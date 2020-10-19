@@ -1,0 +1,235 @@
+openapi: 3.0.0
+info:
+  title: CommunityAPI
+  version: '1.0'
+  description: Provides information about the user and community aspects of the Spottr application
+  contact:
+    name: Jake Wickstrom
+    email: jtwickstrom@gmail.com
+servers:
+  - url: 'http://localhost:3000'
+    description: Jake Wickstrom
+paths:
+  /users:
+    get:
+      summary: Get Users
+      tags:
+        - users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+      operationId: get-users
+      description: Gets users who are registered with the Spottr app
+    post:
+      summary: Create User
+      operationId: post-users-userID
+      responses:
+        '200':
+          description: OK
+      description: Creates a new User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      tags:
+        - users
+  '/users/{userID}':
+    parameters:
+      - schema:
+          type: string
+        name: userID
+        in: path
+        required: true
+    get:
+      summary: Get User
+      tags:
+        - users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      operationId: get-users-userID
+      description: Get a specific user based on their userID
+    delete:
+      summary: Delete User
+      operationId: delete-users-userID
+      responses:
+        '200':
+          description: OK
+      description: Delete an existing user
+      tags:
+        - users
+  '/users/{userID}/messages':
+    parameters:
+      - schema:
+          type: string
+        name: userID
+        in: path
+        required: true
+    get:
+      summary: Get Messages
+      tags:
+        - messages
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+      operationId: get-users-userID-messages
+      description: Get messages between the calling user and the user indicated in the path
+      parameters:
+        - schema:
+            type: number
+          in: query
+          name: from
+          description: Only get messages after this timestamp
+        - schema:
+            type: number
+          in: query
+          name: to
+          description: Only get messages before this timestamp
+    post:
+      summary: Send Message
+      operationId: post-users-userID-messages
+      responses:
+        '200':
+          description: OK
+      description: Sends a message to the specified user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+        description: The message to send
+      tags:
+        - messages
+  '/users/{userID}/workouts':
+    parameters:
+      - schema:
+          type: string
+        name: userID
+        in: path
+        required: true
+    get:
+      summary: Get Workouts
+      tags:
+        - workouts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workout'
+      operationId: get-users-userID-workouts
+      description: Get the workouts performed by a user
+    post:
+      summary: Create Workout
+      operationId: post-users-userID-workouts
+      responses:
+        '200':
+          description: OK
+      description: Post a new completed workout
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workout'
+      tags:
+        - workouts
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      x-tags:
+        - models
+      properties:
+        id:
+          type: string
+        created:
+          type: number
+        email:
+          type: string
+        workouts:
+          type: integer
+      required:
+        - created
+        - email
+    Workout:
+      title: Workout
+      type: object
+      x-examples:
+        example-1:
+          id: string
+      properties:
+        id:
+          type: string
+        planID:
+          type: string
+        duration:
+          type: number
+        userID:
+          type: string
+        location:
+          $ref: '#/components/schemas/Location'
+      required:
+        - id
+        - planID
+        - userID
+      x-tags:
+        - models
+    Message:
+      title: Message
+      type: object
+      properties:
+        id:
+          type: string
+        senderID:
+          type: string
+        recipientID:
+          type: string
+        body:
+          type: string
+        ts:
+          type: number
+      required:
+        - senderID
+        - recipientID
+        - body
+        - ts
+      x-tags:
+        - models
+    Location:
+      title: Location
+      type: object
+      properties:
+        lat:
+          type: number
+        long:
+          type: number
+      required:
+        - lat
+        - long
+      x-tags:
+        - models
+tags:
+  - name: users
+  - name: messages
+  - name: workouts
