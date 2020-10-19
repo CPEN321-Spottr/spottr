@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Spottr</string>
+    <!-- Strings used by sign-in -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
 </resources>
