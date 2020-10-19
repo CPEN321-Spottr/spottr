@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#44bcd8</color>
-    <color name="colorPrimaryDark">#1C1C1C</color>
-    <color name="colorAccent">#03DAC5</color>
+    <!-- Basic colours -->
+    <color name="blue">#0000FF</color>
+    <color name="red">#FF0000</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="orange">#FF6600</color>
+    <color name="green">#00FF00</color>
+    <color name="purple">#6600FF</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Spottr colours -->
+    <color name="colorPrimary">#44BCD8</color>
+    <color name="colorMonochromatic">#62AEBF</color>
+    <color name="colorPrimaryDark">#1C1C1C</color>
+    <color name="colorComplimentary">#D87044</color>
+    <color name="colorAnalogous_purple">#5344D8</color>
+    <color name="colorAnalogous_green">#44D85F</color>
+
 </resources>
