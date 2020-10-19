@@ -1,0 +1,1 @@
+This folder contains all of the fragments used in the application.
