@@ -15,15 +15,26 @@ app.get('/', (req, res) => {
 })
 
 
-
 //////////  COMMUNITY API CALLS   //////////
-app.get('/community/users', (req, res) => {
-  var result = myModule.users();
+app.get('/users', (req, res) => {
+  var result = community.getUsers();
   res.json(result)
 })
 
+app.get('/users/:userID', (req, res) => {
+  var result = community.getUser(req.params.userID);
+  res.json(result)
+})
 
+app.post('/users', function (req, res) {
+  var result = community.createUser(req.body.User.id);
+  res.json(result)
+})
 
+app.delete('/users/:userID', function (req, res) {
+  var result = community.deleteUser(req.params.userID);
+  res.json(result)
+})
 
 
 //////////  EXERCISE API CALLS   //////////
