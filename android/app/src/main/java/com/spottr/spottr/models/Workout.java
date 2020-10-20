@@ -1,4 +1,6 @@
-package com.spottr.spottr.models;
+package com.spottr.models;
+
+import android.location.Location;
 
 /**
  * A workout represents the execution of some exercise Plan by a specific User
@@ -6,14 +8,14 @@ package com.spottr.spottr.models;
 public class Workout {
     private String id;
     private String planID;
-    private int duration;
+    private Number duration;
     private String userID;
     private Location location;
 
     /**
      * Constructor
      */
-    public Workout(String id, String planID, int duration, String userID, Location location) {
+    public Workout(String id, String planID, Number duration, String userID, Location location) {
         this.id = id;
         this.planID = planID;
         this.duration = duration;
@@ -32,7 +34,7 @@ public class Workout {
         return this.planID;
     }
 
-    public int getDuration() {
+    public Number getDuration() {
         return this.duration;
     }
 
@@ -55,7 +57,7 @@ public class Workout {
         this.planID = planID;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(Number duration) {
         this.duration = duration;
     }
 
