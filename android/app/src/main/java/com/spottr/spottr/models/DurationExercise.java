@@ -1,4 +1,4 @@
-package com.spottr.spottr.models;
+package com.spottr.models;
 
 /**
  * A DurationExercise is an Exercise whose progress is measured in a continuous amount of time
