@@ -1,4 +1,4 @@
-package com.spottr.models;
+package com.spottr.spottr.models;
 
 import java.util.Date;
 
