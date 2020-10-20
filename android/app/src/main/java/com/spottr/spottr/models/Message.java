@@ -1,4 +1,6 @@
-package com.spottr.spottr.models;
+package com.spottr.models;
+
+import java.util.Date;
 
 /**
  * A message from User A to User B
@@ -8,7 +10,7 @@ public class Message {
     private String senderID;
     private String recipientID;
     private String body;
-    private int ts;
+    private Date ts;
 
     /**
      * Constructor
@@ -30,14 +32,14 @@ public class Message {
 
     public String getBody() {return this.body;}
 
-    public int getTs() {return this.ts;}
+    public Date getTs() {return this.ts;}
 
     /**
      * Setters
      */
     public void setBody(String body) {this.body = body;}
 
-    public void setTs(int ts) {this.ts = ts;}
+    public void setTs(Date ts) {this.ts = ts;}
 
     /**
      * Copy

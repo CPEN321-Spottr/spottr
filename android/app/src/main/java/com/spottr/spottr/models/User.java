@@ -1,16 +1,18 @@
-package com.spottr.spottr.models;
+package com.spottr.models;
+
+import java.util.Date;
 
 public class User {
     private String id;
     private String name;
-    private int created; //not sure what this field is for
     private String email;
-    private int workouts;
+    Date created;
+    Integer workouts;
 
     /**
      * Constructors
      */
-    public User(String id, String name, int created, String email) {
+    public User(String id, String name, Date created, String email) {
         this.id = id;
         this.name = name;
         this.created = created;
@@ -18,7 +20,7 @@ public class User {
         this.workouts = 0;
     }
 
-    public User(String name, int created, String email) {
+    public User(String name, Date created, String email) {
         this.id = ""; //Call DB to create new id for the new user
         this.name = name;
         this.created = created;
@@ -33,11 +35,11 @@ public class User {
 
     public String getName() {return this.name;}
 
-    public int getCreated() {return this.created;}
+    public Date getCreated() {return this.created;}
 
     public String getEmail() {return this.email;}
 
-    public int getWorkouts() {return this.workouts;}
+    public Integer getWorkouts() {return this.workouts;}
 
     /**
      * Setters
@@ -46,7 +48,7 @@ public class User {
         this.name = name;
     }
 
-    public void setCreated(int created) {
+    public void setCreated(Date created) {
         this.created = created;
     }
 
@@ -54,7 +56,7 @@ public class User {
         this.email = email;
     }
 
-    public void setWorkouts(int workouts) {
+    public void setWorkouts(Integer workouts) {
         this.workouts = workouts;
     }
 
