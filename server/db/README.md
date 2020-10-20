@@ -5,11 +5,16 @@ Just a quick note before getting into the details: this process will be a lot le
 ------
 
 ## Steps to set up the local development enviroment
-1. Install Docker (and Docker-compose)
-2. Navigate to `~/server/db`
+1. Install Docker (and Docker-compose). Make sure to go into Docker settings and allocate at least 2gb of memory.
+2. Navigate in terminal to `/server/db`
 3. Run `sudo docker-compose -f db.docker-compose.yml up` and wait for it to print `Changed database context to 'master'.` (this will take ~30-45sec)
 4. Open a new terminal window and run `sudo docker-compose -f migrate.docker-compose.yml up` and wait for it to print `db_flyway-migration_1 exited with code 0`
 5. Profit
+
+## Steps to cleanly restart local development enviroment
+1. Execute `docker container ls` to see all active Docker containers
+2. Execute `docker rm -v -f [CONTAINER ID]`, where `[CONTAINER ID]` is the mssql container id found by running the previous command
+3. Execute `docker volume rm db_dbdata`
 
 ## Connecting to local development enviroment
 To connect to a set-up local development enviroment, you'll require database management software. If you are using a JetBrain product, then you'll have a database management tool built into your IDE. Otherwise, extentions exist for other IDEs or you can use a free standalone software like DBeaver. Once you have your tools ready, you'll have to add a new connection with the following details:
