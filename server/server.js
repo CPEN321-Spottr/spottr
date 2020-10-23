@@ -19,7 +19,7 @@ app.get('/', cors(), (req, res) => {
 //////////  COMMUNITY API CALLS   //////////
 app.get('/users', cors(), (req, res) => {
   var result = community.getUsers();
-  res.json(result)
+  res.json(result) //return a list of these, not one json
 })
 
 app.get('/users/:userID', cors(), (req, res) => {
