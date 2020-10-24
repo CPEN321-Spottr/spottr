@@ -23,7 +23,7 @@ CREATE TABLE user_profile (
 CREATE TABLE exercise (
     id INT PRIMARY KEY IDENTITY (1,1),
     name VARCHAR(50),
-    description VARCHAR(200),
+    description VARCHAR(250),
     std_reps INT,
     std_reps_time_sec INT,
     major_muscle_group_id INT,
