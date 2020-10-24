@@ -12,7 +12,7 @@ Just a quick note before getting into the details: this process will be a lot le
 5. Profit
 
 ## Steps to cleanly restart local development enviroment
-1. Execute `docker container ls` to see all active Docker containers
+1. Execute `docker container ls -a` to see all active Docker containers
 2. Execute `docker rm -v -f [CONTAINER ID]`, where `[CONTAINER ID]` is the mssql container id found by running the previous command
 3. Execute `docker volume rm db_dbdata`
 
