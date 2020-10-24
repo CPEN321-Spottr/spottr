@@ -1,8 +1,8 @@
-package com.spottr.apis;
+package com.spottr.spottr.apis;
 
-import com.spottr.models.Message;
-import com.spottr.models.User;
-import com.spottr.models.Workout;
+import com.spottr.spottr.models.Message;
+import com.spottr.spottr.models.User;
+import com.spottr.spottr.models.Workout;
 
 import java.util.List;
 

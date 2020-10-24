@@ -1,4 +1,6 @@
-package com.spottr.models;
+package com.spottr.spottr.models;
+
+import com.spottr.spottr.models.Routine;
 
 import java.util.List;
 

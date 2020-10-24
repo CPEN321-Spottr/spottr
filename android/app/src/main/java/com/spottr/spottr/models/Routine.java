@@ -1,4 +1,4 @@
-package com.spottr.models;
+package com.spottr.spottr.models;
 
 public class Routine {
     String id;
