@@ -11,6 +11,7 @@ on:
   push:
     paths:
       - 'server/db/**'  
+      - '.github/workflows/db-migration.yml'
 
 jobs:
   deploy-db:
@@ -21,6 +22,6 @@ jobs:
       FLYWAY_USER: ${{ secrets.DB_USER }}
       FLYWAY_PASSWORD: ${{ secrets.DB_PASSWORD }}
     steps:
-      - run: flyway -configFiles=filesystem:./server/db/conf/flyway.conf info
-      - run: flyway -configFiles=filesystem:./server/db/conf/flyway.conf migrate
-      - run: flyway -configFiles=filesystem:./server/db/conf/flyway.conf info
+      - run: flyway -configFiles=/server/db/conf/flyway.conf info
+      - run: flyway -configFiles=/server/db/conf/flyway.conf migrate
+      - run: flyway -configFiles=/server/db/conf/flyway.conf info
