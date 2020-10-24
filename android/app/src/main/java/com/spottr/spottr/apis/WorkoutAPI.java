@@ -1,8 +1,8 @@
-package com.spottr.apis;
+package com.spottr.spottr.apis;
 
 import com.spottr.constants.MuscleGroup;
-import com.spottr.models.Exercise;
-import com.spottr.models.Plan;
+import com.spottr.spottr.models.Exercise;
+import com.spottr.spottr.models.Plan;
 
 import java.util.List;
 
