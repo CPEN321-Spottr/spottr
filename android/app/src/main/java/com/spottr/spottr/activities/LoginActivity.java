@@ -1,9 +1,12 @@
 package com.spottr.spottr.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.ButtonBarLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +20,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.spottr.spottr.R;
 
 import java.util.Objects;
@@ -49,6 +55,25 @@ public class LoginActivity extends AppCompatActivity {
                 startActivityForResult(intent, RC_SIGN_IN);
             }
         });
+
+        // Get device token for Firebase notifications
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("FIREBASE", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        Log.d("FIREBASE", token);
+                    }
+                });
+
+
     }
 
     @Override
@@ -77,13 +102,16 @@ public class LoginActivity extends AppCompatActivity {
 
         }else{
             Log.d("LOGIN", result.getStatus().toString());
-            Toast.makeText(getApplicationContext(),"Sign in cancel",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Google Sign-In Unsuccessful",Toast.LENGTH_LONG).show();
         }
     }
 
     private void handleUserAccount(GoogleSignInAccount account) {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.putExtra("account", account);
+
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
+        preferences.edit().putString("oauth_token", account.getIdToken());
 
         startActivity(intent);
     }

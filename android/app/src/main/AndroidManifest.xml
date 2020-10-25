@@ -21,7 +21,7 @@
         </activity>
 
         <service
-            android:name=".NewsfeedNotificationService"
+            android:name=".services.NewsfeedNotificationService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
