@@ -1,0 +1,8 @@
+version: '2.1'
+services:
+  flyway-migration:
+    image: flyway/flyway:6.5.3
+    network_mode: "host"
+    volumes:
+      - "./migrations:/flyway/sql"
+    command: -url=jdbc:sqlserver://localhost:1433;databaseName=master -user=sa -password=Password123! migrate
