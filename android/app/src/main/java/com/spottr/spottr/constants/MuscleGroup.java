@@ -1,4 +1,4 @@
-package com.spottr.constants;
+package com.spottr.spottr.constants;
 
 public enum MuscleGroup {
     BICEPS,

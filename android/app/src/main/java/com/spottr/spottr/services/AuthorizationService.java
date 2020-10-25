@@ -1,9 +1,7 @@
-package com.spottr.services;
+package com.spottr.spottr.services;
 
 import okhttp3.Request;
-import com.spottr.constants.AuthorizationType;
-
-import static com.spottr.constants.AuthorizationType.*;
+import com.spottr.spottr.constants.AuthorizationType;
 
 public class AuthorizationService {
 
