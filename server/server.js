@@ -5,7 +5,7 @@ const port = process.env.PORT || 3000
 
 const community = require('./communityAPIFunctions.js');
 const exercise = require('./exerciseAPIFunctions.js');
-const workout = require('./workoutService.js');
+const workout = require('./src/service/workoutService.js');
 
 var dbConfig = {
   user: 'u0tri2ukfid8bnj',

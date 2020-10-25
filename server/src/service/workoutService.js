@@ -1,6 +1,6 @@
-const generator = require('./workoutPlanGenerationEngine.js');
-const data = require('./workoutData.js');
-const userData = require('./userData.js');
+const generator = require('../engine/workoutPlanGenerationEngine.js');
+const data = require('../data/workoutData.js');
+const userData = require('../data/userData.js');
 
 module.exports = {
     generateWorkoutPlan: async function (userId, lengthMinutes, targetMuscleGroup, dbConfig) {
@@ -18,7 +18,7 @@ module.exports = {
             workoutPlanId
         );
 
-        data.createWorkoutExerciseEntries(workoutPlan, dbConfig);
+        //data.createWorkoutExerciseEntries(workoutPlan, dbConfig); TODO: ADD BACK LATER
 
         return workoutPlan;
     }

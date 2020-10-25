@@ -1,6 +1,6 @@
 const { MAX } = require('mssql');
-const util = require('./util.js');
-const workoutData = require('./workoutData.js');
+const util = require('../../util.js');
+const workoutData = require('../data/workoutData.js');
 
 const MAX_REST_SEC = 45;
 const STD_REST_TIME_SEC = 20;
