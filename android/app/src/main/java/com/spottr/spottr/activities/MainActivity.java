@@ -12,6 +12,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.spottr.spottr.R;
 
+import java.util.Objects;
+
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,8 +30,16 @@ public class MainActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
         GoogleSignInAccount account = (GoogleSignInAccount) extras.get("account");
-        Log.d("ACCOUNT", account.getDisplayName());
-        Log.d("ACCOUNT", account.getPhotoUrl().toString());
+        assert account != null;
+        Log.d("ACCOUNT", Objects.requireNonNull(account.getDisplayName()));
+
+        Log.d("ACCOUNT", Objects.requireNonNull(account.getPhotoUrl()).toString());
+
+        if(account.getIdToken() != null) {
+            Log.d("ACCOUNT", Objects.requireNonNull(account.getIdToken()));
+        } else {
+            Log.d("ACCOUNT", "Could not get ID token");
+        }
 
 //        Glide.with(this)
 //                .load(account.getPhotoUrl())

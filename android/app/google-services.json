@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "347900541097",
+    "firebase_url": "https://spottr-1603580674508.firebaseio.com",
+    "project_id": "spottr-1603580674508",
+    "storage_bucket": "spottr-1603580674508.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347900541097:android:703071371dbcb706c3d1b8",
+        "android_client_info": {
+          "package_name": "com.spottr.spottr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "347900541097-jh4h8b5iuglt6s785vo6j73relo9fph4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.spottr.spottr",
+            "certificate_hash": "9b4d582acab4404b1b616d3e6acba5382650ea78"
+          }
+        },
+        {
+          "client_id": "347900541097-msm4ndera2jps66rqdshsgrdqm35gkfg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-N_NOjycWiImqBSxTzAYQzQhwxoAxhW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "347900541097-msm4ndera2jps66rqdshsgrdqm35gkfg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
