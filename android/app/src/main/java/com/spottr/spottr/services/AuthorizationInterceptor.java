@@ -1,4 +1,4 @@
-package com.spottr.services;
+package com.spottr.spottr.services;
 
 import org.jetbrains.annotations.NotNull;
 
