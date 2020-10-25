@@ -6,6 +6,13 @@ const port = process.env.PORT || 3000
 const community = require('./communityAPIFunctions.js');
 const exercise = require('./exerciseAPIFunctions.js');
 
+var dbConfig = {
+  user: 'u0tri2ukfid8bnj',
+  password: 'Udh!v6payG2cTwuVAXvta%0&y',
+  server: 'eu-az-sql-serv1.database.windows.net', 
+  database: 'dkxp1krn55tloca'
+};
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
@@ -20,15 +27,8 @@ app.get('/users', function (req, res) {
    
   var sql = require("mssql");
 
-  var config = {
-      user: 'u0tri2ukfid8bnj',
-      password: 'Udh!v6payG2cTwuVAXvta%0&y',
-      server: 'eu-az-sql-serv1.database.windows.net', 
-      database: 'dkxp1krn55tloca'
-  };
-
   // connect to your database
-  sql.connect(config, function (err) {
+  sql.connect(dbConfig, function (err) {
       if (err) console.log(err);
 
       // create Request object
@@ -54,13 +54,6 @@ app.get('/users/:userID', cors(), (req, res) => {
 
 app.post('/users', cors(), function (req, res) {
   var sql = require("mssql");
-
-  var config = {
-      user: 'u0tri2ukfid8bnj',
-      password: 'Udh!v6payG2cTwuVAXvta%0&y',
-      server: 'eu-az-sql-serv1.database.windows.net', 
-      database: 'dkxp1krn55tloca'
-  };
 
   // connect to your database
   sql.connect(config, function (err) {
