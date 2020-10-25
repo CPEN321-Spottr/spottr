@@ -56,7 +56,7 @@ app.post('/users', cors(), function (req, res) {
   var sql = require("mssql");
 
   // connect to your database
-  sql.connect(config, function (err) {
+  sql.connect(dbConfig, function (err) {
       if (err) console.log(err);
 
       // create Request object
