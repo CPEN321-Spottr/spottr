@@ -5,7 +5,7 @@ const port = process.env.PORT || 3000
 
 const community = require('./communityAPIFunctions.js');
 const exercise = require('./exerciseAPIFunctions.js');
-const workout = require('./workoutAPIFunctions.js');
+const workout = require('./workoutService.js');
 
 var dbConfig = {
   user: 'u0tri2ukfid8bnj',
@@ -47,11 +47,11 @@ app.delete('/users/:userID', cors(), function (req, res) {
 
 
 //////////  WORKOUT API CALLS   //////////
-app.get('/workout-plan/generate/:userId&:lengthMin&:targetMuscleGroups', cors(), function (req, res) {
-  var result = workout.generateWorkoutPlan(
-    req.params.userId, 
-    req.params.lengthMin, 
-    req.params.targetMuscleGroups, 
+app.get('/users/:userId/workout-plan/generate/:lengthMin&:targetMuscleGroup', cors(), async function (req, res) {
+  var result = await workout.generateWorkoutPlan(
+    JSON.parse(req.params.userId), 
+    JSON.parse(req.params.lengthMin), 
+    JSON.parse(req.params.targetMuscleGroup), 
     dbConfig
   );
 

@@ -1,8 +1,8 @@
 module.exports = {
-    generateWorkoutPlan: function(lengthMin, possibleExercises, multiplier, planId) {
+    generateWorkoutPlan: function(lengthMin, possibleExercises, multipliers, planId) {
         // TODO temp
         var workoutPlan = {
-            workoutPlanId = planId,
+            workoutPlanId: planId,
             exercise1: {
               id:  "user1",
               created: 1,
