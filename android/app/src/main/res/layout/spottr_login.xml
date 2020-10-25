@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_logo"
-        app:layout_constraintVertical_bias="0.288" />
+        app:layout_constraintVertical_bias="0.6" />
 
     <ImageView
         android:id="@+id/login_logo"
@@ -25,5 +25,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/spottr_logo_cyan" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:scaleType="fitCenter"
+        app:srcCompat="@drawable/google_authentication"
+        tools:layout_editor_absoluteX="155dp"
+        tools:layout_editor_absoluteY="460dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
