@@ -15,12 +15,37 @@ app.get('/', cors(), (req, res) => {
   res.json(currentTime)
 })
 
-
 //////////  COMMUNITY API CALLS   //////////
+app.get('/users', function (req, res) {
+   
+  var sql = require("mssql");
+
+  var config = {
+      user: 'u0tri2ukfid8bnj',
+      password: 'Udh!v6payG2cTwuVAXvta%0&y',
+      server: 'eu-az-sql-serv1.database.windows.net', 
+      database: 'dkxp1krn55tloca'
+  };
+
+  // connect to your database
+  sql.connect(config, function (err) {
+      if (err) console.log(err);
+
+      // create Request object
+      var request = new sql.Request();
+         
+      // query to the database and get the records
+      request.query('select * from user_profile', function (err, users) {
+          if (err) console.log(err)
+          res.send(users.recordset);
+      });
+  });
+});
+
+/*
 app.get('/users', cors(), (req, res) => {
-  var result = community.getUsers();
-  res.json(result) //return a list of these, not one json
-})
+  community.getUsers();
+})*/
 
 app.get('/users/:userID', cors(), (req, res) => {
   var result = community.getUser(req.params.userID);
@@ -28,14 +53,33 @@ app.get('/users/:userID', cors(), (req, res) => {
 })
 
 app.post('/users', cors(), function (req, res) {
-  var result = community.createUser(req.body.User.id);
-  res.json(result)
+  var sql = require("mssql");
+
+  var config = {
+      user: 'u0tri2ukfid8bnj',
+      password: 'Udh!v6payG2cTwuVAXvta%0&y',
+      server: 'eu-az-sql-serv1.database.windows.net', 
+      database: 'dkxp1krn55tloca'
+  };
+
+  // connect to your database
+  sql.connect(config, function (err) {
+      if (err) console.log(err);
+
+      // create Request object
+      var request = new sql.Request();
+         
+      // query to the database and get the records
+      request.query("insert into user_profile(email) values(" + req.params.email + ")", function (err, users) {
+          if (err) console.log(err)
+          res.send(users.recordset);
+      });
+  });
 })
 
 app.delete('/users/:userID', cors(), function (req, res) {
   var result = community.deleteUser(req.params.userID);
   res.json(result)
 })
-
 
 //////////  EXERCISE API CALLS   //////////
