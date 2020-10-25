@@ -71,6 +71,32 @@ module.exports = {
     },
 
     createWorkoutExerciseEntries: function(workoutPlan, dbConfig) {
-        // TODO
+      try {
+        return sql
+          .connect(dbConfig)
+          .then((pool) => {
+            var lastPool;
+
+            for (var i = 0; i < workoutPlan['num_exercises'] * 2; i += 2) {
+              lastPool = pool
+                          .request()
+                          .input("wpid", sql.Int, workoutPlan['workout_plan_id'])
+                          .input("eid", sql.Int, workoutPlan[i]['exercise_id'])
+                          .input("nr", sql.Int, workoutPlan[i]['reps'])
+                          .input("ns", sql.Int, workoutPlan[i]['sets'])
+                          .query(
+                            "INSERT INTO workout_exercise(workout_plan_id, exercise_id, num_reps, num_sets) VALUES (@wpid, @eid, @nr, @ns)"
+                          );
+            }
+            
+            return lastPool;
+          })
+          .then((result) => {
+            return result;
+          })
+    } catch(ex) {
+        console.log(ex);
+        return ex;
     }
+  }
 }

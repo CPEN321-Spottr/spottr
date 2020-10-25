@@ -8,8 +8,7 @@ module.exports = {
         const user = await userData.getUserByUserId(userId, dbConfig);
         const userMultiplier = await data.getUserMultiplier(targetMuscleGroup, user.user_multiplier_id, dbConfig);
         const possibleExercises = await data.getExercisesByTargetMuscleGroups(targetMuscleGroup, dbConfig);
-        //const workoutPlanId = await data.createWorkoutPlanEntry(userId, dbConfig); TODO: ADD BACK LATER
-        const workoutPlanId = 1;
+        const workoutPlanId = await data.createWorkoutPlanEntry(userId, dbConfig);
 
         var workoutPlan = generator.generateWorkoutPlan(
             lengthMinutes, 
@@ -18,7 +17,7 @@ module.exports = {
             workoutPlanId
         );
 
-        //data.createWorkoutExerciseEntries(workoutPlan, dbConfig); TODO: ADD BACK LATER
+        data.createWorkoutExerciseEntries(workoutPlan, dbConfig);
 
         return workoutPlan;
     }

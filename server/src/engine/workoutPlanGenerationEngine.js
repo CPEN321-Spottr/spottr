@@ -9,7 +9,7 @@ const TIME_ESTIMATE_SHIFT_FACTOR = 0.5;
 module.exports = {
     generateWorkoutPlan: function(lengthMinutes, possibleExercises, multiplier, planId) {
         var workoutPlan = {
-            workoutPlanId: planId
+            workout_plan_id: planId
         };
 
         var adjustedExercises = [];
@@ -18,6 +18,7 @@ module.exports = {
         for (var i = 0; i < possibleExercises.length; ++i) {
             adjustedExercises.push({});
             adjustedExercises[i]['name'] = util.clone(possibleExercises[i]['name']);
+            adjustedExercises[i]['exercise_id'] = util.clone(possibleExercises[i]['id']);
             adjustedExercises[i]['description'] = util.clone(possibleExercises[i]['description']);
             adjustedExercises[i]['major_muscle_group_id'] = util.clone(possibleExercises[i]['major_muscle_group_id']);
             adjustedExercises[i]['sets'] = util.clone(possibleExercises[i]['std_sets']);
@@ -41,6 +42,7 @@ module.exports = {
         // Randomly select exercises to meet the target length of workout (+-10% seconds)
         // Only repeats exercises once all of them have been selected once
         var exerciseNum = 0;
+        var planIndex = 0;
         var curLenSeconds = 0;
         var minimumLenSeconds = (lengthMinutes * 60) - 45;
 
@@ -59,7 +61,8 @@ module.exports = {
                 selectedExercise.sets = Math.floor(Math.random() * 2) - 1 + selectedExercise.sets;
 
                 // Update the workout plan
-                workoutPlan[exerciseNum] = selectedExercise;
+                workoutPlan[planIndex] = selectedExercise;
+                planIndex++;
                 exerciseNum++;
 
                 // Add a rest if there is another exercise next, else add one more set to the last 
@@ -67,13 +70,13 @@ module.exports = {
                 curLenSeconds += selectedExercise['reps_time_sec'] * selectedExercise['sets'];
 
                 if ((curLenSeconds + restTime) < minimumLenSeconds) {
-                    workoutPlan[exerciseNum] = {
+                    workoutPlan[planIndex] = {
                         name: "Rest",
                         duration_sec: restTime
                     };
-                    exerciseNum++;
+                    planIndex++;
                 } else if (curLenSeconds < minimumLenSeconds) {
-                    workoutPlan[exerciseNum - 1]['sets'] += 1;
+                    workoutPlan[planIndex - 1]['sets'] += 1;
                 }
 
                 // Update the workout length and the list of remaning unselected exercises
@@ -87,6 +90,8 @@ module.exports = {
 
         // Finalization steps
         workoutPlan['estimated_time_mins'] = util.roundToTwo(curLenSeconds / 60);
+        workoutPlan['num_exercises'] = exerciseNum;
+        workoutPlan['num_parts'] = planIndex;
 
         return workoutPlan;
     }
