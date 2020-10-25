@@ -8,7 +8,7 @@ Just a quick note before getting into the details: this process will be a lot le
 1. Install Docker (and Docker-compose). Make sure to go into Docker settings and allocate at least 2gb of memory.
 2. Navigate in terminal to `/server/db`
 3. Run `sudo docker-compose -f db.docker-compose.yml up` and wait for it to print `Changed database context to 'master'.` (this will take ~30-45sec)
-4. Open a new terminal window and run `sudo docker-compose -f migrate.docker-compose.yml up` and wait for it to print `db_flyway-migration_1 exited with code 0`
+4. Open a new terminal window and run `docker-compose -f migrate.docker-compose.yml up` and wait for it to print `db_flyway-migration_1 exited with code 0`
 5. Profit
 
 ## Steps to cleanly restart local development enviroment
