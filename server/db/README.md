@@ -37,8 +37,8 @@ Once a file is created and applied to a database (by running `migrate.docker-com
 
 ## Manually Performing Migration
 To manually perform the migration, first edit the URL, user, and password entries in the `flyway.conf` file. Do not include quotation marks around the values you add.
-    - For the URL, put: jdbc:sqlserver://eu-az-sql-serv1.database.windows.net:1433;databaseName=dkxp1krn55tloca
-    - For the user and password, enter the value found in the database dashboard
+- For the URL, put: jdbc:sqlserver://eu-az-sql-serv1.database.windows.net:1433;databaseName=dkxp1krn55tloca
+- For the user and password, enter the value found in the database dashboard
 
 Then, navigate to `~/server/db` and execute `flyway -configFiles=conf/flyway.conf info` and `flyway -configFiles=conf/flyway.conf migrate`.
 
