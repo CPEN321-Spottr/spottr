@@ -6,8 +6,10 @@ const port = process.env.PORT || 3000
 const community = require('./communityAPIFunctions.js');
 const exercise = require('./exerciseAPIFunctions.js');
 const token = require('./tokenVerifyAPIFunctions.js');
+const workout = require('./src/service/workoutService.js');
+const db = require('./src/connection.js');
+const constants = require('./src/constants.js');
 
-var sql = require("mssql");
 const {OAuth2Client} = require('google-auth-library');
 
 //const CLIENT_ID_1 = '347900541097-jh4h8b5iuglt6s785vo6j73relo9fph4.apps.googleusercontent.com'; //debug
@@ -20,9 +22,10 @@ var dbConfig = {
   server: 'eu-az-sql-serv1.database.windows.net', 
   database: 'dkxp1krn55tloca'
 };
+//const dbConfig = db.getDbConfig();
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Spottr API listening at http://localhost:${port}`)
 })
 
 app.get('/', cors(), (req, res) => {
@@ -92,3 +95,50 @@ app.post('/token/:tokenID', cors(), (req, res) => {
   );
   return ticket;
 })*/
+//////////  WORKOUT API CALLS   //////////
+app.get('/users/:userId/workout-plan/generate/:lengthMinutes&:targetMuscleGroup', cors(), async function (req, res) {
+  try {
+    var result = await workout.generateWorkoutPlan(
+        JSON.parse(req.params.userId), 
+        JSON.parse(req.params.lengthMinutes), 
+        JSON.parse(req.params.targetMuscleGroup), 
+        dbConfig
+      );
+
+      res.json(result);
+  } catch(ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
+
+app.put('/users/:userId/workout-difficulty/increase/:factor&:targetMuscleGroup', cors(), async function (req, res) {
+  try {
+    var result = await workout.modifyWorkoutDifficulty(
+    JSON.parse(req.params.userId),
+    JSON.parse(req.params.targetMuscleGroup),
+    JSON.parse(req.params.factor),
+    dbConfig,
+    1
+  );
+
+  res.sendStatus(result);
+  } catch(ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
+
+app.put('/users/:userId/workout-difficulty/decrease/:factor&:targetMuscleGroup', cors(), async function (req, res) {
+  try {
+    var result = await workout.modifyWorkoutDifficulty(
+    JSON.parse(req.params.userId),
+    JSON.parse(req.params.targetMuscleGroup),
+    JSON.parse(req.params.factor),
+    dbConfig,
+    0
+  );
+
+  res.sendStatus(result);
+  } catch(ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
