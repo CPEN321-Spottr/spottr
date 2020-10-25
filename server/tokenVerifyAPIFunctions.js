@@ -1,27 +1,52 @@
 var sql = require("mssql");
-const CLIENT_ID = 'spottr-be.herokuapp.com';
+//const CLIENT_ID_1 = '347900541097-jh4h8b5iuglt6s785vo6j73relo9fph4.apps.googleusercontent.com'; //debug
+//const CLIENT_ID_2 = '347900541097-qbvaoqoc68hp2m6joea6728ebgm598lt.apps.googleusercontent.com'; //release
+const CLIENT_ID = '347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com'; //backend client ID - USE THIS
 
 module.exports = {
-    verifyToken: async function(client, dbConfig) {
+    verifyToken: async function(client, token) {
         //Verify user token
         const ticket = await client.verifyIdToken({
             idToken: token,
             audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
         });
         const payload = ticket.getPayload(); 
-        // const userid = payload['sub']; - I don;t think the userID means much to us in this context
-        
-        //Use output email of verification to query database for any users with that email
-        const email  = payload['email'];
+        return payload
+    }, 
+
+    checkIfUserExists: async function(dbConfig, googleID){
+        try {
+            return sql
+            .connect(dbConfig)
+            .then((pool) => {
+                return pool
+                .request()
+                .input("googleUserID", sql.VarChar(255), googleID)
+                .query(
+                    "SELECT * FROM user_profile where google_user_id=@googleUserID"
+                );
+            })
+            .then((result) => {
+                return result.recordset;
+            })
+        } catch(ex) {
+            console.log(ex);
+            return ex;
+        }
+    },
+
+    createUser: async function(dbConfig, googleID, googleEmail, googleName){
         try {
             return sql
               .connect(dbConfig)
               .then((pool) => {
                 return pool
                   .request()
-                  .input("userEmail", sql.VarChar(50), email)
+                  .input("gID", sql.VarChar(255), googleID)
+                  .input("gEmail", sql.VarChar(50), googleEmail)
+                  .input("gName", sql.VarChar(50), googleName)
                   .query(
-                    "SELECT * FROM user_profile where email=@email"
+                     "insert into user_profile(email, id, google_user_id) values (@gEmail, @gID, @gName)"
                   );
               })
               .then((result) => {

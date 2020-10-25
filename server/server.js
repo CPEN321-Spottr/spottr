@@ -10,6 +10,10 @@ const token = require('./tokenVerifyAPIFunctions.js');
 var sql = require("mssql");
 const {OAuth2Client} = require('google-auth-library');
 
+//const CLIENT_ID_1 = '347900541097-jh4h8b5iuglt6s785vo6j73relo9fph4.apps.googleusercontent.com'; //debug
+//const CLIENT_ID_2 = '347900541097-qbvaoqoc68hp2m6joea6728ebgm598lt.apps.googleusercontent.com'; //release
+const CLIENT_ID = '347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com'; //backend client ID - USE THIS
+
 var dbConfig = {
   user: 'u0tri2ukfid8bnj',
   password: 'Udh!v6payG2cTwuVAXvta%0&y',
@@ -39,7 +43,7 @@ app.get('/users/:userID', cors(), (req, res) => {
 })
 
 app.post('/users', cors(), async function (req, res) {
-  var result = await community.createUser(dbConfig, req.body,email)
+  var result = await community.createUser(dbConfig, req.params.email)
   res.sendStatus(result);
 })
 
@@ -53,10 +57,18 @@ app.delete('/users/:userID', cors(), function (req, res) {
 
 //////////  TOKEN VERIFY API CALLS   //////////
 
-app.post('/token/:tokenID', cors(), async function (req, res){
+app.post('/token', cors(), async function (req, res){
   const client = new OAuth2Client(CLIENT_ID);
-  var result = await token.verifyToken(client, dbConfig).catch(console.error);
-  res.sendStatus
+  var payload = await token.verifyToken(client, req.header.authorization).catch(console.error);
+  var possibleUserProfile = await token.checkIfUserExists(
+    dbConfig, payload['sub'], payload['email'], payload['name']);
+  
+  if (Object.keys(possibleUserProfile).length === 0) { //checks if returned a user or an empty list
+    var newUser = await token.createUser(dbConfig, req.body.email)
+    res.json(newUser)
+  }else{
+    res.json(possibleUserProfile)
+  }
 })
 
 //Another way of authenticating token I found at https://github.com/googleapis/google-auth-library-nodejs
