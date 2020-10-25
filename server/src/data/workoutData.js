@@ -14,11 +14,12 @@ module.exports = {
                   );
               })
               .then((result) => {
+                if (result.recordset.length == 0) throw ('No exercises found for given target muscle group: ' + targetMuscleGroup);
                 return result.recordset;
               })
         } catch(ex) {
             console.log(ex);
-            return ex;
+            throw ex;
         }
     },
 
@@ -41,11 +42,12 @@ module.exports = {
                 }
               })
               .then((result) => {
+                if (result.recordset.length == 0) throw ('No user multiplier records found for given user with multiplier id: ' + multiplierId);
                 return result.recordset[0]['arms'];
               })
         } catch(ex) {
             console.log(ex);
-            return ex;
+            throw ex;
         }
     },
 
@@ -66,7 +68,7 @@ module.exports = {
               })
         } catch(ex) {
             console.log(ex);
-            return ex;
+            throw ex;
         }
     },
 
@@ -94,10 +96,10 @@ module.exports = {
           .then((result) => {
             return result;
           })
-    } catch(ex) {
-        console.log(ex);
-        return ex;
-    }
+      } catch(ex) {
+          console.log(ex);
+          throw ex;
+      }
   },
 
   upsertNewMultiplier : function(targetMuscleGroup, newMultiplier, userMultiplierId, dbConfig) {
@@ -122,9 +124,10 @@ module.exports = {
         .then((result) => {
           return result;
         })
-  } catch(ex) {
-      console.log(ex);
-      return ex;
+    } catch(ex) {
+        console.log(ex);
+        throw ex;
+    }
   }
-  }
+  
 }

@@ -6,16 +6,13 @@ const port = process.env.PORT || 3000
 const community = require('./communityAPIFunctions.js');
 const exercise = require('./exerciseAPIFunctions.js');
 const workout = require('./src/service/workoutService.js');
+const db = require('./src/connection.js');
+const constants = require('./src/constants.js');
 
-var dbConfig = {
-  user: 'u0tri2ukfid8bnj',
-  password: 'Udh!v6payG2cTwuVAXvta%0&y',
-  server: 'eu-az-sql-serv1.database.windows.net', 
-  database: 'dkxp1krn55tloca'
-};
+const dbConfig = db.getDbConfig();
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Spottr API listening at http://localhost:${port}`)
 })
 
 app.get('/', cors(), (req, res) => {
@@ -48,18 +45,23 @@ app.delete('/users/:userID', cors(), function (req, res) {
 
 //////////  WORKOUT API CALLS   //////////
 app.get('/users/:userId/workout-plan/generate/:lengthMinutes&:targetMuscleGroup', cors(), async function (req, res) {
-  var result = await workout.generateWorkoutPlan(
-    JSON.parse(req.params.userId), 
-    JSON.parse(req.params.lengthMinutes), 
-    JSON.parse(req.params.targetMuscleGroup), 
-    dbConfig
-  );
+  try {
+    var result = await workout.generateWorkoutPlan(
+        JSON.parse(req.params.userId), 
+        JSON.parse(req.params.lengthMinutes), 
+        JSON.parse(req.params.targetMuscleGroup), 
+        dbConfig
+      );
 
-  res.json(result);
+      res.json(result);
+  } catch(ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
 })
 
 app.put('/users/:userId/workout-difficulty/increase/:factor&:targetMuscleGroup', cors(), async function (req, res) {
-  var result = await workout.modifyWorkoutDifficulty(
+  try {
+    var result = await workout.modifyWorkoutDifficulty(
     JSON.parse(req.params.userId),
     JSON.parse(req.params.targetMuscleGroup),
     JSON.parse(req.params.factor),
@@ -68,10 +70,14 @@ app.put('/users/:userId/workout-difficulty/increase/:factor&:targetMuscleGroup',
   );
 
   res.sendStatus(result);
+  } catch(ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
 })
 
 app.put('/users/:userId/workout-difficulty/decrease/:factor&:targetMuscleGroup', cors(), async function (req, res) {
-  var result = await workout.modifyWorkoutDifficulty(
+  try {
+    var result = await workout.modifyWorkoutDifficulty(
     JSON.parse(req.params.userId),
     JSON.parse(req.params.targetMuscleGroup),
     JSON.parse(req.params.factor),
@@ -80,4 +86,7 @@ app.put('/users/:userId/workout-difficulty/decrease/:factor&:targetMuscleGroup',
   );
 
   res.sendStatus(result);
+  } catch(ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
 })

@@ -14,11 +14,12 @@ module.exports = {
                   );
               })
               .then((result) => {
+                if (result.recordset.length == 0) throw ('No user found for user with id: ' + userId);
                 return result.recordset[0];
               })
         } catch(ex) {
             console.log(ex);
-            return ex;
+            throw ex;
         }
     }
 }

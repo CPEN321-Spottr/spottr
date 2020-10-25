@@ -38,7 +38,8 @@ module.exports = {
 
         // Calculate the time in between different exercises based upon the multiplier
         var restTime = STD_REST_TIME_SEC * ((1 - multiplier) + 1);
-        restTime = restTime < MAX_REST_SEC ? restTime : MAX_REST_SEC;
+        restTime = restTime < MIN_REST_SEC ? MIN_REST_SEC : restTime;
+        restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
 
         // Randomly select exercises to meet the target length of workout (+-10% seconds)
         // Only repeats exercises once all of them have been selected once
