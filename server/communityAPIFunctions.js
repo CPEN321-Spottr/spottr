@@ -29,7 +29,7 @@ module.exports = {
       return "Deleting user " + userID;
    },
    
-   createUser: function(dbConfig, email) {
+   createUser: async function(dbConfig, email) {
       try {
          return sql
            .connect(dbConfig)
