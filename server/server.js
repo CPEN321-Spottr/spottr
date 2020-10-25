@@ -47,10 +47,10 @@ app.delete('/users/:userID', cors(), function (req, res) {
 
 
 //////////  WORKOUT API CALLS   //////////
-app.get('/users/:userId/workout-plan/generate/:lengthMin&:targetMuscleGroup', cors(), async function (req, res) {
+app.get('/users/:userId/workout-plan/generate/:lengthMinutes&:targetMuscleGroup', cors(), async function (req, res) {
   var result = await workout.generateWorkoutPlan(
     JSON.parse(req.params.userId), 
-    JSON.parse(req.params.lengthMin), 
+    JSON.parse(req.params.lengthMinutes), 
     JSON.parse(req.params.targetMuscleGroup), 
     dbConfig
   );
