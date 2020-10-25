@@ -1,6 +1,6 @@
 package com.spottr.spottr.apis;
 
-import com.spottr.constants.MuscleGroup;
+import com.spottr.spottr.constants.MuscleGroup;
 import com.spottr.spottr.models.Exercise;
 import com.spottr.spottr.models.Plan;
 
