@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.spottr.spottr.R;
 
@@ -32,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         GoogleSignInAccount account = (GoogleSignInAccount) extras.get("account");
         assert account != null;
         Log.d("ACCOUNT", Objects.requireNonNull(account.getDisplayName()));
-
         Log.d("ACCOUNT", Objects.requireNonNull(account.getPhotoUrl()).toString());
 
         if(account.getIdToken() != null) {
@@ -41,9 +41,11 @@ public class MainActivity extends AppCompatActivity {
             Log.d("ACCOUNT", "Could not get ID token");
         }
 
-//        Glide.with(this)
-//                .load(account.getPhotoUrl())
-//                .into(imgProfilePic);
+        Glide.with(this)
+                .load(account.getPhotoUrl())
+                .override(400, 400)
+                .apply(RequestOptions.circleCropTransform())
+                .into(imgProfilePic);
 
     }
 }
