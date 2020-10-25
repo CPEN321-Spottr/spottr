@@ -32,3 +32,14 @@ The mechanism we are using for migrations a tool called Flyway (https://flywaydb
 As previously mentioned, Flyway uses a version system. This is important to remember as all of the files follow a standard naming format of `Vx.xx__name`, where the `x` are numbers and `name` is some short description. 
 
 Once a file is created and applied to a database (by running `migrate.docker-compose.yml`), that file can no longer be changed without fully resetting the database. This is perfectly fine to do in a local development enviroment, but very not ideal in a production enviroment. This rule occurs as Flyway keeps a checksum to ensure previous files are not changed. If you want to change something that a previous file did, you will have to create a new file that changes that table. When database migrations are applied by Flyway, they are applied in sequential order.
+
+------
+
+## Manually Performing Migration
+To manually perform the migration, first edit the URL, user, and password entries in the `flyway.conf` file. Do not include quotation marks around the values you add.
+    - For the URL, put: jdbc:sqlserver://eu-az-sql-serv1.database.windows.net:1433;databaseName=dkxp1krn55tloca
+    - For the user and password, enter the value found in the database dashboard
+
+Then, navigate to `~/server/db` and execute `flyway -configFiles=conf/flyway.conf info` and `flyway -configFiles=conf/flyway.conf migrate`.
+
+NOTE: Do not push these changes to git as we do not want to publically store these values in our repo! Also note that there is now a .gitignore file that should prevent future changes from being persisted to the remote branch.

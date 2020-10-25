@@ -1,4 +1,6 @@
 # GitHub Action script to handle database migration and deployment automatically (or also manually)
+# 
+# NOTE: DISABLED FOR NOW AS IT IS NOT CURRENTLY FUNCTIONAL
 
 name: Deploy / Migrate Public Database
 
@@ -8,11 +10,13 @@ on:
       tags:
         description: 'Reason For Execution'
         default: 'n/a'
-  push:
-    paths:
-      - 'server/db/**'  
-      - '.github/workflows/db-migration.yml'
-
+  #push:
+  #  paths:
+  #    - 'server/db/**'  
+  #    - '.github/workflows/db-migration.yml'
+  #  branches:
+  #    - main
+  
 jobs:
   deploy-db:
     runs-on: ubuntu-latest
@@ -22,6 +26,6 @@ jobs:
       FLYWAY_USER: ${{ secrets.DB_USER }}
       FLYWAY_PASSWORD: ${{ secrets.DB_PASSWORD }}
     steps:
-      - run: flyway -configFiles=/server/db/conf/flyway.conf info
-      - run: flyway -configFiles=/server/db/conf/flyway.conf migrate
-      - run: flyway -configFiles=/server/db/conf/flyway.conf info
+      - run: flyway -configFiles=server/db/conf/flyway.conf info
+      - run: flyway -configFiles=server/db/conf/flyway.conf migrate
+      - run: flyway -configFiles=server/db/conf/flyway.conf info

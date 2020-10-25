@@ -14,7 +14,6 @@ CREATE TABLE major_muscle_group (
 CREATE TABLE user_profile (
     id INT PRIMARY KEY IDENTITY (1,1),
     name VARCHAR(50),
-    user_name VARCHAR(50),
     email VARCHAR(50),
     user_multiplier_id INT,
     FOREIGN KEY (user_multiplier_id) REFERENCES user_multiplier (id)
