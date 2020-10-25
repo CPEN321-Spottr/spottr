@@ -28,7 +28,7 @@ module.exports = {
               .connect(dbConfig)
               .then((pool) => {
                 // Should probably be checking the database instead of hardcoding this,
-                // but it is okay for now...
+                // but it is okay for now... Will need to update db structure to fix properly
                 if (targetMuscleGroup == 1) {
                     return pool
                   .request()
@@ -37,7 +37,7 @@ module.exports = {
                     "SELECT arms FROM user_multiplier WHERE id = @multiplierId"
                   );
                 } else {
-                    throw 'Invalid requested targetMuscleGroup value!';
+                    throw 'Invalid requested targetMuscleGroup value! Only muscleGroupId 1 is being handled!';
                 }
               })
               .then((result) => {
@@ -88,7 +88,7 @@ module.exports = {
                             "INSERT INTO workout_exercise(workout_plan_id, exercise_id, num_reps, num_sets) VALUES (@wpid, @eid, @nr, @ns)"
                           );
             }
-            
+
             return lastPool;
           })
           .then((result) => {
@@ -98,5 +98,33 @@ module.exports = {
         console.log(ex);
         return ex;
     }
+  },
+
+  upsertNewMultiplier : function(targetMuscleGroup, newMultiplier, userMultiplierId, dbConfig) {
+    try {
+      return sql
+        .connect(dbConfig)
+        .then((pool) => {
+          // Should probably be checking the database instead of hardcoding this,
+          // but it is okay for now... Will need to update db structure to fix properly
+          if (targetMuscleGroup == 1) {
+            return pool
+              .request()
+              .input("umid", sql.Int, userMultiplierId)
+              .input("nm", sql.Decimal(4,3), newMultiplier)
+              .query(
+                "UPDATE user_multiplier SET arms = @nm WHERE id = @umid"
+              );
+          } else {
+              throw 'Invalid requested targetMuscleGroup value! Only muscleGroupId 1 is being handled!';
+          }
+        })
+        .then((result) => {
+          return result;
+        })
+  } catch(ex) {
+      console.log(ex);
+      return ex;
+  }
   }
 }

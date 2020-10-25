@@ -58,3 +58,26 @@ app.get('/users/:userId/workout-plan/generate/:lengthMinutes&:targetMuscleGroup'
   res.json(result);
 })
 
+app.put('/users/:userId/workout-difficulty/increase/:factor&:targetMuscleGroup', cors(), async function (req, res) {
+  var result = await workout.modifyWorkoutDifficulty(
+    JSON.parse(req.params.userId),
+    JSON.parse(req.params.targetMuscleGroup),
+    JSON.parse(req.params.factor),
+    dbConfig,
+    1
+  );
+
+  res.sendStatus(result);
+})
+
+app.put('/users/:userId/workout-difficulty/decrease/:factor&:targetMuscleGroup', cors(), async function (req, res) {
+  var result = await workout.modifyWorkoutDifficulty(
+    JSON.parse(req.params.userId),
+    JSON.parse(req.params.targetMuscleGroup),
+    JSON.parse(req.params.factor),
+    dbConfig,
+    0
+  );
+
+  res.sendStatus(result);
+})

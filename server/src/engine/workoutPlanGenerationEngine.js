@@ -1,9 +1,10 @@
 const { MAX } = require('mssql');
-const util = require('../../util.js');
+const util = require('../util.js');
 const workoutData = require('../data/workoutData.js');
 
 const MAX_REST_SEC = 45;
-const STD_REST_TIME_SEC = 20;
+const MIN_REST_SEC = 15;
+const STD_REST_TIME_SEC = 30;
 const TIME_ESTIMATE_SHIFT_FACTOR = 0.5;
 
 module.exports = {
