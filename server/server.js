@@ -5,6 +5,14 @@ const port = process.env.PORT || 3000
 
 const community = require('./communityAPIFunctions.js');
 const exercise = require('./exerciseAPIFunctions.js');
+const workout = require('./workoutAPIFunctions.js');
+
+var dbConfig = {
+  user: 'u0tri2ukfid8bnj',
+  password: 'Udh!v6payG2cTwuVAXvta%0&y',
+  server: 'eu-az-sql-serv1.database.windows.net', 
+  database: 'dkxp1krn55tloca'
+};
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
@@ -38,4 +46,15 @@ app.delete('/users/:userID', cors(), function (req, res) {
 })
 
 
-//////////  EXERCISE API CALLS   //////////
+//////////  WORKOUT API CALLS   //////////
+app.get('/workout-plan/generate/:userId&:lengthMin&:targetMuscleGroups', cors(), function (req, res) {
+  var result = workout.generateWorkoutPlan(
+    req.params.userId, 
+    req.params.lengthMin, 
+    req.params.targetMuscleGroups, 
+    dbConfig
+  );
+
+  res.json(result);
+})
+
