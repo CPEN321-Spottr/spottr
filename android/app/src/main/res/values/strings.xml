@@ -14,4 +14,8 @@
     <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>
     <string name="user_credential_store">com.spottr.spottr.usercredstore</string>
 
+    <!-- Strings used by Newsfeed -->
+    <string name="newsfeed_image_content_desc">Profile Picture</string>
+    <string name="get_workout_button_text">Get Your Recommended Workout!</string>
+
 </resources>
