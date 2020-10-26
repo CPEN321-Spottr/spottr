@@ -98,6 +98,7 @@ app.post('/firebaseToken', jsonParser, cors(), async function (req, res){
     res.sendStatus(result);
   }
   catch(ex){
+    console.error(console.trace());
     res.status(constants.INVALID_TOKEN_RESPONSE).send(ex);
   }
 })
