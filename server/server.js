@@ -8,7 +8,7 @@ const token = require('./src/data/tokenData.js');
 const workout = require('./src/service/workoutService.js');
 const firebase = require('./src/service/firebaseService.js');
 const db = require('./src/connection.js');
-const userData = require('./src/data/userData.js');
+const users = require('./src/service/userService.js');
 const constants = require('./src/constants.js');
 
 const {OAuth2Client} = require('google-auth-library');
@@ -78,7 +78,7 @@ app.post('/token', cors(), async function (req, res){
     var possibleUserProfile = await token.getUserByGoogleID(dbConfig, payload['sub']);
     
     if (Object.keys(possibleUserProfile).length === 0) { //checks if returned a user or an empty list
-      var newUser = await token.createUser(dbConfig, payload['sub'], payload['email'], payload['name']);
+      var newUser = users.createNewUser(payload['sub'], payload['email'], payload['name'], dbConfig);
       res.json(newUser)
     } else {
       res.json(possibleUserProfile)
