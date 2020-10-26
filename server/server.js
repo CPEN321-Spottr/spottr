@@ -136,7 +136,7 @@ app.put('/users/:userId/workout-difficulty/increase/:factor&:targetMuscleGroup',
     dbConfig,
     1
   );
-
+  console.log('Response from workout plan generate is: ', result);
   res.sendStatus(result);
   } catch(ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
