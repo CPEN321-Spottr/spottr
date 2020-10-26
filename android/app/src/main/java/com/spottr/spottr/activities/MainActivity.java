@@ -1,9 +1,12 @@
 package com.spottr.spottr.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,6 +43,7 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 public class MainActivity extends AppCompatActivity {
 
     private ImageView imgProfilePic;
+    private Button workoutButton;
     private TextView welcomeBackText;
     private ListView newsfeed;
     private NewsfeedPostAdapter adapter;
@@ -52,6 +56,13 @@ public class MainActivity extends AppCompatActivity {
         ImageView imgProfilePic = (ImageView) findViewById(R.id.profile_pic);
         TextView welcomeBackText = findViewById(R.id.welcome_back_text);
         ListView newsfeed = findViewById(R.id.newsfeed);
+        Button workoutButton = (Button) findViewById(R.id.get_workout_button);
+        workoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, GeneratePlan.class));
+            }
+        });
 
         Bundle extras = getIntent().getExtras();
 

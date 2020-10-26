@@ -5,8 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +16,22 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.spottr.spottr.apis.APIFactory;
+import com.spottr.spottr.apis.WorkoutAPI;
 import com.spottr.spottr.models.Plan;
 import com.spottr.spottr.R;
+import com.spottr.spottr.models.User;
 
-import org.jetbrains.annotations.NonNls;
+import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GeneratePlan extends AppCompatActivity {
 
     ListView listView;
+    User user;
     Plan workoutPlan;
     //temp Values
     String[] names = {"Pushup", "Squat", "Lunge", "Crunch", "Pushup2", "Squat2", "Lunge2", "Crunch2"};
@@ -32,9 +40,35 @@ public class GeneratePlan extends AppCompatActivity {
 
     Button returnButton;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("GENERATE", "In onCreate");
+
+        APIFactory apiFactory = new APIFactory(this);
+
+        WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
+
+        Call<Plan> call = workoutAPI.getRecommendedPlan("6");
+
+        call.enqueue(new Callback<Plan>() {
+            @Override
+            public void onResponse(Call<Plan> call, Response<Plan> response) {
+                if(response.code() == 200) {
+                    Log.d("GENERATE", "Successfully generated a workout");
+                    workoutPlan = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Plan> call, Throwable t) {
+                Log.d("GENERATE", "Workout generation failed");
+            }
+        });
+
+        names = workoutPlan.getRoutineNames();
+        reps = workoutPlan.getRoutineReps();
+        sets = workoutPlan.getRoutineSets();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generate_plan);
         listView = findViewById(R.id.plan_list);
@@ -51,8 +85,6 @@ public class GeneratePlan extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
 
     class Adapter extends ArrayAdapter<String> {
@@ -79,7 +111,7 @@ public class GeneratePlan extends AppCompatActivity {
             TextView exerciseTitle = row.findViewById(R.id.exercise_title);
             TextView repNum = row.findViewById(R.id.reps_num);
             TextView setNum = row.findViewById(R.id.sets_num);
-            ImageView img = row.findViewById(R.id.list_icon);
+            ImageView img = row.findViewById(R.id.message_photo);
 
             exerciseTitle.setText(names[position]);
             repNum.setText(String.valueOf(reps[position]));
