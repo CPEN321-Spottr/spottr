@@ -21,5 +21,29 @@ module.exports = {
             console.log(ex);
             throw ex;
         }
-    }
+    },
+
+    getUsers: function(dbConfig) {
+      try {
+         return sql
+           .connect(dbConfig)
+           .then((pool) => {
+             return pool
+               .request()
+               .query(
+                 "SELECT * FROM user_profile"
+               );
+           })
+           .then((result) => {
+             return result.recordset;
+           })
+     } catch(ex) {
+         console.log(ex);
+         return ex;
+     }
+   },
+   
+   deleteUser: function(userID) {
+      return "Deleting user " + userID;
+   }
 }
