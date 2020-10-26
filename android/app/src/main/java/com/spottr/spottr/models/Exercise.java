@@ -4,38 +4,22 @@ package com.spottr.spottr.models;
  * An exercise represents a single type of fitness activity that can be performed
  */
 public class Exercise {
-    private String id;
-    private String name;
-    private String mGroup;
+    public String exercise_id;
+    public String name;
+    public String description;
+    public Integer major_muscle_group_id;
+    public Integer sets;
+    public Integer reps;
 
     /**
      * Constructor
      */
-    public Exercise(String id, String name, String mGroup) {
-        this.id = id;
+    public Exercise(String exercise_id, String name, String description, Integer sets, Integer reps, Integer major_muscle_group_id) {
+        this.exercise_id = exercise_id;
         this.name = name;
-        this.mGroup = mGroup;
-    }
-
-    /**
-     * Getters
-     */
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {return name;}
-
-    public String getmGroup() {
-        return mGroup;
-    }
-
-    /**
-     * Setters
-     */
-    public void setName(String name) {this.name = name;}
-
-    public void setmGroup(String mGroup) {
-        this.mGroup = mGroup;
+        this.description = description;
+        this.sets = sets;
+        this.reps = reps;
+        this.major_muscle_group_id = major_muscle_group_id;
     }
 }
