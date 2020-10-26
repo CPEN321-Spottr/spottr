@@ -1,11 +1,12 @@
 const express = require('express')
 const app = express()
 var cors = require('cors')
+var bodyParser = require('body-parser')
 const port = process.env.PORT || 3000
 
 const token = require('./src/data/tokenData.js');
 const workout = require('./src/service/workoutService.js');
-const firebase = require('./src/service/firebaseSend.js');
+const firebase = require('./src/service/firebaseService.js');
 const db = require('./src/connection.js');
 const userData = require('./src/data/userData.js');
 const constants = require('./src/constants.js');
@@ -13,6 +14,8 @@ const constants = require('./src/constants.js');
 const {OAuth2Client} = require('google-auth-library');
 
 const CLIENT_ID = '347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com'; //backend client ID - USE THIS
+
+var jsonParser = bodyParser.urlencoded({ extended: true });
 
 var dbConfig = {
   user: 'u0tri2ukfid8bnj',
@@ -78,14 +81,18 @@ app.post('/token', cors(), async function (req, res){
 })
 
 //////// FIREBASE VERIFY API CALLS  ////////
-app.post('/firebaseToken', cors(), async function (req, res){
+
+// A working token for testing: 'fJDLUk0CRrScpTuhnNjBl9:APA91bGKScW3LwUSRrSfNE-GqkcZf51oOZI8dD9TcRKKQRUpg4KL-JhGj1X_lNT7_HxZttVsE1ztE5uiM5CQz2TZL_T-ZpGDFO9I8QSNv5luyGzegf-z8CO8ljs6KVh_PemvKH_Hc2H_'
+app.post('/firebaseToken', jsonParser, cors(), async function (req, res){
   try {
-    var result = firebase.firebaseTokenVerify(req.headers.authorization);
-      //A working token for testing: 'fJDLUk0CRrScpTuhnNjBl9:APA91bGKScW3LwUSRrSfNE-GqkcZf51oOZI8dD9TcRKKQRUpg4KL-JhGj1X_lNT7_HxZttVsE1ztE5uiM5CQz2TZL_T-ZpGDFO9I8QSNv5luyGzegf-z8CO8ljs6KVh_PemvKH_Hc2H_'
-    }
-    catch(ex){
-      res.status(constants.INVALID_TOKEN_RESPONSE).send(ex);
-    }
+    var body = req.body;
+    var result = await firebase.firebaseTokenVerify(req.body['firebase-token']);
+    
+    res.sendStatus(result);
+  }
+  catch(ex){
+    res.status(constants.INVALID_TOKEN_RESPONSE).send(ex);
+  }
 })
 
 //////////  WORKOUT API CALLS   //////////
