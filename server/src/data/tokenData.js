@@ -35,29 +35,5 @@ module.exports = {
             console.log(ex);
             throw ex;
         }
-    },
-
-    createUser: async function(dbConfig, googleID, googleEmail, googleName){
-        try {
-            return sql
-              .connect(dbConfig)
-              .then((pool) => {
-                return pool
-                  .request()
-                  .input("gID", sql.Char(256), googleID)
-                  .input("gEmail", sql.VarChar(50), googleEmail)
-                  .input("gName", sql.VarChar(50), googleName)
-                  .query(
-                    "insert into user_profile (email, google_user_id, name) values (@gEmail, @gID, @gName)"
-                  );
-              })
-              .then((result) => {
-                if (result.recordset.length == 0) throw ('Could not create user with google id: ' + googleID);
-                return result.recordset[0];
-              })
-        } catch(ex) {
-            console.log(ex);
-            throw ex;
-        }
     }
  }
