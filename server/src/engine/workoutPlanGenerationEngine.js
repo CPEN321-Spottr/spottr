@@ -10,7 +10,9 @@ const TIME_ESTIMATE_SHIFT_FACTOR = 0.5;
 module.exports = {
     generateWorkoutPlan: function(lengthMinutes, possibleExercises, multiplier, planId) {
         var workoutPlan = {
-            workout_plan_id: planId
+            workout_plan_id: planId,
+            exercises: [],
+            breaks: []
         };
 
         var adjustedExercises = [];
@@ -44,6 +46,7 @@ module.exports = {
         // Randomly select exercises to meet the target length of workout (+-10% seconds)
         // Only repeats exercises once all of them have been selected once
         var exerciseNum = 0;
+        var breakNum = 0;
         var planIndex = 0;
         var curLenSeconds = 0;
         var minimumLenSeconds = (lengthMinutes * 60) - 45;
@@ -63,22 +66,26 @@ module.exports = {
                 selectedExercise.sets = Math.floor(Math.random() * 2) - 1 + selectedExercise.sets;
 
                 // Update the workout plan
-                workoutPlan[planIndex] = selectedExercise;
+                selectedExercise['workout_order_num'] = planIndex;
+                workoutPlan['exercises'][exerciseNum] = selectedExercise;
                 planIndex++;
                 exerciseNum++;
 
+                // Update the workout plan
                 // Add a rest if there is another exercise next, else add one more set to the last 
                 // exercise to finish workout if theres still time to spare
                 curLenSeconds += selectedExercise['reps_time_sec'] * selectedExercise['sets'];
 
                 if ((curLenSeconds + restTime) < minimumLenSeconds) {
-                    workoutPlan[planIndex] = {
+                    workoutPlan['breaks'][breakNum] = {
                         name: "Rest",
-                        duration_sec: restTime
+                        duration_sec: restTime,
+                        workout_order_num: planIndex
                     };
+                    breakNum++;
                     planIndex++;
                 } else if (curLenSeconds < minimumLenSeconds) {
-                    workoutPlan[planIndex - 1]['sets'] += 1;
+                    workoutPlan['exercises'][exerciseNum - 1]['sets'] += 1;
                 }
 
                 // Update the workout length and the list of remaning unselected exercises

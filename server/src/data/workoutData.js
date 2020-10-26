@@ -79,13 +79,13 @@ module.exports = {
           .then((pool) => {
             var lastPool;
 
-            for (var i = 0; i < workoutPlan['num_exercises'] * 2; i += 2) {
+            for (var i = 0; i < workoutPlan['exercises'].length; i += 2) {
               lastPool = pool
                           .request()
                           .input("wpid", sql.Int, workoutPlan['workout_plan_id'])
-                          .input("eid", sql.Int, workoutPlan[i]['exercise_id'])
-                          .input("nr", sql.Int, workoutPlan[i]['reps'])
-                          .input("ns", sql.Int, workoutPlan[i]['sets'])
+                          .input("eid", sql.Int, workoutPlan['exercises'][i]['exercise_id'])
+                          .input("nr", sql.Int, workoutPlan['exercises'][i]['reps'])
+                          .input("ns", sql.Int, workoutPlan['exercises'][i]['sets'])
                           .query(
                             "INSERT INTO workout_exercise(workout_plan_id, exercise_id, num_reps, num_sets) VALUES (@wpid, @eid, @nr, @ns)"
                           );
