@@ -48,6 +48,7 @@ public class GeneratePlan extends AppCompatActivity {
 
         WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
 
+        //userID 6 was given to
         Call<Plan> call = workoutAPI.getRecommendedPlan("6");
 
         call.enqueue(new Callback<Plan>() {
@@ -59,7 +60,6 @@ public class GeneratePlan extends AppCompatActivity {
                     names = workoutPlan.getRoutineNames();
                     reps = workoutPlan.getRoutineReps();
                     sets = workoutPlan.getRoutineSets();
-
                 }
             }
 
