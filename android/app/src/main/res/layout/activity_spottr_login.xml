@@ -8,13 +8,15 @@
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
-        android:layout_width="231dp"
-        android:layout_height="56dp"
+        android:layout_width="119dp"
+        android:layout_height="57dp"
+        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_logo"
-        app:layout_constraintVertical_bias="0.288" />
+        app:layout_constraintVertical_bias="0.624" />
 
     <ImageView
         android:id="@+id/login_logo"
