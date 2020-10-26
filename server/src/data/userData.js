@@ -42,8 +42,30 @@ module.exports = {
          return ex;
      }
    },
+
+   upsertUserMultiplier: function(userId, newValue, dbConfig) {
+    try {
+      return sql
+        .connect(dbConfig)
+        .then((pool) => {
+            return pool
+              .request()
+              .input("uid", sql.Int, userId)
+              .input("value", sql.Int, newValue)
+              .query(
+                "UPDATE user_profile SET user_multiplier_id = @value OUTPUT Inserted.* WHERE id = @uid"
+              );
+        })
+        .then((result) => {
+          return result.resultset[0];
+        })
+    } catch(ex) {
+        console.log(ex);
+        throw ex;
+    }
+   },
    
-   deleteUser: function(userID) {
-      return "Deleting user " + userID;
+   deleteUser: function(userId) {
+      return "Deleting user " + userId;
    }
 }
