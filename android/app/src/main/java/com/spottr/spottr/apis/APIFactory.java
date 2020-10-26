@@ -3,6 +3,7 @@ package com.spottr.spottr.apis;
 import android.content.Context;
 import android.util.Log;
 
+import com.spottr.spottr.models.Workout;
 import com.spottr.spottr.services.AuthorizationInterceptor;
 
 import okhttp3.OkHttpClient;
@@ -38,6 +39,9 @@ public class APIFactory {
         return retrofit.create(CommunityAPI.class);
     }
 
+    public WorkoutAPI getWorkoutAPI() {
+        return retrofit.create(WorkoutAPI.class);
+    }
     public AdminAPI getAdminAPI() {
         return retrofit.create(AdminAPI.class);
     }
