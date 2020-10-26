@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<Void> call, Throwable t) {
-                                Log.d("TOKEN", "Token registration failed");
+                                Log.d("TOKEN", "Device token registration failed");
                             }
                         });
                     }
@@ -154,6 +154,5 @@ public class MainActivity extends AppCompatActivity {
         Log.d("LIVE", newsfeedPostEvent.newsfeedPost.toString());
         adapter.add(newsfeedPostEvent.newsfeedPost);
         adapter.notifyDataSetChanged();
-        newsfeed.smoothScrollToPosition(adapter.getCount()-1);
     }
 }
