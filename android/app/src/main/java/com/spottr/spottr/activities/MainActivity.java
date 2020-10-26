@@ -28,6 +28,7 @@ import com.spottr.spottr.services.AuthorizationService;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -149,10 +150,10 @@ public class MainActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void handleNewsFeedPostEvent(NewsfeedPostEvent newsfeedPostEvent) {
         Log.d("LIVE", newsfeedPostEvent.newsfeedPost.toString());
-        adapter.add(newsfeedPostEvent.newsfeedPost);
+        adapter.insert(newsfeedPostEvent.newsfeedPost, 0);
         adapter.notifyDataSetChanged();
     }
 }
