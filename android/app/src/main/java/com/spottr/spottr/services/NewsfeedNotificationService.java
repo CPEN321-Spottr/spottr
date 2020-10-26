@@ -10,6 +10,7 @@ import com.spottr.spottr.models.NewsfeedPost;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 import static android.content.ContentValues.TAG;
@@ -47,14 +48,14 @@ public class NewsfeedNotificationService extends FirebaseMessagingService {
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+        Log.d("FIREBASE", "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            Log.d("FIREBASE", "Message data payload: " + remoteMessage.getData());
 
             String name = remoteMessage.getData().getOrDefault("name", "NAME_PLACEHOLDER");
-            Date posted = new Date(Integer.parseInt(remoteMessage.getData().get("posted")));
+            Date posted = new Date(new BigInteger(remoteMessage.getData().get("posted")).longValue());
             Uri profile_img_uri = Uri.parse(remoteMessage.getData().get("profile_img_uri"));
             NewsfeedPost newsfeedPost = new NewsfeedPost(name, posted, profile_img_uri);
 
