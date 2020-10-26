@@ -38,4 +38,8 @@ public class APIFactory {
         return retrofit.create(CommunityAPI.class);
     }
 
+    public AdminAPI getAdminAPI() {
+        return retrofit.create(AdminAPI.class);
+    }
+
 }
