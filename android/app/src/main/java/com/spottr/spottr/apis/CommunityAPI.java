@@ -15,6 +15,9 @@ import retrofit2.http.Path;
 
 public interface CommunityAPI {
 
+    @POST("/token")
+    Call<User> registerToken();
+
     @GET("/users")
     Call<List<User>> getUsers();
 
