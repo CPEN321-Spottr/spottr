@@ -5,5 +5,9 @@ module.exports = {
 
     clone : function (obj) {
         return JSON.parse(JSON.stringify(obj));
+    },
+
+    sleep : function (ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 }

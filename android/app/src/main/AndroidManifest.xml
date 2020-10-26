@@ -8,8 +8,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".activities.WelcomeActivity" />
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <activity android:name=".activities.GeneratePlan" />
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.LoginActivity">

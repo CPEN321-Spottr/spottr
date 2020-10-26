@@ -42,8 +42,54 @@ module.exports = {
          return ex;
      }
    },
+
+   upsertUserMultiplier: function(userId, newMultiplierId, dbConfig) {
+    try {
+      return sql
+        .connect(dbConfig)
+        .then((pool) => {
+            return pool
+              .request()
+              .input("uid", sql.Int, userId)
+              .input("value", sql.Int, newMultiplierId)
+              .query(
+                "UPDATE user_profile SET user_multiplier_id = @value WHERE id = @uid"
+              );
+        })
+        .then((result) => {
+          return 1;
+        })
+    } catch(ex) {
+        console.log(ex);
+        throw ex;
+    }
+   },
+
+   createUser: async function(dbConfig, googleID, googleEmail, googleName){
+    try {
+        return sql
+          .connect(dbConfig)
+          .then((pool) => {
+            return pool
+              .request()
+              .input("gID", sql.Char(256), googleID)
+              .input("gEmail", sql.VarChar(50), googleEmail)
+              .input("gName", sql.VarChar(50), googleName)
+              .query(
+                "insert into user_profile (email, google_user_id, name) OUTPUT Inserted.id values (@gEmail, @gID, @gName)"
+              );
+          })
+          .then((result) => {
+            if (result.recordset.length == 0) throw ('Could not create user with google id: ' + googleID);
+            return result.recordset[0].id;
+          })
+    } catch(ex) {
+        console.log(ex);
+        throw ex;
+    }
+  },
    
-   deleteUser: function(userID) {
-      return "Deleting user " + userID;
+   deleteUser: function(userId) {
+      return "Deleting user " + userId;
    }
 }

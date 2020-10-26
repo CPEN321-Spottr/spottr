@@ -1,17 +1,29 @@
 const express = require('express')
 const app = express()
 var cors = require('cors')
+var bodyParser = require('body-parser')
 const port = process.env.PORT || 3000
 
 const token = require('./src/data/tokenData.js');
 const workout = require('./src/service/workoutService.js');
+const firebase = require('./src/service/firebaseService.js');
 const db = require('./src/connection.js');
-const userData = require('./src/data/userData.js');
+const userService = require('./src/service/userService.js');
 const constants = require('./src/constants.js');
 
 const {OAuth2Client} = require('google-auth-library');
 
 const CLIENT_ID = '347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com'; //backend client ID - USE THIS
+
+var jsonParser = bodyParser.urlencoded({ extended: true });
+
+var serviceAccount = require("./firebaseKey.json");
+var admin = require("firebase-admin");
+        
+var firebaseApp = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "sqlserver://eu-az-sql-serv1.database.windows.net:1433;database=dkxp1krn55tloca"
+});
 
 var dbConfig = {
   user: 'u0tri2ukfid8bnj',
@@ -54,9 +66,6 @@ app.delete('/users/:userID', cors(), function (req, res) { //yet to be implement
   res.json(result)
 })
 
-//////////  EXERCISE API CALLS   //////////
-
-
 //////////  TOKEN VERIFY API CALLS   //////////
 app.post('/token', cors(), async function (req, res){
   const client = new OAuth2Client(CLIENT_ID);
@@ -69,13 +78,36 @@ app.post('/token', cors(), async function (req, res){
     var possibleUserProfile = await token.getUserByGoogleID(dbConfig, payload['sub']);
     
     if (Object.keys(possibleUserProfile).length === 0) { //checks if returned a user or an empty list
-      var newUser = await token.createUser(dbConfig, payload['sub'], payload['email'], payload['name']);
+      var newUser = userService.createNewUser(payload['sub'], payload['email'], payload['name'], dbConfig);
       res.json(newUser)
     } else {
       res.json(possibleUserProfile)
     }
   } catch(ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
+
+//////// FIREBASE VERIFY API CALLS  ////////
+
+// A working token for testing: 'fJDLUk0CRrScpTuhnNjBl9:APA91bGKScW3LwUSRrSfNE-GqkcZf51oOZI8dD9TcRKKQRUpg4KL-JhGj1X_lNT7_HxZttVsE1ztE5uiM5CQz2TZL_T-ZpGDFO9I8QSNv5luyGzegf-z8CO8ljs6KVh_PemvKH_Hc2H_'
+app.post('/firebaseToken', jsonParser, cors(), async function (req, res){
+  try {
+    // Basic error checking
+    if (!('firebase-token' in req.body)) {
+      throw ('Could not find expected "firebase-token" key in request body!');
+    }
+    if (req.body['firebase-token'] == "") {
+      throw ('Found token in body contains no value');
+    }
+
+    var result = await firebase.firebaseTokenVerify(req.body['firebase-token']);
+    
+    res.sendStatus(result);
+  }
+  catch(ex){
+    console.error(console.trace());
+    res.status(constants.INVALID_TOKEN_RESPONSE).send(ex);
   }
 })
 
@@ -126,3 +158,6 @@ app.put('/users/:userId/workout-difficulty/decrease/:factor&:targetMuscleGroup',
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 })
+
+//////////  EXERCISE API CALLS   //////////
+
