@@ -7,25 +7,12 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="profile_pic_content_desc">Profile Picture</string>
-    <string name="verification_confirm">Confirm</string>
-    <string name="verification_applychanges">Apply Changes</string>
 
+    <!-- Profile Verification Strings -->
+    <string name="verification_continue">Continue</string>
 
     <!-- Workout Generation Strings -->
-    <string name="workoutCreation_generate">Generate Plan</string>
-    <string name="workoutCreation_sets">Sets</string>
-    <string name="workoutCreation_repetitions">Repetitions</string>
-    <string name="workoutCreation_exercise1">Exercise 1</string>
-    <string name="workoutCreation_exercise2">Exercise 2</string>
-    <string name="workoutCreation_exercise3">Exercise 3</string>
-    <string name="workoutCreation_exercise4">Exercise 4</string>
-    <string name="workoutCreation_exercise5">Exercise 5</string>
-    <string name="workoutCreation_exercise6">Exercise 6</string>
-    <string name="workoutCreation_exercise7">Exercise 7</string>
-    <string name="workoutCreation_exercise8">Exercise 8</string>
-    <string name="workoutCreation_exercise9">Exercise 9</string>
-    <string name="workoutCreation_exercise10">Exercise 10</string>
-    <string name="workoutCreation_dash">-</string>
+    <string name="workoutCreation_return">Return</string>
 
     <!-- Strings used for Google OAuth -->
     <string name="server_client_id">347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com</string>
