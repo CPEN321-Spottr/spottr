@@ -56,6 +56,10 @@ public class GeneratePlan extends AppCompatActivity {
                 if(response.code() == 200) {
                     Log.d("GENERATE", "Successfully generated a workout");
                     workoutPlan = response.body();
+                    names = workoutPlan.getRoutineNames();
+                    reps = workoutPlan.getRoutineReps();
+                    sets = workoutPlan.getRoutineSets();
+
                 }
             }
 
@@ -65,9 +69,7 @@ public class GeneratePlan extends AppCompatActivity {
             }
         });
 
-        names = workoutPlan.getRoutineNames();
-        reps = workoutPlan.getRoutineReps();
-        sets = workoutPlan.getRoutineSets();
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generate_plan);

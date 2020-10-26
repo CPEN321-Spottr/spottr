@@ -42,5 +42,8 @@ public class APIFactory {
     public WorkoutAPI getWorkoutAPI() {
         return retrofit.create(WorkoutAPI.class);
     }
+    public AdminAPI getAdminAPI() {
+        return retrofit.create(AdminAPI.class);
+    }
 
 }
