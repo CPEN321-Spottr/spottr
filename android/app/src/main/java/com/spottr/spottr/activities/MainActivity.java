@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,9 +18,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.spottr.spottr.R;
 import com.spottr.spottr.apis.APIFactory;
 import com.spottr.spottr.apis.CommunityAPI;
+import com.spottr.spottr.events.NewsfeedPostEvent;
+import com.spottr.spottr.models.NewsfeedPost;
+import com.spottr.spottr.models.NewsfeedPostAdapter;
 import com.spottr.spottr.models.User;
 import com.spottr.spottr.services.AuthorizationService;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -30,13 +40,18 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 public class MainActivity extends AppCompatActivity {
 
     private ImageView imgProfilePic;
-    
+    private TextView welcomeBackText;
+    private ListView newsfeed;
+    private NewsfeedPostAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ImageView imgProfilePic = (ImageView) findViewById(R.id.profile_pic);
+        TextView welcomeBackText = findViewById(R.id.welcome_back_text);
+        ListView newsfeed = findViewById(R.id.newsfeed);
 
         Bundle extras = getIntent().getExtras();
 
@@ -64,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
         CommunityAPI communityAPI = apiFactory.getCommunityAPI();
 
         Call<User> call = communityAPI.registerToken();
-
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -78,5 +92,33 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("TOKEN", "Token registration failed");
             }
         });
+
+        welcomeBackText.setText(account.getDisplayName());
+
+        ArrayList<NewsfeedPost> arrayOfPosts = new ArrayList<NewsfeedPost>();
+
+        adapter = new NewsfeedPostAdapter(this, arrayOfPosts);
+
+        newsfeed.setAdapter(adapter);
+
+        NewsfeedPost testpost = new NewsfeedPost(account.getDisplayName(), Calendar.getInstance().getTime(), account.getPhotoUrl());
+        adapter.add(testpost);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void handleNewsfeedPostEvent(NewsfeedPostEvent newsfeedPostEvent) {
+        adapter.add(newsfeedPostEvent.newsfeedPost);
     }
 }
