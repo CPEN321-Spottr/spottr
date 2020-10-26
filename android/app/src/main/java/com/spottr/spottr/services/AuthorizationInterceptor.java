@@ -62,7 +62,6 @@ public class AuthorizationInterceptor implements Interceptor, Authenticator {
     private void updateToken() {
         SharedPreferences preferences = ctx.getSharedPreferences(ctx.getString(R.string.user_credential_store), Context.MODE_PRIVATE);
         this.token = preferences.getString("oauth_token", "");
-        Log.d("TOKEN", this.token);
     }
 
 }

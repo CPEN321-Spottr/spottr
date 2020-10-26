@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
                 if(response.code() == 200) {
                     Log.d("TOKEN", "Successfully registered token");
                 }
-
-                Log.d("TOKEN", response.toString());
             }
 
             @Override
