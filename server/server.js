@@ -85,7 +85,14 @@ app.post('/token', cors(), async function (req, res){
 // A working token for testing: 'fJDLUk0CRrScpTuhnNjBl9:APA91bGKScW3LwUSRrSfNE-GqkcZf51oOZI8dD9TcRKKQRUpg4KL-JhGj1X_lNT7_HxZttVsE1ztE5uiM5CQz2TZL_T-ZpGDFO9I8QSNv5luyGzegf-z8CO8ljs6KVh_PemvKH_Hc2H_'
 app.post('/firebaseToken', jsonParser, cors(), async function (req, res){
   try {
-    var body = req.body;
+    // Basic error checking
+    if (!('firebase-token' in req.body)) {
+      throw ('Could not find expected "firebase-token" key in request body!');
+    }
+    if (req.body['firebase-token'] == "") {
+      throw ('Found token in body contains no value');
+    }
+
     var result = await firebase.firebaseTokenVerify(req.body['firebase-token']);
     
     res.sendStatus(result);
