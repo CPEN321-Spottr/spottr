@@ -8,7 +8,7 @@
     android:padding="16dp">
 
     <ImageView
-        android:id="@+id/list_icon"
+        android:id="@+id/message_photo"
         android:layout_width="100dp"
         android:layout_height="75dp"
         android:src="@drawable/ic_baseline_directions_run_24" />
