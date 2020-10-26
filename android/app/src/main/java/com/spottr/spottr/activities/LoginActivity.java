@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.spottr_login);
+        setContentView(R.layout.activity_spottr_login);
 
         final GoogleSignInClient mGoogleSignInClient = AuthorizationService.getDefaultSignInClient(this);
 
