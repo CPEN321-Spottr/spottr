@@ -3,13 +3,23 @@ const app = express()
 var cors = require('cors')
 const port = process.env.PORT || 3000
 
-const community = require('./communityAPIFunctions.js');
-const exercise = require('./exerciseAPIFunctions.js');
+const token = require('./src/data/tokenData.js');
 const workout = require('./src/service/workoutService.js');
 const db = require('./src/connection.js');
+const userData = require('./src/data/userData.js');
 const constants = require('./src/constants.js');
 
-const dbConfig = db.getDbConfig();
+const {OAuth2Client} = require('google-auth-library');
+
+const CLIENT_ID = '347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com'; //backend client ID - USE THIS
+
+var dbConfig = {
+  user: 'u0tri2ukfid8bnj',
+  password: 'Udh!v6payG2cTwuVAXvta%0&y',
+  server: 'eu-az-sql-serv1.database.windows.net', 
+  database: 'dkxp1krn55tloca'
+};
+//const dbConfig = db.getDbConfig();
 
 app.listen(port, () => {
   console.log(`Spottr API listening at http://localhost:${port}`)
@@ -20,28 +30,54 @@ app.get('/', cors(), (req, res) => {
   res.json(currentTime)
 })
 
-
 //////////  COMMUNITY API CALLS   //////////
-app.get('/users', cors(), (req, res) => {
-  var result = community.getUsers();
+app.get('/users', cors(), async function (req, res){
+  try{
+    var result = await userData.getUsers(dbConfig)
+    res.send(result);
+  } catch (ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
+
+app.get('/users/:userId', cors(), async function (req, res){
+  try{
+    var result = await userData.getUserByUserId(JSON.parse(req.params.userId), dbConfig);
+    res.json(result);
+  } catch (ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
+
+app.delete('/users/:userID', cors(), function (req, res) { //yet to be implemented
+  var result = userData.deleteUser(req.params.userID);
   res.json(result)
 })
 
-app.get('/users/:userID', cors(), (req, res) => {
-  var result = community.getUser(req.params.userID);
-  res.json(result)
-})
+//////////  EXERCISE API CALLS   //////////
 
-app.post('/users', cors(), function (req, res) {
-  var result = community.createUser(req.body.User.id);
-  res.json(result)
-})
 
-app.delete('/users/:userID', cors(), function (req, res) {
-  var result = community.deleteUser(req.params.userID);
-  res.json(result)
+//////////  TOKEN VERIFY API CALLS   //////////
+app.post('/token', cors(), async function (req, res){
+  const client = new OAuth2Client(CLIENT_ID);
+  try{
+    var payload = await token.verifyToken(client, req.headers.authorization);
+  }catch(ex){
+      res.status(constants.INVALID_TOKEN_RESPONSE).send(ex);
+  }
+  try{
+    var possibleUserProfile = await token.getUserByGoogleID(dbConfig, payload['sub']);
+    
+    if (Object.keys(possibleUserProfile).length === 0) { //checks if returned a user or an empty list
+      var newUser = await token.createUser(dbConfig, payload['sub'], payload['email'], payload['name']);
+      res.json(newUser)
+    } else {
+      res.json(possibleUserProfile)
+    }
+  } catch(ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
 })
-
 
 //////////  WORKOUT API CALLS   //////////
 app.get('/users/:userId/workout-plan/generate/:lengthMinutes&:targetMuscleGroup', cors(), async function (req, res) {
