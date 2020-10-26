@@ -10,11 +10,14 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface CommunityAPI {
 
+    @Headers("Cache-Control: max-age=640000")
     @POST("/token")
     Call<User> registerToken();
 

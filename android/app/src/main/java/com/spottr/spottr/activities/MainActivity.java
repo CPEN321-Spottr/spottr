@@ -1,5 +1,7 @@
 package com.spottr.spottr.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -15,6 +17,7 @@ import com.spottr.spottr.R;
 import com.spottr.spottr.apis.APIFactory;
 import com.spottr.spottr.apis.CommunityAPI;
 import com.spottr.spottr.models.User;
+import com.spottr.spottr.services.AuthorizationService;
 
 import java.util.Objects;
 
@@ -53,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
                 .override(400, 400)
                 .apply(RequestOptions.circleCropTransform())
                 .into(imgProfilePic);
+
+        AuthorizationService.silentSignIn(this);
 
         APIFactory apiFactory = new APIFactory(this);
 

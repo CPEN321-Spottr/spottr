@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         intent.putExtra("account", account);
 
         SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
-        preferences.edit().putString("oauth_token", account.getIdToken());
+        preferences.edit().putString("oauth_token", account.getIdToken()).apply();
 
         startActivity(intent);
     }

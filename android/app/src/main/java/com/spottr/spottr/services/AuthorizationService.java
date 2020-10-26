@@ -44,8 +44,9 @@ public class AuthorizationService  {
             public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
                 if(task.isSuccessful()) {
                     Log.d("LOGIN", "User successfully logged in (silent)");
+                    Log.d("LOGIN", task.getResult().getIdToken());
                     SharedPreferences preferences = ctx.getSharedPreferences(ctx.getString(R.string.user_credential_store), Context.MODE_PRIVATE);
-                    preferences.edit().putString("oauth_token", task.getResult().getIdToken());
+                    preferences.edit().putString("oauth_token", task.getResult().getIdToken()).apply();
                 } else {
                     Log.d("LOGIN", "User login unsuccessful (silent)");
                 }
