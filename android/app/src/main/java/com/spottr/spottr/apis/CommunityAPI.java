@@ -17,10 +17,6 @@ import retrofit2.http.Path;
 
 public interface CommunityAPI {
 
-    @Headers("Cache-Control: max-age=640000")
-    @POST("/token")
-    Call<User> registerToken();
-
     @GET("/users")
     Call<List<User>> getUsers();
 
