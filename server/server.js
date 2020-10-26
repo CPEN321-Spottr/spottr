@@ -13,13 +13,7 @@ const {OAuth2Client} = require('google-auth-library');
 
 const CLIENT_ID = '347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com'; //backend client ID - USE THIS
 
-var dbConfig = {
-  user: 'u0tri2ukfid8bnj',
-  password: 'Udh!v6payG2cTwuVAXvta%0&y',
-  server: 'eu-az-sql-serv1.database.windows.net', 
-  database: 'dkxp1krn55tloca'
-};
-//const dbConfig = db.getDbConfig();
+const dbConfig = db.getDbConfig();
 
 app.listen(port, () => {
   console.log(`Spottr API listening at http://localhost:${port}`)
