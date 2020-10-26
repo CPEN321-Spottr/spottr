@@ -1,6 +1,7 @@
 package com.spottr.spottr.apis;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.spottr.spottr.services.AuthorizationInterceptor;
 
@@ -12,15 +13,18 @@ public class APIFactory {
 
     private final Context ctx;
     private final Retrofit retrofit;
+    private final AuthorizationInterceptor authInterceptor;
+    private final OkHttpClient okHttpClient;
 
     public APIFactory(Context ctx) {
         this.ctx = ctx;
 
-        AuthorizationInterceptor authInterceptor = new AuthorizationInterceptor(this.ctx);
+        authInterceptor = new AuthorizationInterceptor(this.ctx);
 
-        OkHttpClient okHttpClient = new OkHttpClient()
-                .newBuilder()
+        okHttpClient = new OkHttpClient
+                .Builder()
                 .addInterceptor(authInterceptor)
+                .authenticator(authInterceptor)
                 .build();
 
         retrofit = new Retrofit.Builder()
@@ -31,7 +35,7 @@ public class APIFactory {
     }
 
     public CommunityAPI getCommunityAPI() {
-        return this.retrofit.create(CommunityAPI.class);
+        return retrofit.create(CommunityAPI.class);
     }
 
 }

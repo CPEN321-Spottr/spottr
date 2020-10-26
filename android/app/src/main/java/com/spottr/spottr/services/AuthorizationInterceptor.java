@@ -2,6 +2,7 @@ package com.spottr.spottr.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -21,7 +22,7 @@ import okhttp3.Route;
 public class AuthorizationInterceptor implements Interceptor, Authenticator {
 
     private final Context ctx;
-    private String token;
+    public String token;
 
     public AuthorizationInterceptor(Context ctx) {
         this.ctx = ctx;
@@ -32,9 +33,11 @@ public class AuthorizationInterceptor implements Interceptor, Authenticator {
     @Override
     public Response intercept(@NotNull Chain chain) throws IOException {
         Request request = chain.request();
+
         Request newRequest = request.newBuilder()
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
+                .addHeader("Authorization", this.token)
                 .build();
         return chain.proceed(newRequest);
     }
@@ -59,6 +62,7 @@ public class AuthorizationInterceptor implements Interceptor, Authenticator {
     private void updateToken() {
         SharedPreferences preferences = ctx.getSharedPreferences(ctx.getString(R.string.user_credential_store), Context.MODE_PRIVATE);
         this.token = preferences.getString("oauth_token", "");
+        Log.d("TOKEN", this.token);
     }
 
 }
