@@ -61,7 +61,11 @@ app.delete('/users/:userID', cors(), function (req, res) { //yet to be implement
 app.post('/token', cors(), async function (req, res){
   const client = new OAuth2Client(CLIENT_ID);
   try{
-    var payload = await token.verifyToken(client, req.headers.authorization).catch(console.error);
+    var payload = await token.verifyToken(client, req.headers.authorization);
+  }catch(ex){
+      res.status(constants.INVALID_TOKEN_RESPONSE).send(ex);
+  }
+  try{
     var possibleUserProfile = await token.getUserByGoogleID(dbConfig, payload['sub']);
     
     if (Object.keys(possibleUserProfile).length === 0) { //checks if returned a user or an empty list
