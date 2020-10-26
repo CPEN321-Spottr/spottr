@@ -5,6 +5,7 @@ const port = process.env.PORT || 3000
 
 const token = require('./src/data/tokenData.js');
 const workout = require('./src/service/workoutService.js');
+const firebase = require('./src/service/firebaseSend.js');
 const db = require('./src/connection.js');
 const userData = require('./src/data/userData.js');
 const constants = require('./src/constants.js');
@@ -54,9 +55,6 @@ app.delete('/users/:userID', cors(), function (req, res) { //yet to be implement
   res.json(result)
 })
 
-//////////  EXERCISE API CALLS   //////////
-
-
 //////////  TOKEN VERIFY API CALLS   //////////
 app.post('/token', cors(), async function (req, res){
   const client = new OAuth2Client(CLIENT_ID);
@@ -77,6 +75,17 @@ app.post('/token', cors(), async function (req, res){
   } catch(ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
+})
+
+//////// FIREBASE VERIFY API CALLS  ////////
+app.post('/firebaseToken', cors(), async function (req, res){
+  try {
+    var result = firebase.firebaseTokenVerify(req.headers.authorization);
+      //A working token for testing: 'fJDLUk0CRrScpTuhnNjBl9:APA91bGKScW3LwUSRrSfNE-GqkcZf51oOZI8dD9TcRKKQRUpg4KL-JhGj1X_lNT7_HxZttVsE1ztE5uiM5CQz2TZL_T-ZpGDFO9I8QSNv5luyGzegf-z8CO8ljs6KVh_PemvKH_Hc2H_'
+    }
+    catch(ex){
+      res.status(constants.INVALID_TOKEN_RESPONSE).send(ex);
+    }
 })
 
 //////////  WORKOUT API CALLS   //////////
@@ -126,3 +135,6 @@ app.put('/users/:userId/workout-difficulty/decrease/:factor&:targetMuscleGroup',
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 })
+
+//////////  EXERCISE API CALLS   //////////
+
