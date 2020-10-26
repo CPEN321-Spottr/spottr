@@ -1,11 +1,18 @@
 <resources>
     <string name="app_name">Spottr</string>
     <!-- Strings used by sign-in -->
-    <string name="prompt_email">Email</string>
+    <string name="prompt_email">Email: </string>
+    <string name="prompt_name">Name: </string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="profile_pic_content_desc">Profile Picture</string>
+
+    <!-- Profile Verification Strings -->
+    <string name="verification_continue">Continue</string>
+
+    <!-- Workout Generation Strings -->
+    <string name="workoutCreation_return">Return</string>
 
     <!-- Strings used for Google OAuth -->
     <string name="server_client_id">347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com</string>
