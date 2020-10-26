@@ -42,25 +42,37 @@ public class GeneratePlan extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("GENERATE", "In onCreate");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_generate_plan);
 
         APIFactory apiFactory = new APIFactory(this);
 
         WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
 
         //userID 6 was given to
-        Call<Plan> call = workoutAPI.getRecommendedPlan("6");
+        Call<Plan> call = workoutAPI.getRecommendedPlan("6", 45, 1);
+
+        listView = findViewById(R.id.plan_list);
+
+        //creation of adapter
+        final Adapter adapter = new Adapter(GeneratePlan.this, names, reps, sets);
+        listView.setAdapter(adapter);
 
         call.enqueue(new Callback<Plan>() {
             @Override
             public void onResponse(Call<Plan> call, Response<Plan> response) {
                 if(response.code() == 200) {
                     Log.d("GENERATE", "Successfully generated a workout");
+                    Log.d("GENERATE", response.body().toString());
                     workoutPlan = response.body();
-                    names = workoutPlan.getRoutineNames();
-                    reps = workoutPlan.getRoutineReps();
-                    sets = workoutPlan.getRoutineSets();
+                    adapter.names = workoutPlan.getRoutineNames();
+                    adapter.reps = workoutPlan.getRoutineReps();
+                    adapter.sets = workoutPlan.getRoutineSets();
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Log.d("GENERATE", response.toString());
                 }
+
             }
 
             @Override
@@ -68,16 +80,6 @@ public class GeneratePlan extends AppCompatActivity {
                 Log.d("GENERATE", "Workout generation failed");
             }
         });
-
-
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_generate_plan);
-        listView = findViewById(R.id.plan_list);
-
-        //creation of adapter
-        Adapter adapter = new Adapter(this, names, reps, sets);
-        listView.setAdapter(adapter);
 
         //return button
         returnButton = (Button) findViewById(R.id.workoutcreation_returnButton);
