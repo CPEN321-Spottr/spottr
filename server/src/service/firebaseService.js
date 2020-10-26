@@ -2,19 +2,11 @@ const util = require('../util.js');
 const constants = require('../constants.js');
 
 var faker = require('faker');
+var admin = require("firebase-admin");
+
 
 module.exports = {
     firebaseTokenVerify: async function(registrationToken) {
-        //this code follows the tutorial here: https://www.techotopia.com/index.php/Sending_Firebase_Cloud_Messages_from_a_Node.js_Server
-
-        var admin = require("firebase-admin");
-        var serviceAccount = require("../../firebaseKey.json");
-        
-        admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount),
-          databaseURL: "sqlserver://eu-az-sql-serv1.database.windows.net:1433;database=dkxp1krn55tloca"
-        });
-        
         return generateNotificationBatch(admin, registrationToken);
     }
 }

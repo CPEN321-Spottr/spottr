@@ -17,6 +17,14 @@ const CLIENT_ID = '347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleuser
 
 var jsonParser = bodyParser.urlencoded({ extended: true });
 
+var serviceAccount = require("./firebaseKey.json");
+var admin = require("firebase-admin");
+        
+var firebaseApp = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "sqlserver://eu-az-sql-serv1.database.windows.net:1433;database=dkxp1krn55tloca"
+});
+
 var dbConfig = {
   user: 'u0tri2ukfid8bnj',
   password: 'Udh!v6payG2cTwuVAXvta%0&y',
