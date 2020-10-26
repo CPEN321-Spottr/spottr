@@ -1,8 +1,16 @@
 package com.spottr.spottr.services;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
+import com.spottr.spottr.events.NewsfeedPostEvent;
+import com.spottr.spottr.models.NewsfeedPost;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.Date;
 
 import static android.content.ContentValues.TAG;
 
@@ -31,5 +39,34 @@ public class NewsfeedNotificationService extends FirebaseMessagingService {
      */
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
+    }
+
+    @Override
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        // ...
+
+        // TODO(developer): Handle FCM messages here.
+        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
+        Log.d(TAG, "From: " + remoteMessage.getFrom());
+
+        // Check if message contains a data payload.
+        if (remoteMessage.getData().size() > 0) {
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+
+            String name = remoteMessage.getData().getOrDefault("name", "NAME_PLACEHOLDER");
+            Date posted = new Date(Integer.parseInt(remoteMessage.getData().get("posted")));
+            Uri profile_img_uri = Uri.parse(remoteMessage.getData().get("profile_img_uri"));
+            NewsfeedPost newsfeedPost = new NewsfeedPost(name, posted, profile_img_uri);
+
+            EventBus.getDefault().post(new NewsfeedPostEvent(newsfeedPost));
+        }
+
+        // Check if message contains a notification payload.
+        if (remoteMessage.getNotification() != null) {
+            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+        }
+
+        // Also if you intend on generating your own notifications as a result of a received FCM
+        // message, here is where that should be initiated. See sendNotification method below.
     }
 }
