@@ -1,22 +1,24 @@
 package com.spottr.spottr.activities;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.spottr.spottr.R;
 import com.spottr.spottr.apis.APIFactory;
+import com.spottr.spottr.apis.AdminAPI;
 import com.spottr.spottr.apis.CommunityAPI;
 import com.spottr.spottr.events.NewsfeedPostEvent;
 import com.spottr.spottr.models.NewsfeedPost;
@@ -75,10 +77,43 @@ public class MainActivity extends AppCompatActivity {
         AuthorizationService.silentSignIn(this);
 
         APIFactory apiFactory = new APIFactory(this);
+        final AdminAPI adminAPI = apiFactory.getAdminAPI();
 
-        CommunityAPI communityAPI = apiFactory.getCommunityAPI();
+        // Get device token for Firebase notifications
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("FIREBASE", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
 
-        Call<User> call = communityAPI.registerToken();
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        Log.d("FIREBASE", token);
+
+                        Call<Void> firebasetokencall = adminAPI.registerFirebaseDeviceToken(token);
+                        firebasetokencall.enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                if(response.code() == 200) {
+                                    Log.d("TOKEN", "Successfully registered device token");
+                                } else {
+                                    Log.d("TOKEN", response.toString());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                Log.d("TOKEN", "Token registration failed");
+                            }
+                        });
+                    }
+                });
+
+        Call<User> call = adminAPI.registerToken();
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -100,9 +135,6 @@ public class MainActivity extends AppCompatActivity {
         adapter = new NewsfeedPostAdapter(this, arrayOfPosts);
 
         newsfeed.setAdapter(adapter);
-
-        NewsfeedPost testpost = new NewsfeedPost(account.getDisplayName(), Calendar.getInstance().getTime(), account.getPhotoUrl());
-        adapter.add(testpost);
     }
 
     @Override
@@ -113,12 +145,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Subscribe
-    public void handleNewsfeedPostEvent(NewsfeedPostEvent newsfeedPostEvent) {
+    public void handleNewsFeedPostEvent(NewsfeedPostEvent newsfeedPostEvent) {
+        Log.d("LIVE", newsfeedPostEvent.newsfeedPost.toString());
         adapter.add(newsfeedPostEvent.newsfeedPost);
+        adapter.notifyDataSetChanged();
+        newsfeed.smoothScrollToPosition(adapter.getCount()-1);
     }
 }
