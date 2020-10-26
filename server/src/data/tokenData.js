@@ -8,7 +8,7 @@ module.exports = {
         //Verify user token
         const ticket = await client.verifyIdToken({
             idToken: token,
-            audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+            audience: CLIENT_ID,
         });
         const payload = ticket.getPayload(); 
         return payload
@@ -29,30 +29,6 @@ module.exports = {
               .then((result) => {
                 if (result.recordset.length == 0) 
                     return {};
-                return result.recordset[0];
-              })
-        } catch(ex) {
-            console.log(ex);
-            throw ex;
-        }
-    },
-
-    createUser: async function(dbConfig, googleID, googleEmail, googleName){
-        try {
-            return sql
-              .connect(dbConfig)
-              .then((pool) => {
-                return pool
-                  .request()
-                  .input("gID", sql.Char(256), googleID)
-                  .input("gEmail", sql.VarChar(50), googleEmail)
-                  .input("gName", sql.VarChar(50), googleName)
-                  .query(
-                    "insert into user_profile (email, google_user_id, name) values (@gEmail, @gID, @gName)"
-                  );
-              })
-              .then((result) => {
-                if (result.recordset.length == 0) throw ('Could not create user with google id: ' + googleID);
                 return result.recordset[0];
               })
         } catch(ex) {
