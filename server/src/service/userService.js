@@ -10,5 +10,13 @@ module.exports = {
         await userData.upsertUserMultiplier(newUserId, newMultiplierId, dbConfig);
         
         return await userData.getUserByUserId(newUserId, dbConfig);
+    },
+
+    getAllUsers : async function (dbConfig) {
+        return userData.getUsers(dbConfig);
+    },
+
+    getUserById : async function (userId, dbConfig) {
+        return userData.getUserByUserId(userId, dbConfig);
     }
 }
