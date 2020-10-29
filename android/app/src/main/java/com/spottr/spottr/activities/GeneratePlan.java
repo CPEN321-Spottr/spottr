@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,12 +40,30 @@ public class GeneratePlan extends AppCompatActivity {
     int[] sets = {4, 5, 6, 7, 4, 5, 6, 7};
     int[] breaks = {4, 5, 6, 7, 4, 5, 6, 7};
 
-    Button returnButton;
+    Button returnButton, startButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generate_plan);
+
+        //return button
+        returnButton = (Button) findViewById(R.id.workoutcreation_returnButton);
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        //return button
+        startButton = (Button) findViewById(R.id.workoutcreation_startButton);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(GeneratePlan.this, WorkoutActivity.class));
+            }
+        });
 
         APIFactory apiFactory = new APIFactory(this);
 
@@ -83,14 +102,7 @@ public class GeneratePlan extends AppCompatActivity {
             }
         });
 
-        //return button
-        returnButton = (Button) findViewById(R.id.workoutcreation_returnButton);
-        returnButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+
     }
 
     class Adapter extends ArrayAdapter<String> {

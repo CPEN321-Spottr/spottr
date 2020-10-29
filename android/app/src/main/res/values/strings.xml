@@ -24,5 +24,6 @@
     <!-- Strings used by Newsfeed -->
     <string name="newsfeed_image_content_desc">Profile Picture</string>
     <string name="get_workout_button_text">Get Your Recommended Workout!</string>
+    <string name="workoutCreation_start">Start</string>
 
 </resources>
