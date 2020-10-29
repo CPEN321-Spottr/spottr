@@ -39,7 +39,7 @@ module.exports = {
         }
 
         // Calculate the time in between different exercises based upon the multiplier
-        var restTime = STD_REST_TIME_SEC * ((1 - multiplier) + 1);
+        var restTime = Math.round(STD_REST_TIME_SEC * ((1 - multiplier) + 1));
         restTime = restTime < MIN_REST_SEC ? MIN_REST_SEC : restTime;
         restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
 
@@ -79,6 +79,7 @@ module.exports = {
                 if ((curLenSeconds + restTime) < minimumLenSeconds) {
                     workoutPlan['breaks'][breakNum] = {
                         name: "Rest",
+                        exercise_id: "20",
                         duration_sec: restTime,
                         workout_order_num: planIndex
                     };
@@ -98,9 +99,9 @@ module.exports = {
         }
 
         // Finalization steps
-        workoutPlan['estimated_time_mins'] = util.roundToTwo(curLenSeconds / 60);
-        workoutPlan['num_exercises'] = exerciseNum;
-        workoutPlan['num_parts'] = planIndex;
+        workoutPlan['est_length_sec'] = curLenSeconds;
+        workoutPlan['associated_multiplier'] = multiplier;
+        workoutPlan['spottr_points'] = 0;    // TODO: need to implement calculation
 
         return workoutPlan;
     }

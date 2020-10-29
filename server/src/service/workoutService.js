@@ -13,7 +13,7 @@ module.exports = {
         const user = await userData.getUserByUserId(userId, dbConfig);
         const userMultiplier = await data.getUserMultiplier(targetMuscleGroup, user.user_multiplier_id, dbConfig);
         const possibleExercises = await data.getExercisesByTargetMuscleGroups(targetMuscleGroup, dbConfig);
-        const workoutPlanId = await data.createWorkoutPlanEntry(userId, dbConfig);
+        const workoutPlanId = await data.createWorkoutPlanEntry(dbConfig);
 
         var workoutPlan = generator.generateWorkoutPlan(
             lengthMinutes, 
@@ -22,6 +22,14 @@ module.exports = {
             workoutPlanId
         );
 
+        data.updateWorkoutPlan(
+            workoutPlan['workout_plan_id'],
+            workoutPlan['est_length_sec'],
+            targetMuscleGroup,
+            workoutPlan['associated_multiplier'],
+            workoutPlan['spottr_points'],
+            dbConfig
+        );
         data.createWorkoutExerciseEntries(workoutPlan, dbConfig);
 
         return workoutPlan;
@@ -37,8 +45,12 @@ module.exports = {
         userMultiplier += (MULTIPLIER_STEPS * changeFactor);
         if (userMultiplier < MIN_MULTIPLIER) userMultiplier = MIN_MULTIPLIER;
 
-        await data.upsertNewMultiplier(targetMuscleGroup, userMultiplier, user.user_multiplier_id, dbConfig);
+        await data.updateUserMultiplier(targetMuscleGroup, userMultiplier, user.user_multiplier_id, dbConfig);
         
         return constants.SUCCESS_RESPONSE;
+    },
+
+    completeWorkout: async function (userId, lengthOfWorkoutSec, workoutPlanId, dbConfig) {
+        // TODO
     }
 }

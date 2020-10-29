@@ -51,16 +51,15 @@ module.exports = {
         }
     },
 
-    createWorkoutPlanEntry: function(userId, dbConfig) {
+    createWorkoutPlanEntry: function(dbConfig) {
         try {
             return sql
               .connect(dbConfig)
               .then((pool) => {
                 return pool
                   .request()
-                  .input("userId", sql.Int, userId)
                   .query(
-                    "INSERT INTO workout_plan(user_profile_id) OUTPUT Inserted.id VALUES (@userId)"
+                    "INSERT INTO workout_plan OUTPUT Inserted.id DEFAULT VALUES"
                   );
               })
               .then((result) => {
@@ -79,16 +78,29 @@ module.exports = {
           .then((pool) => {
             var lastPool;
 
-            for (var i = 0; i < workoutPlan['exercises'].length; i += 2) {
-              lastPool = pool
+            for (var i = 0; i < workoutPlan['exercises'].length; i += 1) {
+                lastPool = pool
                           .request()
                           .input("wpid", sql.Int, workoutPlan['workout_plan_id'])
                           .input("eid", sql.Int, workoutPlan['exercises'][i]['exercise_id'])
                           .input("nr", sql.Int, workoutPlan['exercises'][i]['reps'])
                           .input("ns", sql.Int, workoutPlan['exercises'][i]['sets'])
+                          .input("won", sql.Int, workoutPlan['exercises'][i]['workout_order_num'])
                           .query(
-                            "INSERT INTO workout_exercise(workout_plan_id, exercise_id, num_reps, num_sets) VALUES (@wpid, @eid, @nr, @ns)"
+                            "INSERT INTO workout_exercise(workout_plan_id, exercise_id, num_reps, num_sets, workout_order_num) VALUES (@wpid, @eid, @nr, @ns, @won)"
                           );
+
+                if (i < workoutPlan['breaks'].length) {
+                  lastPool = pool
+                          .request()
+                          .input("wpid", sql.Int, workoutPlan['workout_plan_id'])
+                          .input("eid", sql.Int, workoutPlan['breaks'][i]['exercise_id'])
+                          .input("len", sql.Int, workoutPlan['breaks'][i]['duration_sec'])
+                          .input("won", sql.Int, workoutPlan['breaks'][i]['workout_order_num'])
+                          .query(
+                            "INSERT INTO workout_exercise(workout_plan_id, exercise_id, num_reps, num_sets, workout_order_num) VALUES (@wpid, @eid, @len, 1, @won)"
+                          );
+                }
             }
 
             return lastPool;
@@ -102,7 +114,7 @@ module.exports = {
       }
   },
 
-  upsertNewMultiplier : function(targetMuscleGroup, newMultiplier, userMultiplierId, dbConfig) {
+  updateUserMultiplier : function(targetMuscleGroup, newMultiplier, userMultiplierId, dbConfig) {
     try {
       return sql
         .connect(dbConfig)
@@ -120,6 +132,31 @@ module.exports = {
           } else {
               throw 'Invalid requested targetMuscleGroup value! Only muscleGroupId 1 is being handled!';
           }
+        })
+        .then((result) => {
+          return result;
+        })
+    } catch(ex) {
+        console.log(ex);
+        throw ex;
+    }
+  },
+
+  updateWorkoutPlan : function(workoutPlanId, estLenSec, majorMuscleGroupId, associatedMultiplier, spottrPoints, dbConfig) {
+    try {
+      return sql
+        .connect(dbConfig)
+        .then((pool) => {
+          return pool
+              .request()
+              .input("wpid", sql.Int, workoutPlanId)
+              .input("esl", sql.Int, estLenSec)
+              .input("mmgpi", sql.Int, majorMuscleGroupId)
+              .input("sp", sql.Int, spottrPoints)
+              .input("am", sql.Decimal(4,3), associatedMultiplier)
+              .query(
+                "UPDATE workout_plan SET est_length_sec = @esl, major_muscle_group_id = @mmgpi, associated_multiplier = @am, spottr_points = @sp WHERE id = @wpid"
+            );
         })
         .then((result) => {
           return result;
