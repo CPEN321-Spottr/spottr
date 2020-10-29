@@ -8,6 +8,11 @@ var admin = require("firebase-admin");
 module.exports = {
     firebaseTokenVerify: async function(registrationToken) {
         return generateNotificationBatch(admin, registrationToken);
+    },
+
+    sendWorkoutToFirebase: async function(workoutHistory) {
+        throw 'NOT IMPLEMENTED YET';
+        // TODO: need to still implement!
     }
 }
 

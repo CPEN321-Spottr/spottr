@@ -65,6 +65,28 @@ module.exports = {
     }
    },
 
+   updateUserSpottrPoints: function(userId, newAmount, dbConfig) {
+    try {
+      return sql
+        .connect(dbConfig)
+        .then((pool) => {
+            return pool
+              .request()
+              .input("uid", sql.Int, userId)
+              .input("value", sql.Int, newAmount)
+              .query(
+                "UPDATE user_profile SET spottr_points = @value WHERE id = @uid"
+              );
+        })
+        .then((result) => {
+          return 1;
+        })
+    } catch(ex) {
+        console.log(ex);
+        throw ex;
+    }
+   },
+
    createUser: async function(dbConfig, googleID, googleEmail, googleName){
     try {
         return sql
@@ -83,11 +105,11 @@ module.exports = {
             if (result.recordset.length == 0) throw ('Could not create user with google id: ' + googleID);
             return result.recordset[0].id;
           })
-    } catch(ex) {
-        console.log(ex);
-        throw ex;
-    }
-  },
+      } catch(ex) {
+          console.log(ex);
+          throw ex;
+      }
+    },
    
    deleteUser: function(userId) {
       return "Deleting user " + userId;

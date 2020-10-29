@@ -115,6 +115,10 @@ const MIN_POINTS = 25;
 const MULTIPLIER_SHIFT_FACTOR = 0.9;
 
 function calculateSpottrPoints(estimatedLengthSeconds, multiplier) {
+    // Calculation is based upon both the workout's multiplier and the estimated length in seconds. We use the
+    // MULTIPLIER_SHIFT_FACTOR to further extenuate the difference in points for harder vs. easier workouts.
+    //
+    // Harder workouts == more Spottr Points
     if (multiplier <= 1) {
         return Math.max(
             MIN_POINTS, 

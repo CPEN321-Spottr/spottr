@@ -51,6 +51,76 @@ module.exports = {
         }
     },
 
+    getWorkoutPlanById: function(workoutPlanId, dbConfig) {
+      try {
+        return sql
+          .connect(dbConfig)
+          .then((pool) => {
+            return pool
+              .request()
+              .input("wpid", sql.Int, workoutPlanId)
+              .query(
+                "SELECT * FROM workout_plan WHERE id = @wpid"
+              );
+          })
+          .then((result) => {
+            if (result.recordset.length == 0) throw ('No workout plan found for given workout plan id: ' + workoutPlanId);
+            return result.recordset[0];
+          })
+      } catch(ex) {
+          console.log(ex);
+          throw ex;
+      }
+    },
+
+    getWorkoutHistoryById: function(workoutHistoryId, dbConfig) {
+      try {
+        return sql
+          .connect(dbConfig)
+          .then((pool) => {
+            return pool
+              .request()
+              .input("whid", sql.Int, workoutHistoryId)
+              .query(
+                "SELECT * FROM workout_history WHERE id = @whid"
+              );
+          })
+          .then((result) => {
+            if (result.recordset.length == 0) throw ('No workout history found for given workout history id: ' + workoutHistoryId);
+            return result.recordset[0];
+          })
+      } catch(ex) {
+          console.log(ex);
+          throw ex;
+      }
+    },
+
+    createWorkoutHistoryEntry: function(workoutPlan, lengthOfWorkoutSec, userId, dbConfig) {
+      try {
+          return sql
+            .connect(dbConfig)
+            .then((pool) => {
+              return pool
+                .request()
+                .input("upid", sql.Int, userId)
+                .input("wpid", sql.Int, workoutPlan['id'])
+                .input("als", sql.Int, lengthOfWorkoutSec)
+                .input("mmgid", sql.Int, workoutPlan['major_muscle_group_id'])
+                .input("sp", sql.Int, workoutPlan['spottr_points'])
+                .input("dtu", sql.DateTime, new Date().toLocaleString())
+                .query(
+                  "INSERT INTO workout_history(user_profile_id, workout_plan_id, actual_length_sec, major_muscle_group_id, spottr_points, date_time_utc) OUTPUT Inserted.id VALUES (@upid, @wpid, @als, @mmgid, @sp, @dtu)"
+                );
+            })
+            .then((result) => {
+              return result.recordset[0]['id'];
+            })
+      } catch(ex) {
+          console.log(ex);
+          throw ex;
+      }
+  },
+
     createWorkoutPlanEntry: function(dbConfig) {
         try {
             return sql
