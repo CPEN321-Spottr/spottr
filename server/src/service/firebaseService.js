@@ -3,11 +3,39 @@ const constants = require('../constants.js');
 
 var faker = require('faker');
 var admin = require("firebase-admin");
+const workoutData = require('../data/workoutData.js');
 
 
 module.exports = {
     firebaseTokenVerify: async function(registrationToken) {
         return generateNotificationBatch(admin, registrationToken);
+    },
+
+    sendWorkoutToFirebase: async function(workoutHistory, userName) {
+      // TODO: Need to figure this out still
+
+      // var payload = {
+      //   data: {
+      //     profile_img_uri: faker.image.imageUrl(),
+      //     name: userName,
+      //     posted: new Date(workoutHistory.date_time_utc).toDateString(),
+      //     workoutHistory: workoutHistory
+      //   }
+      // };
+    
+      // var options = {
+      //   priority: "high",
+      //   timeToLive: 60 * 60 * 24
+      // };
+      
+      // // send message
+      // admin.messaging().sendToDevice(registrationToken, payload, options)
+      //   .then(function(response) { })
+      //   .catch(function(error) {
+      //     console.log("Error sending message:", error);
+      //   });
+
+      // return 1;
     }
 }
 
