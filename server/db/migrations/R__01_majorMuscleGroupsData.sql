@@ -4,4 +4,5 @@
 
 INSERT INTO major_muscle_group(name)
     VALUES
-        ('Arms');
+        ('Arms'),
+        ('Rest');

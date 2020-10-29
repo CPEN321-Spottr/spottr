@@ -11,7 +11,31 @@ const connectionData = {
 // the "const dbConfig" line in server.js as specified in the Google Doc file
 module.exports = {
     getDbConfig : function () {
-        if (connectionData.length == 0) throw 'Invalid connection data!';
+        if (connectionData[0] === undefined) {
+            console.log("RESORTING TO DEFAULT DB CONNECTION...\n");
+
+            return {
+                user: 'u0tri2ukfid8bnj',
+                password: 'Udh!v6payG2cTwuVAXvta%0&y',
+                server: 'eu-az-sql-serv1.database.windows.net', 
+                database: 'dkxp1krn55tloca'
+              };
+        };
         return util.clone(connectionData);
+    },
+
+    initializeFirebaseApp : function (admin) {
+        var serviceAccount = require("../firebaseKey.json");
+        var admin = require("firebase-admin");
+
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount),
+            databaseURL: "sqlserver://eu-az-sql-serv1.database.windows.net:1433;database=dkxp1krn55tloca"
+        });
+    },
+
+    getGoogleAuthClientID : function () {
+        // backend client ID - USE THIS
+        return '347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com';
     }
 }
