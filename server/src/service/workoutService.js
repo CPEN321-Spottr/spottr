@@ -3,6 +3,7 @@ const data = require('../data/workoutData.js');
 const userData = require('../data/userData.js');
 const firebaseService = require('./firebaseService.js');
 const constants = require('../constants.js');
+const util = require('../util.js');
 
 const MULTIPLIER_STEPS = 0.025;
 const MIN_MULTIPLIER = 0.2;
@@ -59,12 +60,12 @@ module.exports = {
         const workoutHistoryId = await data.createWorkoutHistoryEntry(workoutPlan, lengthOfWorkoutSec, userId, dbConfig);
         const workoutHistory = await data.getWorkoutHistoryById(workoutHistoryId, dbConfig);
 
-        // Send message to Firebase so other user's are notified in real-time
-        firebaseService.sendWorkoutToFirebase(workoutHistory);                      // TODO: NEED TO IMPLEMENT STILL
-
         // Increment the user's Spottr Points
         const user = await userData.getUserByUserId(userId, dbConfig);
         userData.updateUserSpottrPoints(userId, user.spottr_points + workoutPlan.spottr_points, dbConfig);
+
+        // Send message to Firebase so other user's are notified in real-time
+        firebaseService.sendWorkoutToFirebase(workoutHistory, user.name);
 
         // Adjust user's multiplier (if they were reasonably off the estimated workout time)
         var percentageDifference = lengthOfWorkoutSec / workoutPlan.est_length_sec;
@@ -73,12 +74,12 @@ module.exports = {
             
             // Only trigger change if the workout they were doing was set at their level (ie not from "one upping" someone)
             if (userMultiplier == workoutPlan.associated_multiplier) {
-                await data.updateUserMultiplier(
-                workoutPlan.major_muscle_group_id, 
-                calculateNewMultiplier(lengthOfWorkoutSec, workoutPlan.est_length_sec, userMultiplier), 
-                user.user_multiplier_id, 
-                dbConfig
-            );
+                data.updateUserMultiplier(
+                    workoutPlan.major_muscle_group_id, 
+                    calculateNewMultiplier(percentageDifference, userMultiplier), 
+                    user.user_multiplier_id, 
+                    dbConfig
+                );
             }
         }
 
@@ -87,11 +88,25 @@ module.exports = {
 }
 
 
+const DIFF_MULTIPLICATION_FACTOR = 0.33;
+const MAX_SINGLE_CHANGE_PERCENT = 0.15;
+
 // Either increases or decreases a user's multiplier depending on the amount of time they took to 
-// complete a workout vs the estimated time for their current multiplier
-function calculateNewMultiplier(actualLengthSeconds, estLengthSeconds, currentMultiplier) {
-    //
-    // TODO: NEED TO IMPLEMENT STILL
-    //
-    return currentMultiplier;
+// complete a workout vs the estimated time for their current multiplier.
+//
+// The percentageDifference is "actual time / estimated time". This means percentageDifference > 1
+// implies that the workout was too hard and the multiplier needs to be decreased.
+//
+// This can be made more complex in the future if it is required to enhance user experience.
+function calculateNewMultiplier(percentageDifference, currentMultiplier) {
+    var changeFactor = (percentageDifference - 1) * -1 * DIFF_MULTIPLICATION_FACTOR;
+    
+    var changeValue;
+    if (changeFactor < 0) {
+        changeValue = Math.max(-changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
+    } else {
+        changeValue = Math.min(changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
+    }
+    
+    return util.roundToThree(currentMultiplier + changeValue);
 }
