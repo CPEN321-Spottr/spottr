@@ -28,17 +28,13 @@ module.exports = {
     },
 
     // Changes a user's multiplier for a given muscle group by a given factor
-    modifyWorkoutDifficulty: async function (userId, targetMuscleGroup, changeFactor, dbConfig, shouldIncrease) {
+    modifyWorkoutDifficulty: async function (userId, targetMuscleGroup, changeFactor, dbConfig) {
         // Collect current multiplier
         const user = await userData.getUserByUserId(userId, dbConfig);
         var userMultiplier = await data.getUserMultiplier(targetMuscleGroup, user.user_multiplier_id, dbConfig);
 
         // Generate new multiplier, upsert data, return success response
-        if (shouldIncrease) {
-            userMultiplier += (MULTIPLIER_STEPS * changeFactor);
-        } else {
-            userMultiplier -= (MULTIPLIER_STEPS * changeFactor);
-        }
+        userMultiplier += (MULTIPLIER_STEPS * changeFactor);
         if (userMultiplier < MIN_MULTIPLIER) userMultiplier = MIN_MULTIPLIER;
 
         await data.upsertNewMultiplier(targetMuscleGroup, userMultiplier, user.user_multiplier_id, dbConfig);

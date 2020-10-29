@@ -1,52 +1,39 @@
 const express = require('express')
 const app = express()
-var cors = require('cors')
-var bodyParser = require('body-parser')
+const cors = require('cors')
+const bodyParser = require('body-parser')
 const port = process.env.PORT || 3000
 
-const token = require('./src/data/tokenData.js');
-const workout = require('./src/service/workoutService.js');
-const firebase = require('./src/service/firebaseService.js');
-const db = require('./src/connection.js');
+const workoutService = require('./src/service/workoutService.js');
+const firebaseService = require('./src/service/firebaseService.js');
 const userService = require('./src/service/userService.js');
+const authService = require('./src/service/authService.js');
+const connection = require('./src/connection.js');
 const constants = require('./src/constants.js');
 
 const {OAuth2Client} = require('google-auth-library');
+const token = require('./src/data/tokenData.js');
 
-const CLIENT_ID = '347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com'; //backend client ID - USE THIS
+const jsonParser = bodyParser.urlencoded({ extended: true });
+var CLIENT_ID = connection.getGoogleAuthClientID();
+var dbConfig = connection.getDbConfig();
 
-var jsonParser = bodyParser.urlencoded({ extended: true });
+connection.initializeFirebaseApp();
 
-var serviceAccount = require("./firebaseKey.json");
-var admin = require("firebase-admin");
-        
-var firebaseApp = admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "sqlserver://eu-az-sql-serv1.database.windows.net:1433;database=dkxp1krn55tloca"
-});
+app.listen(port, () => { console.log(`Spottr API listening at http://localhost:${port}`) })
 
-var dbConfig = {
-  user: 'u0tri2ukfid8bnj',
-  password: 'Udh!v6payG2cTwuVAXvta%0&y',
-  server: 'eu-az-sql-serv1.database.windows.net', 
-  database: 'dkxp1krn55tloca'
-};
-//const dbConfig = db.getDbConfig();
+app.get('/', cors(), (req, res) => { res.json(new Date()) })
 
-app.listen(port, () => {
-  console.log(`Spottr API listening at http://localhost:${port}`)
-})
 
-app.get('/', cors(), (req, res) => {
-  var currentTime = new Date();
-  res.json(currentTime)
-})
-
+//////////                        //////////
 //////////  COMMUNITY API CALLS   //////////
+//////////                        //////////
+
 app.get('/users', cors(), async function (req, res){
   try{
-    var result = await userData.getUsers(dbConfig)
-    res.send(result);
+    res.send(
+      await userService.getAllUsers(dbConfig)
+    );
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
@@ -54,20 +41,27 @@ app.get('/users', cors(), async function (req, res){
 
 app.get('/users/:userId', cors(), async function (req, res){
   try{
-    var result = await userData.getUserByUserId(JSON.parse(req.params.userId), dbConfig);
-    res.json(result);
+    res.json(
+      await userService.getUserById(JSON.parse(req.params.userId), dbConfig)
+    );
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 })
 
-app.delete('/users/:userID', cors(), function (req, res) { //yet to be implemented
-  var result = userData.deleteUser(req.params.userID);
-  res.json(result)
+app.delete('/users/:userID', cors(), function (req, res) { // TODO: not yet implemented!
+  res.sendStatus(constants.ERROR_RESPONSE);
 })
 
+
+//////////                           //////////
 //////////  TOKEN VERIFY API CALLS   //////////
+//////////                           //////////
+
 app.post('/token', cors(), async function (req, res){
+
+  // TODO: There is too much logic here. This should be refactored and placed in the authService.js file
+  
   const client = new OAuth2Client(CLIENT_ID);
   try{
     var payload = await token.verifyToken(client, req.headers.authorization);
@@ -88,7 +82,10 @@ app.post('/token', cors(), async function (req, res){
   }
 })
 
+
+////////                            ////////
 //////// FIREBASE VERIFY API CALLS  ////////
+////////                            ////////
 
 // A working token for testing: 'fJDLUk0CRrScpTuhnNjBl9:APA91bGKScW3LwUSRrSfNE-GqkcZf51oOZI8dD9TcRKKQRUpg4KL-JhGj1X_lNT7_HxZttVsE1ztE5uiM5CQz2TZL_T-ZpGDFO9I8QSNv5luyGzegf-z8CO8ljs6KVh_PemvKH_Hc2H_'
 app.post('/firebaseToken', jsonParser, cors(), async function (req, res){
@@ -101,9 +98,9 @@ app.post('/firebaseToken', jsonParser, cors(), async function (req, res){
       throw ('Found token in body contains no value');
     }
 
-    var result = await firebase.firebaseTokenVerify(req.body['firebase-token']);
-    
-    res.sendStatus(result);
+    res.sendStatus(
+      await firebaseService.firebaseTokenVerify(req.body['firebase-token'])
+    );
   }
   catch(ex){
     console.error(console.trace());
@@ -111,53 +108,48 @@ app.post('/firebaseToken', jsonParser, cors(), async function (req, res){
   }
 })
 
+
+//////////                      //////////
 //////////  WORKOUT API CALLS   //////////
-app.get('/users/:userId/workout-plan/generate/:lengthMinutes&:targetMuscleGroup', cors(), async function (req, res) {
+//////////                      //////////
+
+app.get('/users/:userId/workout/generate-plan/:lengthMinutes&:targetMuscleGroup', cors(), async function (req, res) {
   try {
-    var result = await workout.generateWorkoutPlan(
+    res.json(await workoutService.generateWorkoutPlan(
         JSON.parse(req.params.userId), 
         JSON.parse(req.params.lengthMinutes), 
         JSON.parse(req.params.targetMuscleGroup), 
         dbConfig
-      );
-
-      res.json(result);
+    ));
   } catch(ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 })
 
-app.put('/users/:userId/workout-difficulty/increase/:factor&:targetMuscleGroup', cors(), async function (req, res) {
+app.put('/users/:userId/workout/change-difficulty/:factor&:targetMuscleGroup', cors(), async function (req, res) {
   try {
-    var result = await workout.modifyWorkoutDifficulty(
-    JSON.parse(req.params.userId),
-    JSON.parse(req.params.targetMuscleGroup),
-    JSON.parse(req.params.factor),
-    dbConfig,
-    1
-  );
-  console.log('Response from workout plan generate is: ', result);
-  res.sendStatus(result);
+    res.sendStatus(await workoutService.modifyWorkoutDifficulty(
+      JSON.parse(req.params.userId),
+      JSON.parse(req.params.targetMuscleGroup),
+      JSON.parse(req.params.factor),
+      dbConfig
+    ));
   } catch(ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 })
 
-app.put('/users/:userId/workout-difficulty/decrease/:factor&:targetMuscleGroup', cors(), async function (req, res) {
+app.post('/users/:userId/workout/complete/:lengthOfWorkoutSeconds&:workoutPlanId', cors(), async function (req, res) {
   try {
-    var result = await workout.modifyWorkoutDifficulty(
-    JSON.parse(req.params.userId),
-    JSON.parse(req.params.targetMuscleGroup),
-    JSON.parse(req.params.factor),
-    dbConfig,
-    0
-  );
+    await workoutService.completeWorkout(
+      JSON.parse(req.params.userId),
+      JSON.parse(req.params.lengthOfWorkoutSeconds),
+      JSON.parse(req.params.workoutPlanId),
+      dbConfig
+    );
 
-  res.sendStatus(result);
+    res.sendStatus(constants.SUCCESS_RESPONSE);
   } catch(ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 })
-
-//////////  EXERCISE API CALLS   //////////
-
