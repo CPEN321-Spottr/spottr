@@ -34,7 +34,7 @@ module.exports = {
                                                             * (((1 - multiplier) * TIME_ESTIMATE_SHIFT_FACTOR) + multiplier)));
             } else {
                 // Greater than 1 multipliers est time scales linearly
-                adjustedExercises[i]['reps_time_sec'] = util.clone(util.roundToTwo(possibleExercises[i]['std_reps_time_sec'] * (multiplier + 1)));
+                adjustedExercises[i]['reps_time_sec'] = util.clone(util.roundToTwo(possibleExercises[i]['std_reps_time_sec'] * multiplier));
             }
         }
 
@@ -101,10 +101,29 @@ module.exports = {
         }
 
         // Finalization steps
-        workoutPlan['est_length_sec'] = curLenSeconds;
+        workoutPlan['est_length_sec'] = Math.round(curLenSeconds);
         workoutPlan['associated_multiplier'] = multiplier;
-        workoutPlan['spottr_points'] = 0;    // TODO: need to implement calculation
+        workoutPlan['spottr_points'] = calculateSpottrPoints(curLenSeconds, multiplier);
 
         return workoutPlan;
+    }
+}
+
+const SEC_INCR = 20;
+const POINT_PER_NORMALIZED_INCR = 5;
+const MIN_POINTS = 25;
+const MULTIPLIER_SHIFT_FACTOR = 0.9;
+
+function calculateSpottrPoints(estimatedLengthSeconds, multiplier) {
+    if (multiplier <= 1) {
+        return Math.max(
+            MIN_POINTS, 
+            Math.round(estimatedLengthSeconds * multiplier * MULTIPLIER_SHIFT_FACTOR / SEC_INCR) * POINT_PER_NORMALIZED_INCR
+        );
+    } else {
+        return Math.max(
+            MIN_POINTS, 
+            Math.round(estimatedLengthSeconds * multiplier * (1 / MULTIPLIER_SHIFT_FACTOR) / SEC_INCR) * POINT_PER_NORMALIZED_INCR
+        );
     }
 }
