@@ -67,4 +67,16 @@ public class Plan {
         }
         return ret;
     }
+
+    public int[] getRoutineBreaks() {
+        ArrayList<Integer> retList = new ArrayList<Integer>();
+        for (Exercise exercise : exercises) {
+            retList.add(exercise.breaks);
+        }
+        int[] ret = new int[retList.size()];
+        for (int i = 0; i < retList.size(); i++) {
+            ret[i] = retList.get(i).intValue();
+        }
+        return ret;
+    }
 }

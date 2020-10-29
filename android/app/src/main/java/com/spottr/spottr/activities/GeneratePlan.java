@@ -37,6 +37,7 @@ public class GeneratePlan extends AppCompatActivity {
     String[] names = {"Pushup", "Squat", "Lunge", "Crunch", "Pushup2", "Squat2", "Lunge2", "Crunch2"};
     int[] reps = {10, 10, 10, 10, 10, 10, 10, 10};
     int[] sets = {4, 5, 6, 7, 4, 5, 6, 7};
+    int[] breaks = {4, 5, 6, 7, 4, 5, 6, 7};
 
     Button returnButton;
 
@@ -55,7 +56,7 @@ public class GeneratePlan extends AppCompatActivity {
         listView = findViewById(R.id.plan_list);
 
         //creation of adapter
-        final Adapter adapter = new Adapter(GeneratePlan.this, names, reps, sets);
+        final Adapter adapter = new Adapter(GeneratePlan.this, names, reps, sets, breaks);
         listView.setAdapter(adapter);
 
         call.enqueue(new Callback<Plan>() {
@@ -68,6 +69,7 @@ public class GeneratePlan extends AppCompatActivity {
                     adapter.names = workoutPlan.getRoutineNames();
                     adapter.reps = workoutPlan.getRoutineReps();
                     adapter.sets = workoutPlan.getRoutineSets();
+                    adapter.breaks = workoutPlan.getRoutineBreaks();
                     adapter.notifyDataSetChanged();
                 } else {
                     Log.d("GENERATE", response.toString());
@@ -97,13 +99,15 @@ public class GeneratePlan extends AppCompatActivity {
         String names[];
         int sets[];
         int reps[];
+        int breaks[];
 
-        Adapter (Context c, String names[], int reps[], int sets[]) {
+        Adapter (Context c, String names[], int reps[], int sets[], int[] breaks) {
             super(c, R.layout.list_item, R.id.exercise_title, names);
             this.context = c;
             this.names = names;
             this.reps = reps;
             this.sets = sets;
+            this.breaks = breaks;
 
         }
 
@@ -115,11 +119,13 @@ public class GeneratePlan extends AppCompatActivity {
             TextView exerciseTitle = row.findViewById(R.id.exercise_title);
             TextView repNum = row.findViewById(R.id.reps_num);
             TextView setNum = row.findViewById(R.id.sets_num);
+            TextView breakNum = row.findViewById(R.id.breaks_num);
             ImageView img = row.findViewById(R.id.message_photo);
 
             exerciseTitle.setText(names[position]);
             repNum.setText(String.valueOf(reps[position]));
             setNum.setText(String.valueOf(sets[position]));
+            breakNum.setText(String.valueOf(breaks[position]));
             img.setImageResource(R.drawable.ic_baseline_directions_run_24);
 
             return row;
