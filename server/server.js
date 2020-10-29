@@ -153,12 +153,3 @@ app.post('/users/:userId/workout/complete/:lengthOfWorkoutSeconds&:workoutPlanId
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 })
-
-//////////  EXERCISE API CALLS   //////////
-/*
-//TEST CALL
-app.get('/users/abc123', cors(), async function (req, res) { 
-  console.log("got here");
-  var result = userService.createNewUser("JestID", "Jest@shaw.ca", "Jest Test", dbConfig);
-  res.json(result)
-})*/
