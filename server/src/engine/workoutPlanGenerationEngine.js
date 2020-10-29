@@ -4,7 +4,7 @@ const workoutData = require('../data/workoutData.js');
 
 const MAX_REST_SEC = 45;
 const MIN_REST_SEC = 15;
-const STD_REST_TIME_SEC = 30;
+const WORKOUT_TO_REST_RATIO = 5;
 const TIME_ESTIMATE_SHIFT_FACTOR = 0.5;
 
 module.exports = {
@@ -38,11 +38,6 @@ module.exports = {
             }
         }
 
-        // Calculate the time in between different exercises based upon the multiplier
-        var restTime = Math.round(STD_REST_TIME_SEC * ((1 - multiplier) + 1));
-        restTime = restTime < MIN_REST_SEC ? MIN_REST_SEC : restTime;
-        restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
-
         // Randomly select exercises to meet the target length of workout (+-10% seconds)
         // Only repeats exercises once all of them have been selected once
         var exerciseNum = 0;
@@ -71,10 +66,15 @@ module.exports = {
                 planIndex++;
                 exerciseNum++;
 
-                // Update the workout plan
                 // Add a rest if there is another exercise next, else add one more set to the last 
                 // exercise to finish workout if theres still time to spare
-                curLenSeconds += selectedExercise['reps_time_sec'] * selectedExercise['sets'];
+                var lengthOfExercise = selectedExercise['reps_time_sec'] * selectedExercise['sets'];
+                curLenSeconds += lengthOfExercise;
+
+                // Calculate the rest time in between different exercises based upon the multiplier and length of past exercise
+                var restTime = Math.round(lengthOfExercise / WORKOUT_TO_REST_RATIO * ((1 - multiplier) + 1));
+                restTime = restTime < MIN_REST_SEC ? MIN_REST_SEC : restTime;
+                restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
 
                 if ((curLenSeconds + restTime) < minimumLenSeconds) {
                     workoutPlan['breaks'][breakNum] = {
@@ -86,7 +86,9 @@ module.exports = {
                     breakNum++;
                     planIndex++;
                 } else if (curLenSeconds < minimumLenSeconds) {
+                    // Add one more set to the final exercise to fill the small gap (or at least get closer to the target)
                     workoutPlan['exercises'][exerciseNum - 1]['sets'] += 1;
+                    curLenSeconds += selectedExercise['reps_time_sec'];
                 }
 
                 // Update the workout length and the list of remaning unselected exercises
