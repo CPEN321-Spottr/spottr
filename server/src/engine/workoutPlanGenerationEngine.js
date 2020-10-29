@@ -4,7 +4,7 @@ const workoutData = require('../data/workoutData.js');
 
 const MAX_REST_SEC = 45;
 const MIN_REST_SEC = 15;
-const STD_REST_TIME_SEC = 30;
+const WORKOUT_TO_REST_RATIO = 5;
 const TIME_ESTIMATE_SHIFT_FACTOR = 0.5;
 
 module.exports = {
@@ -34,14 +34,9 @@ module.exports = {
                                                             * (((1 - multiplier) * TIME_ESTIMATE_SHIFT_FACTOR) + multiplier)));
             } else {
                 // Greater than 1 multipliers est time scales linearly
-                adjustedExercises[i]['reps_time_sec'] = util.clone(util.roundToTwo(possibleExercises[i]['std_reps_time_sec'] * (multiplier + 1)));
+                adjustedExercises[i]['reps_time_sec'] = util.clone(util.roundToTwo(possibleExercises[i]['std_reps_time_sec'] * multiplier));
             }
         }
-
-        // Calculate the time in between different exercises based upon the multiplier
-        var restTime = STD_REST_TIME_SEC * ((1 - multiplier) + 1);
-        restTime = restTime < MIN_REST_SEC ? MIN_REST_SEC : restTime;
-        restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
 
         // Randomly select exercises to meet the target length of workout (+-10% seconds)
         // Only repeats exercises once all of them have been selected once
@@ -71,21 +66,29 @@ module.exports = {
                 planIndex++;
                 exerciseNum++;
 
-                // Update the workout plan
                 // Add a rest if there is another exercise next, else add one more set to the last 
                 // exercise to finish workout if theres still time to spare
-                curLenSeconds += selectedExercise['reps_time_sec'] * selectedExercise['sets'];
+                var lengthOfExercise = selectedExercise['reps_time_sec'] * selectedExercise['sets'];
+                curLenSeconds += lengthOfExercise;
+
+                // Calculate the rest time in between different exercises based upon the multiplier and length of past exercise
+                var restTime = Math.round(lengthOfExercise / WORKOUT_TO_REST_RATIO * ((1 - multiplier) + 1));
+                restTime = restTime < MIN_REST_SEC ? MIN_REST_SEC : restTime;
+                restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
 
                 if ((curLenSeconds + restTime) < minimumLenSeconds) {
                     workoutPlan['breaks'][breakNum] = {
                         name: "Rest",
+                        exercise_id: "20",
                         duration_sec: restTime,
                         workout_order_num: planIndex
                     };
                     breakNum++;
                     planIndex++;
                 } else if (curLenSeconds < minimumLenSeconds) {
+                    // Add one more set to the final exercise to fill the small gap (or at least get closer to the target)
                     workoutPlan['exercises'][exerciseNum - 1]['sets'] += 1;
+                    curLenSeconds += selectedExercise['reps_time_sec'];
                 }
 
                 // Update the workout length and the list of remaning unselected exercises
@@ -98,10 +101,33 @@ module.exports = {
         }
 
         // Finalization steps
-        workoutPlan['estimated_time_mins'] = util.roundToTwo(curLenSeconds / 60);
-        workoutPlan['num_exercises'] = exerciseNum;
-        workoutPlan['num_parts'] = planIndex;
+        workoutPlan['est_length_sec'] = Math.round(curLenSeconds);
+        workoutPlan['associated_multiplier'] = multiplier;
+        workoutPlan['spottr_points'] = calculateSpottrPoints(curLenSeconds, multiplier);
 
         return workoutPlan;
+    }
+}
+
+const SEC_INCR = 20;
+const POINT_PER_NORMALIZED_INCR = 5;
+const MIN_POINTS = 25;
+const MULTIPLIER_SHIFT_FACTOR = 0.9;
+
+function calculateSpottrPoints(estimatedLengthSeconds, multiplier) {
+    // Calculation is based upon both the workout's multiplier and the estimated length in seconds. We use the
+    // MULTIPLIER_SHIFT_FACTOR to further extenuate the difference in points for harder vs. easier workouts.
+    //
+    // Harder workouts == more Spottr Points
+    if (multiplier <= 1) {
+        return Math.max(
+            MIN_POINTS, 
+            Math.round(estimatedLengthSeconds * multiplier * MULTIPLIER_SHIFT_FACTOR / SEC_INCR) * POINT_PER_NORMALIZED_INCR
+        );
+    } else {
+        return Math.max(
+            MIN_POINTS, 
+            Math.round(estimatedLengthSeconds * multiplier * (1 / MULTIPLIER_SHIFT_FACTOR) / SEC_INCR) * POINT_PER_NORMALIZED_INCR
+        );
     }
 }

@@ -12,4 +12,5 @@ INSERT INTO exercise(name, description, std_reps, std_reps_time_sec, major_muscl
         ('Floor Dips', 'Sit on the floor with your knees bent and hands at your sides, directly underneath your shoulders. Hoist your hips off the floor, like a crab. Next, bend your elbows and lower yourself toward the floor (without touching it), then straighten your arms.', 15, 30, 1, 3),
         ('Half-Cobra Push-Up', 'Get into Half-Cobra position, and perform push-ups from there.', 10, 30, 1, 3),
         ('Arm Circles', 'Perform arm circles. Alternate directions for each set.', 20, 20, 1, 4),
-        ('Diamond Push-up', 'Perform push-ups with your hands together forming a diamond shape.', 10, 30, 1, 3);
+        ('Diamond Push-up', 'Perform push-ups with your hands together forming a diamond shape.', 10, 30, 1, 3),
+        ('Rest', '', 0, 0, 2, 0);
