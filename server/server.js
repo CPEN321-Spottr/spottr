@@ -160,4 +160,10 @@ app.put('/users/:userId/workout-difficulty/decrease/:factor&:targetMuscleGroup',
 })
 
 //////////  EXERCISE API CALLS   //////////
-
+/*
+//TEST CALL
+app.get('/users/abc123', cors(), async function (req, res) { 
+  console.log("got here");
+  var result = userService.createNewUser("JestID", "Jest@shaw.ca", "Jest Test", dbConfig);
+  res.json(result)
+})*/
