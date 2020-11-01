@@ -13,10 +13,14 @@ module.exports = {
     },
 
     getAllUsers : async function (dbConfig) {
-        return userData.getUsers(dbConfig);
+        return new Promise(function(resolve) {
+            resolve(userData.getUsers(dbConfig));
+        });
     },
 
     getUserById : async function (userId, dbConfig) {
-        return userData.getUserByUserId(userId, dbConfig);
+        return new Promise(function(resolve) {
+            resolve(userData.getUserByUserId(userId, dbConfig));
+        })
     }
 }
