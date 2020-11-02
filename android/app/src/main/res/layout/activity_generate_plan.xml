@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimaryDark"
-    android:backgroundTint="@color/colorPrimaryDark">
+    android:backgroundTint="@color/colorPrimaryDark"
+    android:id="@+id/generate_plan_layout">
 
 
 
