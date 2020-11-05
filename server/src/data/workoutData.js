@@ -95,6 +95,28 @@ module.exports = {
       }
     },
 
+    getWorkoutExercisesByWorkoutPlanId: function(workoutPlanId, dbConfig) {
+      try {
+        return sql
+          .connect(dbConfig)
+          .then((pool) => {
+            return pool
+              .request()
+              .input("wpid", sql.Int, workoutPlanId)
+              .query(
+                "SELECT * FROM workout_exercise WHERE workout_plan_id = @wpid"
+              );
+          })
+          .then((result) => {
+            if (result.recordset.length == 0) throw ('No workout exercises found for given workout plan id: ' + workoutPlanId);
+            return result.recordset;
+          })
+      } catch(ex) {
+          console.log(ex);
+          throw ex;
+      }
+    },
+
     createWorkoutHistoryEntry: function(workoutPlan, lengthOfWorkoutSec, userId, dbConfig) {
       try {
           return sql
