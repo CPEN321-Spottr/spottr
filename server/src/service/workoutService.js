@@ -89,6 +89,12 @@ module.exports = {
         return new Promise(function(resolve) {
             resolve(1);
         });
+    }, 
+
+    getAllMuscleGroups: async function(dbConfig) {
+        return new Promise(function(resolve) {
+            resolve(data.getAllMuscleGroups(dbConfig));
+        });
     }
 }
 
