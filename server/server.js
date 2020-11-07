@@ -149,3 +149,13 @@ app.get('/workout/history/:numEntries/:startId?', cors(), async function (req, r
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 })
+
+app.get('/workout/workoutplan/:workoutPlanId', cors(), async function (req, res) {
+  try{
+    res.send(
+      await workoutService.getWorkoutPlanById(dbConfig, req.params.workoutPlanId)
+    );
+  } catch (ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
