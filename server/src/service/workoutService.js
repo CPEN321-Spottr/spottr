@@ -36,7 +36,9 @@ module.exports = {
         );
         data.createWorkoutExerciseEntries(workoutPlan, dbConfig);
 
-        return workoutPlan;
+        return new Promise(function(resolve) {
+            resolve(workoutPlan);
+        });
     },
 
     // Changes a user's multiplier for a given muscle group by a given factor
@@ -51,7 +53,9 @@ module.exports = {
 
         await data.updateUserMultiplier(targetMuscleGroup, userMultiplier, user.user_multiplier_id, dbConfig);
         
-        return constants.SUCCESS_RESPONSE;
+        return new Promise(function(resolve) {
+            resolve(constants.SUCCESS_RESPONSE);
+        });
     },
 
     completeWorkout: async function (userId, lengthOfWorkoutSec, workoutPlanId, dbConfig) {
@@ -82,8 +86,9 @@ module.exports = {
                 );
             }
         }
-
-        return 1;
+        return new Promise(function(resolve) {
+            resolve(1);
+        });
     }
 }
 
@@ -108,5 +113,7 @@ function calculateNewMultiplier(percentageDifference, currentMultiplier) {
         changeValue = Math.min(changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
     }
     
-    return util.roundToThree(currentMultiplier + changeValue);
+    return new Promise(function(resolve) {
+        resolve(util.roundToThree(currentMultiplier + changeValue));
+    });
 }
