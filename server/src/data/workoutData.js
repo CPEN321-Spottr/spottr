@@ -251,9 +251,50 @@ module.exports = {
          .then((result) => {
            return result.recordset;
          })
-   } catch(ex) {
-       console.log(ex);
-       return ex;
-   }
- },
+    } catch(ex) {
+        console.log(ex);
+        return ex;
+    }
+  },
+
+  getMaxWorkoutHistoryId: function(dbConfig) {
+    try {
+       return sql
+         .connect(dbConfig)
+         .then((pool) => {
+           return pool
+             .request()
+             .query(
+               "SELECT MAX (id) from workout_history"
+             );
+         })
+         .then((result) => {
+           return result.recordset[0][""];
+         })
+    } catch(ex) {
+        console.log(ex);
+        return ex;
+    }
+  },    
+
+  getRecentWorkoutHistory: function(dbConfig, startIdBottom, startIdTop) {
+    try {
+       return sql
+         .connect(dbConfig)
+         .then((pool) => {
+           return pool
+             .request()
+             .input("sIdBottom", sql.Int, startIdBottom)
+             .input("sIdTop", sql.Int, startIdTop)
+             .query("SELECT * FROM workout_history WHERE id >= @sIdBottom and id <= @sIdTop"
+             );
+         })
+         .then((result) => {
+           return result.recordset;
+         })
+    } catch(ex) {
+        console.log(ex);
+        return ex;
+    }
+  }
 }

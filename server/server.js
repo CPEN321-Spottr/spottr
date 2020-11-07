@@ -130,10 +130,20 @@ app.post('/users/:userId/workout/complete/:lengthOfWorkoutSeconds&:workoutPlanId
   }
 })
 
-app.get('/muscleGroups', cors(), async function (req, res) {
+app.get('/workout/muscleGroups', cors(), async function (req, res) {
   try{
     res.send(
       await workoutService.getAllMuscleGroups(dbConfig)
+    );
+  } catch (ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
+
+app.get('/workout/history/:numEntries/:startId?', cors(), async function (req, res) {
+  try{
+    res.send(
+      await workoutService.getWorkoutHistory(dbConfig, req.params.numEntries, req.params.startId)
     );
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
