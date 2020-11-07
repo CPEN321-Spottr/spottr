@@ -4,6 +4,7 @@ const userData = require('../data/userData.js');
 const firebaseService = require('./firebaseService.js');
 const constants = require('../constants.js');
 const util = require('../util.js');
+const e = require('express');
 
 const MULTIPLIER_STEPS = 0.025;
 const MIN_MULTIPLIER = 0.2;
@@ -94,6 +95,27 @@ module.exports = {
     getAllMuscleGroups: async function(dbConfig) {
         return new Promise(function(resolve) {
             resolve(data.getAllMuscleGroups(dbConfig));
+        });
+    },
+
+    getWorkoutHistory: async function(dbConfig, numEntries, startId) {
+        numEntries = Number(numEntries);
+        startId = Number(startId);
+        var maxWorkoutHistoryId = Number(await data.getMaxWorkoutHistoryId(dbConfig));
+        return new Promise(function(resolve, reject) {
+            if (typeof startId == 'undefined') {
+                resolve(data.getRecentWorkoutHistory(dbConfig, maxWorkoutHistoryId-numEntries, maxWorkoutHistoryId));
+            }
+            else {
+                if (startId > maxWorkoutHistoryId){
+                    console.log("Error: startId is bigger than the number of entries in the workout_history table.")
+                    reject(constants.ERROR_RESPONSE)
+                }
+                console.log(startId+numEntries);
+                upperLimitId = startId+numEntries <= maxWorkoutHistoryId ? startId+numEntries-1 : maxWorkoutHistoryId;
+                console.log(upperLimitId);
+                resolve(data.getRecentWorkoutHistory(dbConfig, startId, upperLimitId));
+            }
         });
     }
 }
