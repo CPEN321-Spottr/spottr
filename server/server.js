@@ -129,3 +129,13 @@ app.post('/users/:userId/workout/complete/:lengthOfWorkoutSeconds&:workoutPlanId
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 })
+
+app.get('/muscleGroups', cors(), async function (req, res) {
+  try{
+    res.send(
+      await workoutService.getAllMuscleGroups(dbConfig)
+    );
+  } catch (ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})

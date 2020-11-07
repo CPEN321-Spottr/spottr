@@ -235,6 +235,25 @@ module.exports = {
         console.log(ex);
         throw ex;
     }
-  }
-  
+  },
+
+  getAllMuscleGroups: function(dbConfig) {
+    try {
+       return sql
+         .connect(dbConfig)
+         .then((pool) => {
+           return pool
+             .request()
+             .query(
+               "SELECT * FROM major_muscle_group"
+             );
+         })
+         .then((result) => {
+           return result.recordset;
+         })
+   } catch(ex) {
+       console.log(ex);
+       return ex;
+   }
+ },
 }
