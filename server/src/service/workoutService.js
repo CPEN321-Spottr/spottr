@@ -87,18 +87,18 @@ module.exports = {
                 );
             }
         }
-        return new Promise(function(resolve) {
+        return new Promise (function (resolve) {
             resolve(1);
         });
     }, 
 
-    getAllMuscleGroups: async function(dbConfig) {
+    getAllMuscleGroups: async function (dbConfig) {
         return new Promise(function(resolve) {
             resolve(data.getAllMuscleGroups(dbConfig));
         });
     },
 
-    getWorkoutHistory: async function(dbConfig, numEntries, startId) {
+    getWorkoutHistory: async function (dbConfig, numEntries, startId) {
         numEntries = Number(numEntries);
         startId = Number(startId);
         var maxWorkoutHistoryId = Number(await data.getMaxWorkoutHistoryId(dbConfig));
@@ -116,6 +116,14 @@ module.exports = {
                 console.log(upperLimitId);
                 resolve(data.getRecentWorkoutHistory(dbConfig, startId, upperLimitId));
             }
+        });
+    },
+
+    getWorkoutPlanById: async function (dbConfig, workoutPlanId){
+        var workoutExercise = data.createWorkoutExerciseEntries(workoutPlan, dbConfig);
+        var workoutPlan = await data.getWorkoutPlanById(workoutPlanId, dbConfig);
+        return new Promise(async function(resolve) {
+            resolve();
         });
     }
 }
