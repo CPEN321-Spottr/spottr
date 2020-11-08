@@ -167,10 +167,12 @@ module.exports = {
     },
 
     getWorkoutPlanById: async function (dbConfig, workoutPlanId){
-        var workoutExercise = data.createWorkoutExerciseEntries(workoutPlan, dbConfig);
-        var workoutPlan = await data.getWorkoutPlanById(workoutPlanId, dbConfig);
+        var oldWorkoutPlan = await data.getWorkoutPlanById(workoutPlanId, dbConfig);
+        var oldWorkoutExercises = await data.getWorkoutExercisesByWorkoutPlanId(workoutPlanId);
+        var exerciseData = await data.getExercisesByTargetMuscleGroups(oldWorkoutPlan.major_muscle_group_id, dbConfig)
+
         return new Promise(async function(resolve) {
-            resolve();
+            resolve(reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData));
         });
     }
 }
