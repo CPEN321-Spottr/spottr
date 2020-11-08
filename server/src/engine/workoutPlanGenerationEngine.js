@@ -7,8 +7,12 @@ const MIN_REST_SEC = 15;
 const WORKOUT_TO_REST_RATIO = 5;
 const TIME_ESTIMATE_SHIFT_FACTOR = 0.5;
 
+const ONE_UP_DIFFICULTY_INCREASE = 0.1;
+
 module.exports = {
-    generateWorkoutPlan: function(lengthMinutes, possibleExercises, multiplier, planId) {
+    // Generates a new workout plan with the given possible exercises to include, multiplier, 
+    // desired length in minutes, and the new plan id to associate with the generated plan
+    generateNewWorkoutPlan: function(lengthMinutes, possibleExercises, multiplier, planId) {
         var workoutPlan = {
             workout_plan_id: planId,
             exercises: [],
@@ -106,6 +110,30 @@ module.exports = {
         workoutPlan['spottr_points'] = calculateSpottrPoints(curLenSeconds, multiplier);
 
         return workoutPlan;
+    },
+
+
+    // Generates a new "one-up" workout plan from a passed workout plan and multiplier.
+    // Order of exercises does not change, only the number of reps.
+    //
+    // The multiplier determines how much harder to make the "one-up" workout. Larger 
+    // multiplier will lead to a more difficult workout being generated.
+    generateOneUpWorkoutPlan: function(oldWorkoutPlan, multiplier, newPlanId) {
+        var actualDifficultyIncrease = ONE_UP_DIFFICULTY_INCREASE * multiplier;
+        var newPlan = util.clone(oldWorkoutPlan);
+
+        for (var i = 0; i < newPlan.exercises.length; i++) {
+            newPlan.exercises[i].reps = Math.ceil(newPlan.exercises[i].reps * (1 + actualDifficultyIncrease));
+        }
+
+        newPlan.workout_plan_id = newPlanId;
+        newPlan.associated_multiplier = util.roundToThree(newPlan.associated_multiplier * (1 + actualDifficultyIncrease));
+        newPlan.spottr_points = calculateSpottrPoints(
+            newPlan.est_length_sec,
+            newPlan.associated_multiplier
+        );
+
+        return newPlan;
     }
 }
 
