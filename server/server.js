@@ -126,6 +126,18 @@ app.get('/users/:userId/workout/generate-plan/:lengthMinutes&:targetMuscleGroup'
   }
 })
 
+app.get('/users/:userId/workout/one-up/:workoutPlanId', cors(), async function (req, res) {
+  try {
+    res.json(await workoutService.generateOneUpWorkoutPlan(
+        JSON.parse(req.params.userId), 
+        JSON.parse(req.params.workoutPlanId), 
+        dbConfig
+    ));
+  } catch(ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
+
 app.put('/users/:userId/workout/change-difficulty/:factor&:targetMuscleGroup', cors(), async function (req, res) {
   try {
     res.sendStatus(await workoutService.modifyWorkoutDifficulty(
