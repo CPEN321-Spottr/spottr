@@ -16,7 +16,6 @@ module.exports = {
             return result.recordset[0]["id"];
           })
           .catch((ex) => {
-            console.error(ex);
             throw ex;
           });
     }

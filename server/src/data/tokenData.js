@@ -32,7 +32,6 @@ module.exports = {
           return result.recordset[0];
         })
         .catch((ex) => {
-          console.error(ex);
           throw ex;
         });
     }
