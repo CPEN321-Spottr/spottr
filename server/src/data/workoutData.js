@@ -19,7 +19,6 @@ module.exports = {
             return result.recordset;
           })
           .catch((ex) => {
-            console.error(ex);
             throw ex;
           })
     },
@@ -48,7 +47,6 @@ module.exports = {
             return result.recordset[0]["arms"];
           })
           .catch((ex) => {
-            console.error(ex);
             throw ex;
           })
     },
@@ -71,7 +69,6 @@ module.exports = {
             return result.recordset[0];
           })
           .catch((ex) => {
-            console.error(ex);
             throw ex;
           })
     },
@@ -94,7 +91,6 @@ module.exports = {
             return result.recordset[0];
           })
           .catch((ex) => {
-            console.error(ex);
             throw ex;
           })
     },
@@ -117,7 +113,6 @@ module.exports = {
             return result.recordset;
           })
           .catch((ex) => {
-            console.error(ex);
             throw ex;
           })
     },
@@ -141,7 +136,6 @@ module.exports = {
         .then((result) => {
           return result.recordset[0]["id"];
         }).catch((ex) => {
-          console.error(ex);
           throw ex;
         })
   },
@@ -160,7 +154,6 @@ module.exports = {
           return result.recordset[0]["id"];
         })
         .catch((ex) => {
-          console.error(ex);
           throw ex;
         })
     },
@@ -200,7 +193,6 @@ module.exports = {
             return lastPool;
           })
           .catch((ex) => {
-            console.error(ex);
             throw ex;
           })
   },
@@ -227,7 +219,6 @@ module.exports = {
           return result;
         })
         .catch((ex) => {
-          console.error(ex);
           throw ex;
         })
   },
@@ -248,7 +239,6 @@ module.exports = {
             );
         })
         .catch((ex) => {
-          console.error(ex);
           throw ex;
         })
   },
@@ -266,7 +256,6 @@ module.exports = {
      .then((result) => {
        return result.recordset;
      }).catch((ex) => {
-       console.error(ex);
        throw ex;
      })
   },
@@ -285,7 +274,6 @@ module.exports = {
        return result.recordset[0][""];
      })
      .catch((ex) => {
-       console.error(ex);
        throw ex;
      })
   },
@@ -305,7 +293,6 @@ module.exports = {
          return result.recordset;
        })
        .catch((ex) => {
-         console.error(ex);
          throw ex;
        })
   }

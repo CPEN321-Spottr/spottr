@@ -25,12 +25,7 @@ async function generateNotificationBatch(admin, registrationToken) {
     };
 
     // send message
-    admin.messaging().sendToDevice(registrationToken, payload, options)
-      .then(function(response) {
-      })
-      .catch(function(error) {
-        console.log("Error sending message:", error);
-      });
+    admin.messaging().sendToDevice(registrationToken, payload, options);
 
     // generate time to wait before next message (standard time +- 1 sec) and execute it
     var timeToWait = Math.floor(Math.random() * 2) - 1 + TIME_BETWEEN_SEC;
@@ -39,7 +34,7 @@ async function generateNotificationBatch(admin, registrationToken) {
   return new Promise(async function(resolve) {
     resolve(constants.SUCCESS_RESPONSE);
   });
-};
+}
 
 
 module.exports = {

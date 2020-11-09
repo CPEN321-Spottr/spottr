@@ -19,7 +19,6 @@ module.exports = {
             return result.recordset[0];
           })
           .catch((ex) => {
-            console.error(ex);
             throw ex;
           });
     },
@@ -38,7 +37,6 @@ module.exports = {
              return result.recordset;
            })
            .catch((ex) => {
-             console.error(ex);
              throw ex;
            });
    },
@@ -59,7 +57,6 @@ module.exports = {
           return 1;
         })
         .catch((ex) => {
-          console.error(ex);
           throw ex;
         });
    },
@@ -80,7 +77,6 @@ module.exports = {
           return 1;
         })
         .catch((ex) => {
-          console.error(ex);
           throw ex;
         });
    },
@@ -106,7 +102,6 @@ module.exports = {
             return result.recordset[0].id;
           })
           .catch((ex) => {
-            console.error(ex);
             throw ex;
           });
     },

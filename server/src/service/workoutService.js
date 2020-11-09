@@ -51,11 +51,9 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
     };
 
     // Combine the breaks and exercise lists (like the usual plan generation)
-    let exerciseCount = 0;
-    let breakCount = 0;
 
-    for (var i = 0; i < oldWorkoutExercises.length; i++) {
-        currentExercise = oldWorkoutExercises[i];
+    for (let exercise in oldWorkoutExercises) {
+        currentExercise = exercise;
 
         if (currentExercise.exercise_id === BREAK_ID) {
             var reassembledBreak = {
@@ -65,8 +63,7 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
                 workout_order_num: currentExercise.workout_order_num
             };
 
-            reassembledPlan.breaks[breakCount] = reassembledBreak;
-            breakCount++;
+            reassembledPlan.breaks.push(reassembledBreak);
         } else {
             relevantExercise = exerciseData.find((obj) => {
               return obj.id === currentExercise.exercise_id;
@@ -86,8 +83,7 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
                 workout_order_num: currentExercise.workout_order_num
             };
 
-            reassembledPlan.exercises[exerciseCount] = reassembledExercise;
-            exerciseCount++;
+            reassembledPlan.exercises.push(reassembledExercise);
         }
     }
 
