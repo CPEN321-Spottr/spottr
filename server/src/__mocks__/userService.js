@@ -7,21 +7,21 @@ const users = {
 }
 
 module.exports = {
-    createNewUser : async function (sub, email, name, dbConfig) {
+    async createNewUser(sub, email, name, dbConfig) {
         const newUser = sub + email + name;
         return new Promise(async function(resolve) {
             resolve(await newUser);
         });
     },
-    getAllUsers : async function (dbConfig) {
+    async getAllUsers(dbConfig) {
         var getUsers = "Successfully found all users";
         return new Promise(function(resolve) {
             resolve(getUsers);
         });
     },
-    getUserById : async function (userId, dbConfig) {
+    async getUserById(userId, dbConfig) {
         return new Promise(function(resolve) {
-            resolve(users[userId]);
+            resolve(users[String(userId)]);
         });
     }
 }
