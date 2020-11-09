@@ -180,7 +180,7 @@ function adjustExercises(exercises, multiplier) {
         delete exercises[i].std_reps_time_sec;
     }
 
-    return adjustedExercises;
+    return exercises;
 }
 
 // Calculates the number of Spottr Points for a given workout. 
