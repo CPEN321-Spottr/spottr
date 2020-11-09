@@ -24,55 +24,6 @@ const MULTIPLIER_SHIFT_FACTOR = 0.9;
 // Will meet the target length within +-10% seconds and will only repeat exercises once 
 // all of them have been selected once.
 function fillWorkoutPlan(lengthMinutes, exercises, workoutPlan, multiplier) {
-    function generateExercise() {
-        var selectedIdx = Math.floor(Math.random() * remainingIds.length);
-        var selectedExercise = util.clone(exercises[remainingIds[selectedIdx]]);
-
-        // Modulate the sets (+-1) to make things more interesting for the user
-        selectedExercise.sets = Math.floor(Math.random() * 2) - 1 + selectedExercise.sets;
-
-        // Update the workout plan
-        selectedExercise.workout_order_num = planIndex;
-        workoutPlan.exercises.push(selectedExercise);
-        planIndex++;
-        exerciseNum++;
-        return { selectedExercise, selectedIdx };
-    }
-
-    function generateBreak() {
-        function calculateBreakTime() {
-            var restTime = Math.round(lengthOfExercise / WORKOUT_TO_REST_RATIO * ((1 - multiplier) + 1));
-            restTime = restTime < MIN_REST_SEC ? MIN_REST_SEC : restTime;
-            restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
-            return restTime;
-        }
-        
-        
-        var lengthOfExercise = selectedExercise.reps_time_sec * selectedExercise.sets;
-        curLenSeconds += lengthOfExercise;
-
-        // Calculate the rest time in between different exercises based upon the multiplier and length of past exercise
-        var restTime = calculateBreakTime();
-
-        if ((curLenSeconds + restTime) < minimumLenSeconds) {
-            workoutPlan.breaks.push({
-                name: "Rest",
-                exercise_id: "20",
-                duration_sec: restTime,
-                workout_order_num: planIndex
-            });
-
-            breakNum++;
-            planIndex++;
-        } else if (curLenSeconds < minimumLenSeconds) {
-            // Add one more set to the final exercise to fill the small gap (or at least get closer to the target)
-            workoutPlan.exercises[exerciseNum - 1].sets += 1;
-            curLenSeconds += selectedExercise.reps_time_sec;
-        }
-        return restTime;
-    }
-
-    
     var exerciseNum = 0;
     var breakNum = 0;
     var planIndex = 0;
@@ -84,11 +35,14 @@ function fillWorkoutPlan(lengthMinutes, exercises, workoutPlan, multiplier) {
 
         while (remainingIds.length > 0 && curLenSeconds < minimumLenSeconds) {
             // Randomly select a previously unselected exercise
-            var { selectedExercise, selectedIdx } = generateExercise(workoutPlan);
+            var selectedExercise;
+            var selectedIdx;
+            ({ selectedExercise, selectedIdx, planIndex, exerciseNum } = generateExercise(remainingIds, exercises, planIndex, workoutPlan, exerciseNum));
 
             // Add a rest if there is another exercise next, else add one more set to the last 
             // exercise to finish workout if theres still time to spare
-            var restTime = generateBreak();
+            var restTime;
+            ({ restTime, curLenSeconds, planIndex, breakNum } = generateRest(selectedExercise, curLenSeconds, multiplier, minimumLenSeconds, workoutPlan, planIndex, breakNum, exerciseNum));
 
             // Update the workout length and the list of remaning unselected exercises
             curLenSeconds += restTime;
@@ -99,6 +53,53 @@ function fillWorkoutPlan(lengthMinutes, exercises, workoutPlan, multiplier) {
         }
     }
     return curLenSeconds;
+}
+
+function generateRest(selectedExercise, curLenSeconds, multiplier, minimumLenSeconds, workoutPlan, planIndex, breakNum, exerciseNum) {
+    var lengthOfExercise = selectedExercise.reps_time_sec * selectedExercise.sets;
+    curLenSeconds += lengthOfExercise;
+
+    // Calculate the rest time in between different exercises based upon the multiplier and length of past exercise
+    var restTime = calculateRest(lengthOfExercise, multiplier);
+
+    if ((curLenSeconds + restTime) < minimumLenSeconds) {
+        workoutPlan.breaks.push({
+            name: "Rest",
+            exercise_id: "20",
+            duration_sec: restTime,
+            workout_order_num: planIndex
+        });
+
+        breakNum++;
+        planIndex++;
+    } else if (curLenSeconds < minimumLenSeconds) {
+        // Add one more set to the final exercise to fill the small gap (or at least get closer to the target)
+        workoutPlan.exercises[exerciseNum - 1].sets += 1;
+        curLenSeconds += selectedExercise.reps_time_sec;
+    }
+    return { restTime, curLenSeconds, planIndex, breakNum };
+}
+
+function calculateRest(lengthOfExercise, multiplier) {
+    var restTime = Math.round(lengthOfExercise / WORKOUT_TO_REST_RATIO * ((1 - multiplier) + 1));
+    restTime = restTime < MIN_REST_SEC ? MIN_REST_SEC : restTime;
+    restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
+    return restTime;
+}
+
+function generateExercise(remainingIds, exercises, planIndex, workoutPlan, exerciseNum) {
+    var selectedIdx = Math.floor(Math.random() * remainingIds.length);
+    var selectedExercise = util.clone(exercises[remainingIds[selectedIdx]]);
+
+    // Modulate the sets (+-1) to make things more interesting for the user
+    selectedExercise.sets = Math.floor(Math.random() * 2) - 1 + selectedExercise.sets;
+
+    // Update the workout plan
+    selectedExercise.workout_order_num = planIndex;
+    workoutPlan.exercises.push(selectedExercise);
+    planIndex++;
+    exerciseNum++;
+    return { selectedExercise, selectedIdx, planIndex, exerciseNum };
 }
 
 // Adjusts the difficulty of a list of exercises depending on a passed multiplier. A larger multiplier
