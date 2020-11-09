@@ -18,6 +18,57 @@ const MIN_POINTS = 25;
 const MULTIPLIER_SHIFT_FACTOR = 0.9;
 
 
+// Helper method to calculate rest time
+function calculateRest(lengthOfExercise, multiplier) {
+    var restTime = Math.round(lengthOfExercise / WORKOUT_TO_REST_RATIO * ((1 - multiplier) + 1));
+    restTime = restTime < MIN_REST_SEC ? MIN_REST_SEC : restTime;
+    restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
+    return restTime;
+}
+
+// Helper method to generate a rest based upon a set of given parameters
+function generateRest(selectedExercise, curLenSeconds, multiplier, minimumLenSeconds, workoutPlan, planIndex, breakNum, exerciseNum) {
+    var lengthOfExercise = selectedExercise.reps_time_sec * selectedExercise.sets;
+    curLenSeconds += lengthOfExercise;
+
+    // Calculate the rest time in between different exercises based upon the multiplier and length of past exercise
+    var restTime = calculateRest(lengthOfExercise, multiplier);
+
+    if ((curLenSeconds + restTime) < minimumLenSeconds) {
+        workoutPlan.breaks.push({
+            name: "Rest",
+            exercise_id: "20",
+            duration_sec: restTime,
+            workout_order_num: planIndex
+        });
+
+        breakNum++;
+        planIndex++;
+    } else if (curLenSeconds < minimumLenSeconds) {
+        // Add one more set to the final exercise to fill the small gap (or at least get closer to the target)
+        workoutPlan.exercises[exerciseNum - 1].sets += 1;
+        curLenSeconds += selectedExercise.reps_time_sec;
+    }
+    return { restTime, curLenSeconds, planIndex, breakNum };
+}
+
+// Helper method to generate an exercise based upon a set of given parameters
+function generateExercise(remainingIds, exercises, planIndex, workoutPlan, exerciseNum) {
+    var selectedIdx = Math.floor(Math.random() * remainingIds.length);
+    let exerciseIdx = remainingIds[parseInt(selectedIdx, 10)];
+    var selectedExercise = util.clone(exercises[parseInt(exerciseIdx, 10)]);
+
+    // Modulate the sets (+-1) to make things more interesting for the user
+    selectedExercise.sets = Math.floor(Math.random() * 2) - 1 + selectedExercise.sets;
+
+    // Update the workout plan
+    selectedExercise.workout_order_num = planIndex;
+    workoutPlan.exercises.push(selectedExercise);
+    planIndex++;
+    exerciseNum++;
+    return { selectedExercise, selectedIdx, planIndex, exerciseNum };
+}
+
 // Selects exercises a given list of exercises and generates breaks to fill a passed
 // workout plan object. Accounts for user multiplier and desiered length in minutes.
 //
@@ -55,58 +106,11 @@ function fillWorkoutPlan(lengthMinutes, exercises, workoutPlan, multiplier) {
     return curLenSeconds;
 }
 
-function generateRest(selectedExercise, curLenSeconds, multiplier, minimumLenSeconds, workoutPlan, planIndex, breakNum, exerciseNum) {
-    var lengthOfExercise = selectedExercise.reps_time_sec * selectedExercise.sets;
-    curLenSeconds += lengthOfExercise;
-
-    // Calculate the rest time in between different exercises based upon the multiplier and length of past exercise
-    var restTime = calculateRest(lengthOfExercise, multiplier);
-
-    if ((curLenSeconds + restTime) < minimumLenSeconds) {
-        workoutPlan.breaks.push({
-            name: "Rest",
-            exercise_id: "20",
-            duration_sec: restTime,
-            workout_order_num: planIndex
-        });
-
-        breakNum++;
-        planIndex++;
-    } else if (curLenSeconds < minimumLenSeconds) {
-        // Add one more set to the final exercise to fill the small gap (or at least get closer to the target)
-        workoutPlan.exercises[exerciseNum - 1].sets += 1;
-        curLenSeconds += selectedExercise.reps_time_sec;
-    }
-    return { restTime, curLenSeconds, planIndex, breakNum };
-}
-
-function calculateRest(lengthOfExercise, multiplier) {
-    var restTime = Math.round(lengthOfExercise / WORKOUT_TO_REST_RATIO * ((1 - multiplier) + 1));
-    restTime = restTime < MIN_REST_SEC ? MIN_REST_SEC : restTime;
-    restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
-    return restTime;
-}
-
-function generateExercise(remainingIds, exercises, planIndex, workoutPlan, exerciseNum) {
-    var selectedIdx = Math.floor(Math.random() * remainingIds.length);
-    var selectedExercise = util.clone(exercises[remainingIds[selectedIdx]]);
-
-    // Modulate the sets (+-1) to make things more interesting for the user
-    selectedExercise.sets = Math.floor(Math.random() * 2) - 1 + selectedExercise.sets;
-
-    // Update the workout plan
-    selectedExercise.workout_order_num = planIndex;
-    workoutPlan.exercises.push(selectedExercise);
-    planIndex++;
-    exerciseNum++;
-    return { selectedExercise, selectedIdx, planIndex, exerciseNum };
-}
-
 // Adjusts the difficulty of a list of exercises depending on a passed multiplier. A larger multiplier
 // will lead to a greater number of reps per exercise. 
 function adjustExercises(exercises, multiplier) {
     for (let i = 0; i < exercises.length; i++) {
-        let exercise = exercises[i];
+        let exercise = exercises[parseInt(i, 10)];
 
         // Rename some fields for clarity in later use
         exercise.exercise_id = exercise.id;
