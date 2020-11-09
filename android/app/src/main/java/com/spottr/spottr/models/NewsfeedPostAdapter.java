@@ -12,13 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.spottr.spottr.R;
 
-
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static android.text.format.DateUtils.getRelativeTimeSpanString;

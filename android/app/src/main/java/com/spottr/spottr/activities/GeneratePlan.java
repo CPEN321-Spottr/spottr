@@ -22,8 +22,6 @@ import com.spottr.spottr.models.Plan;
 import com.spottr.spottr.R;
 import com.spottr.spottr.models.User;
 
-import java.util.Date;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
