@@ -20,7 +20,7 @@ module.exports = {
           })
           .catch((ex) => {
             throw ex;
-          })
+          });
     },
 
     async getUserMultiplier(targetMuscleGroup, multiplierId, dbConfig) {
@@ -296,4 +296,4 @@ module.exports = {
          throw ex;
        })
   }
-}
+};
