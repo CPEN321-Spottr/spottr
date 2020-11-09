@@ -42,7 +42,6 @@ function calculateNewMultiplier(percentageDifference, currentMultiplier) {
 // plan and reproduces the same format which the FE expects from the generateNewWorkoutPlan API
 function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData) {
     var relevantExercise;
-    var currentExercise;
 
     var reassembledPlan = {
         workout_plan_id: oldWorkoutPlan.id,
@@ -53,20 +52,18 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
     // Combine the breaks and exercise lists (like the usual plan generation)
 
     for (let exercise in oldWorkoutExercises) {
-        currentExercise = exercise;
-
-        if (currentExercise.exercise_id === BREAK_ID) {
+        if (exercise.exercise_id === BREAK_ID) {
             var reassembledBreak = {
                 name: "Rest",
                 exercise_id: BREAK_ID,
-                duration_sec: currentExercise.num_reps,
-                workout_order_num: currentExercise.workout_order_num
+                duration_sec: exercise.num_reps,
+                workout_order_num: exercise.workout_order_num
             };
 
             reassembledPlan.breaks.push(reassembledBreak);
         } else {
             relevantExercise = exerciseData.find((obj) => {
-              return obj.id === currentExercise.exercise_id;
+              return obj.id === exercise.exercise_id;
             });
 
             if (typeof relevantExercise === "undefined") {
@@ -78,9 +75,9 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
                 exercise_id: relevantExercise.id,
                 description: relevantExercise.description,
                 major_muscle_group_id: relevantExercise.major_muscle_group_id,
-                sets: currentExercise.num_sets,
-                reps: currentExercise.num_reps,
-                workout_order_num: currentExercise.workout_order_num
+                sets: exercise.num_sets,
+                reps: exercise.num_reps,
+                workout_order_num: exercise.workout_order_num
             };
 
             reassembledPlan.exercises.push(reassembledExercise);
