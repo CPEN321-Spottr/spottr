@@ -18,7 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
 
 import com.spottr.spottr.R;
-import com.spottr.spottr.services.AuthorizationService;
+import com.spottr.spottr.services.AuthorizationServiceHelper;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spottr_login);
 
-        final GoogleSignInClient mGoogleSignInClient = AuthorizationService.getDefaultSignInClient(this);
+        final GoogleSignInClient mGoogleSignInClient = AuthorizationServiceHelper.getDefaultSignInClient(this);
 
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
