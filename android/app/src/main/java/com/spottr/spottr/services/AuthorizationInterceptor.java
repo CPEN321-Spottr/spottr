@@ -43,7 +43,7 @@ public class AuthorizationInterceptor implements Interceptor, Authenticator {
     public Request authenticate(@NotNull Route route, Response response) throws IOException {
         Request requestAvailable = null;
         try {
-            AuthorizationService.silentSignIn(this.ctx);
+            AuthorizationServiceHelper.silentSignIn(this.ctx);
             this.updateToken();
 
             requestAvailable = response.request().newBuilder()

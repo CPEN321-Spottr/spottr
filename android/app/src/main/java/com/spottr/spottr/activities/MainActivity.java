@@ -26,7 +26,7 @@ import com.spottr.spottr.events.NewsfeedPostEvent;
 import com.spottr.spottr.models.NewsfeedPost;
 import com.spottr.spottr.models.NewsfeedPostAdapter;
 import com.spottr.spottr.models.User;
-import com.spottr.spottr.services.AuthorizationService;
+import com.spottr.spottr.services.AuthorizationServiceHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 .apply(RequestOptions.circleCropTransform())
                 .into(imgProfilePic);
 
-        AuthorizationService.silentSignIn(this);
+        AuthorizationServiceHelper.silentSignIn(this);
 
         APIFactory apiFactory = new APIFactory(this);
         final AdminAPI adminAPI = apiFactory.getAdminAPI();
