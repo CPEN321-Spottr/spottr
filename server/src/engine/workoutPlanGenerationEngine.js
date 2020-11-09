@@ -1,6 +1,6 @@
-const { MAX } = require('mssql');
-const util = require('../util.js');
-const workoutData = require('../data/workoutData.js');
+const { MAX } = require("mssql");
+const util = require("../util.js");
+const workoutData = require("../data/workoutData.js");
 
 const MAX_REST_SEC = 45;
 const MIN_REST_SEC = 15;
@@ -10,9 +10,9 @@ const TIME_ESTIMATE_SHIFT_FACTOR = 0.5;
 const ONE_UP_DIFFICULTY_INCREASE = 0.1;
 
 module.exports = {
-    // Generates a new workout plan with the given possible exercises to include, multiplier, 
+    // Generates a new workout plan with the given possible exercises to include, multiplier,
     // desired length in minutes, and the new plan id to associate with the generated plan
-    generateNewWorkoutPlan: function(lengthMinutes, possibleExercises, multiplier, planId) {
+    generateNewWorkoutPlan(lengthMinutes, possibleExercises, multiplier, planId) {
         var workoutPlan = {
             workout_plan_id: planId,
             exercises: [],
@@ -21,24 +21,24 @@ module.exports = {
 
         var adjustedExercises = [];
 
-        // Calculate adjusted standard time and reps 
+        // Calculate adjusted standard time and reps
         for (var i = 0; i < possibleExercises.length; ++i) {
             adjustedExercises.push({});
-            adjustedExercises[i]['name'] = util.clone(possibleExercises[i]['name']);
-            adjustedExercises[i]['exercise_id'] = util.clone(possibleExercises[i]['id']);
-            adjustedExercises[i]['description'] = util.clone(possibleExercises[i]['description']);
-            adjustedExercises[i]['major_muscle_group_id'] = util.clone(possibleExercises[i]['major_muscle_group_id']);
-            adjustedExercises[i]['sets'] = util.clone(possibleExercises[i]['std_sets']);
+            adjustedExercises[i]["name"] = util.clone(possibleExercises[i]["name"]);
+            adjustedExercises[i]["exercise_id"] = util.clone(possibleExercises[i]["id"]);
+            adjustedExercises[i]["description"] = util.clone(possibleExercises[i]["description"]);
+            adjustedExercises[i]["major_muscle_group_id"] = util.clone(possibleExercises[i]["major_muscle_group_id"]);
+            adjustedExercises[i]["sets"] = util.clone(possibleExercises[i]["std_sets"]);
 
-            adjustedExercises[i]['reps'] = util.clone(Math.round(possibleExercises[i]['std_reps'] * multiplier));
+            adjustedExercises[i]["reps"] = util.clone(Math.round(possibleExercises[i]["std_reps"] * multiplier));
 
             if (multiplier <= 1) {
                 // Lower than 1 multipliers est time does not scale linearly as we expect these users to need more time per rep
-                adjustedExercises[i]['reps_time_sec'] = util.clone(util.roundToTwo(possibleExercises[i]['std_reps_time_sec'] 
+                adjustedExercises[i]["reps_time_sec"] = util.clone(util.roundToTwo(possibleExercises[i]["std_reps_time_sec"]
                                                             * (((1 - multiplier) * TIME_ESTIMATE_SHIFT_FACTOR) + multiplier)));
             } else {
                 // Greater than 1 multipliers est time scales linearly
-                adjustedExercises[i]['reps_time_sec'] = util.clone(util.roundToTwo(possibleExercises[i]['std_reps_time_sec'] * multiplier));
+                adjustedExercises[i]["reps_time_sec"] = util.clone(util.roundToTwo(possibleExercises[i]["std_reps_time_sec"] * multiplier));
             }
         }
 
@@ -65,14 +65,14 @@ module.exports = {
                 selectedExercise.sets = Math.floor(Math.random() * 2) - 1 + selectedExercise.sets;
 
                 // Update the workout plan
-                selectedExercise['workout_order_num'] = planIndex;
-                workoutPlan['exercises'][exerciseNum] = selectedExercise;
+                selectedExercise["workout_order_num"] = planIndex;
+                workoutPlan["exercises"][exerciseNum] = selectedExercise;
                 planIndex++;
                 exerciseNum++;
 
-                // Add a rest if there is another exercise next, else add one more set to the last 
+                // Add a rest if there is another exercise next, else add one more set to the last
                 // exercise to finish workout if theres still time to spare
-                var lengthOfExercise = selectedExercise['reps_time_sec'] * selectedExercise['sets'];
+                var lengthOfExercise = selectedExercise["reps_time_sec"] * selectedExercise["sets"];
                 curLenSeconds += lengthOfExercise;
 
                 // Calculate the rest time in between different exercises based upon the multiplier and length of past exercise
@@ -81,7 +81,7 @@ module.exports = {
                 restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
 
                 if ((curLenSeconds + restTime) < minimumLenSeconds) {
-                    workoutPlan['breaks'][breakNum] = {
+                    workoutPlan["breaks"][breakNum] = {
                         name: "Rest",
                         exercise_id: "20",
                         duration_sec: restTime,
@@ -91,8 +91,8 @@ module.exports = {
                     planIndex++;
                 } else if (curLenSeconds < minimumLenSeconds) {
                     // Add one more set to the final exercise to fill the small gap (or at least get closer to the target)
-                    workoutPlan['exercises'][exerciseNum - 1]['sets'] += 1;
-                    curLenSeconds += selectedExercise['reps_time_sec'];
+                    workoutPlan["exercises"][exerciseNum - 1]["sets"] += 1;
+                    curLenSeconds += selectedExercise["reps_time_sec"];
                 }
 
                 // Update the workout length and the list of remaning unselected exercises
@@ -100,14 +100,14 @@ module.exports = {
                 remainingIds.splice(selectedIdx, 1);
 
                 // Cleanup some data fields
-                delete selectedExercise['reps_time_sec'];
-            } 
+                delete selectedExercise["reps_time_sec"];
+            }
         }
 
         // Finalization steps
-        workoutPlan['est_length_sec'] = Math.round(curLenSeconds);
-        workoutPlan['associated_multiplier'] = multiplier;
-        workoutPlan['spottr_points'] = calculateSpottrPoints(curLenSeconds, multiplier);
+        workoutPlan["est_length_sec"] = Math.round(curLenSeconds);
+        workoutPlan["associated_multiplier"] = multiplier;
+        workoutPlan["spottr_points"] = calculateSpottrPoints(curLenSeconds, multiplier);
 
         return workoutPlan;
     },
@@ -116,7 +116,7 @@ module.exports = {
     // Generates a new "one-up" workout plan from a passed workout plan and multiplier.
     // Order of exercises does not change, only the number of reps.
     //
-    // The multiplier determines how much harder to make the "one-up" workout. Larger 
+    // The multiplier determines how much harder to make the "one-up" workout. Larger
     // multiplier will lead to a more difficult workout being generated.
     generateOneUpWorkoutPlan: function(oldWorkoutPlan, multiplier, newPlanId) {
         var actualDifficultyIncrease = ONE_UP_DIFFICULTY_INCREASE * multiplier;
@@ -143,18 +143,18 @@ const MIN_POINTS = 25;
 const MULTIPLIER_SHIFT_FACTOR = 0.9;
 
 function calculateSpottrPoints(estimatedLengthSeconds, multiplier) {
-    // Calculation is based upon both the workout's multiplier and the estimated length in seconds. We use the
+    // Calculation is based upon both the workout"s multiplier and the estimated length in seconds. We use the
     // MULTIPLIER_SHIFT_FACTOR to further extenuate the difference in points for harder vs. easier workouts.
     //
     // Harder workouts == more Spottr Points
     if (multiplier <= 1) {
         return Math.max(
-            MIN_POINTS, 
+            MIN_POINTS,
             Math.round(estimatedLengthSeconds * multiplier * MULTIPLIER_SHIFT_FACTOR / SEC_INCR) * POINT_PER_NORMALIZED_INCR
         );
     } else {
         return Math.max(
-            MIN_POINTS, 
+            MIN_POINTS,
             Math.round(estimatedLengthSeconds * multiplier * (1 / MULTIPLIER_SHIFT_FACTOR) / SEC_INCR) * POINT_PER_NORMALIZED_INCR
         );
     }
