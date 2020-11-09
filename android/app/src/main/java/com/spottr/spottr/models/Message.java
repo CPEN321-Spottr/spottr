@@ -26,14 +26,6 @@ public class Message {
      */
     public String getId() {return this.id;}
 
-    public String getSenderID() {return this.senderID;}
-
-    public String getRecipientID() {return this.recipientID;}
-
-    public String getBody() {return this.body;}
-
-    public Date getTs() {return this.ts;}
-
     /**
      * Setters
      */
