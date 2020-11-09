@@ -1,7 +1,7 @@
 var sql = require("mssql");
 
 module.exports = {
-    getUserByUserId: function(userId, dbConfig) {
+    getUserByUserId(userId, dbConfig) {
         try {
             return sql
               .connect(dbConfig)
@@ -23,7 +23,7 @@ module.exports = {
         }
     },
 
-    getUsers: function(dbConfig) {
+    getUsers(dbConfig) {
       try {
          return sql
            .connect(dbConfig)
@@ -43,7 +43,7 @@ module.exports = {
      }
    },
 
-   upsertUserMultiplier: function(userId, newMultiplierId, dbConfig) {
+   upsertUserMultiplier(userId, newMultiplierId, dbConfig) {
     try {
       return sql
         .connect(dbConfig)
@@ -65,7 +65,7 @@ module.exports = {
     }
    },
 
-   updateUserSpottrPoints: function(userId, newAmount, dbConfig) {
+   updateUserSpottrPoints(userId, newAmount, dbConfig) {
     try {
       return sql
         .connect(dbConfig)
@@ -87,7 +87,7 @@ module.exports = {
     }
    },
 
-   createUser: async function(dbConfig, googleID, googleEmail, googleName){
+   async createUser(dbConfig, googleID, googleEmail, googleName){
     try {
         return sql
           .connect(dbConfig)
@@ -110,8 +110,8 @@ module.exports = {
           throw ex;
       }
     },
-   
-   deleteUser: function(userId) {
+
+   deleteUser(userId) {
       return "Deleting user " + userId;
    }
 }
