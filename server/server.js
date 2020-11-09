@@ -36,9 +36,8 @@ app.get("/users", cors(), async function (req, res){
 
 app.get("/users/:userId", cors(), async function (req, res){
   try{
-    res.json(
-      await userService.getUserById(JSON.parse(req.params.userId), dbConfig)
-    );
+    let user = await userService.getUserById(JSON.parse(req.params.userId), dbConfig);
+    res.json(user);
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
