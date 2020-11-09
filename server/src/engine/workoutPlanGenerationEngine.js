@@ -197,8 +197,8 @@ module.exports = {
         var actualDifficultyIncrease = ONE_UP_DIFFICULTY_INCREASE * multiplier;
         var newPlan = util.clone(oldWorkoutPlan);
 
-        for (var i = 0; i < newPlan.exercises.length; i++) {
-            newPlan.exercises[i].reps = Math.ceil(newPlan.exercises[i].reps * (1 + actualDifficultyIncrease));
+        for (let exercise of newPlan.exercises) {
+            exercise.reps = Math.ceil(exercise.reps * (1 + actualDifficultyIncrease));
         }
 
         newPlan.workout_plan_id = newPlanId;
@@ -207,4 +207,4 @@ module.exports = {
 
         return newPlan;
     }
-}
+};

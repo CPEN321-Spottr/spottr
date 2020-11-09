@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.spottr.spottr.apis.APIFactory;
+import com.spottr.spottr.apis.AdminAPI;
 import com.spottr.spottr.events.NewsfeedPostEvent;
 import com.spottr.spottr.models.NewsfeedPost;
 
@@ -12,6 +14,10 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.math.BigInteger;
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
 
@@ -39,7 +45,25 @@ public class NewsfeedNotificationService extends FirebaseMessagingService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        // TODO: Implement this method to send token to your app server.
+        APIFactory apiFactory = new APIFactory(this);
+        final AdminAPI adminAPI = apiFactory.getAdminAPI();
+
+        Call<Void> firebasetokencall = adminAPI.registerFirebaseDeviceToken(token);
+        firebasetokencall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.code() == 200) {
+                    Log.d("TOKEN", "Successfully registered device token");
+                } else {
+                    Log.d("TOKEN", response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("TOKEN", "Device token registration failed");
+            }
+        });
     }
 
     @Override
