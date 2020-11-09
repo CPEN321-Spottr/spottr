@@ -16,6 +16,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -26,6 +27,7 @@ public class UITest {
 
         @Test
         public void testNavGeneratePlan() {
+                assertNotNull("get_workout_button was found", R.id.get_workout_button);
                 onView(withId(R.id.get_workout_button)).perform(click());
                 onView(withId(R.id.generate_plan_layout)).check(matches(isDisplayed()));
         }
