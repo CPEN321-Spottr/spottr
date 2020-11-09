@@ -1,8 +1,8 @@
-const {OAuth2Client} = require('google-auth-library');
-const connection = require('../connection.js');
-const token = require('../data/tokenData.js');
-const constants = require('../constants.js');
-const userService = require('./userService.js');
+const {OAuth2Client} = require("google-auth-library");
+const connection = require("../connection.js");
+const token = require("../data/tokenData.js");
+const constants = require("../constants.js");
+const userService = require("./userService.js");
 var CLIENT_ID = connection.getGoogleAuthClientID();
 
 module.exports = {
@@ -18,16 +18,16 @@ module.exports = {
         }
         try {
             return new Promise(async function(resolve){
-                var possibleUserProfile = await token.getUserByGoogleID(dbConfig, payload['sub']);
+                var possibleUserProfile = await token.getUserByGoogleID(dbConfig, payload["sub"]);
                 if (Object.keys(possibleUserProfile).length === 0) { //checks if returned a user or an empty list
-                    var newUser = userService.createNewUser(payload['sub'], payload['email'], payload['name'], dbConfig);
+                    var newUser = userService.createNewUser(payload["sub"], payload["email"], payload["name"], dbConfig);
                     resolve(JSON.parse(newUser));
-                } 
+                }
                 else {
                     resolve(JSON.parse(possibleUserProfile));
                 }
             });
-        } 
+        }
         catch(ex) {
             return new Promise(function(reject){
                 reject(constants.ERROR_RESPONSE)
