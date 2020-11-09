@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import static androidx.test.espresso.Espresso.*;
+import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -25,7 +25,7 @@ public class UITest {
         public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
         @Test
-        public void test_nav_generatePlan() {
+        public void testNavGeneratePlan() {
                 onView(withId(R.id.get_workout_button)).perform(click());
                 onView(withId(R.id.generate_plan_layout)).check(matches(isDisplayed()));
         }
