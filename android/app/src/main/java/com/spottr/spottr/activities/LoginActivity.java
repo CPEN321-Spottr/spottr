@@ -1,6 +1,5 @@
 package com.spottr.spottr.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -17,19 +16,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
+
 import com.spottr.spottr.R;
-
-import com.spottr.spottr.apis.APIFactory;
-import com.spottr.spottr.apis.AdminAPI;
-import com.spottr.spottr.models.User;
-import com.spottr.spottr.services.AuthorizationService;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.spottr.spottr.services.AuthorizationServiceHelper;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spottr_login);
 
-        final GoogleSignInClient mGoogleSignInClient = AuthorizationService.getDefaultSignInClient(this);
+        final GoogleSignInClient mGoogleSignInClient = AuthorizationServiceHelper.getDefaultSignInClient(this);
 
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {

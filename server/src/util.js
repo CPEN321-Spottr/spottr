@@ -1,17 +1,17 @@
 module.exports = {
-    roundToTwo : function (num) {    
+    roundToTwo(num) {
         return +(Math.round(num + "e+2")  + "e-2");
     },
 
-    roundToThree : function (num) {    
+    roundToThree(num) {
         return +(Math.round(num + "e+3")  + "e-3");
     },
 
-    clone : function (obj) {
+    clone(obj) {
         return JSON.parse(JSON.stringify(obj));
     },
 
-    sleep : function (ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
     }
-}
+};

@@ -6,8 +6,8 @@ public class User {
     private String id;
     private String name;
     private String email;
-    Date created;
-    Integer workouts;
+    private Date created;
+    private Integer workouts;
 
     /**
      * Constructors
