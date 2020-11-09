@@ -31,7 +31,6 @@ public class GeneratePlan extends AppCompatActivity {
     private String names[] = {};
     private int sets[] = {};
     private int reps[] = {};
-    private Button returnButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +74,7 @@ public class GeneratePlan extends AppCompatActivity {
         });
 
         //return button
-        returnButton = (Button) findViewById(R.id.workoutcreation_returnButton);
+        Button returnButton = (Button) findViewById(R.id.workoutcreation_returnButton);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,14 +85,12 @@ public class GeneratePlan extends AppCompatActivity {
 
     class Adapter extends ArrayAdapter<String> {
 
-        private Context context;
         private String names[];
         private int sets[];
         private int reps[];
 
         Adapter (Context c, String names[], int reps[], int sets[]) {
             super(c, R.layout.list_item, R.id.exercise_title, names);
-            this.context = c;
             this.names = names;
             this.reps = reps;
             this.sets = sets;
