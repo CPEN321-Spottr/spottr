@@ -18,7 +18,6 @@ Just a quick note before getting into the details: this process will be a lot le
 
 ## Connecting to local development enviroment
 To connect to a set-up local development enviroment, you'll require database management software. If you are using a JetBrain product, then you'll have a database management tool built into your IDE. Otherwise, extentions exist for other IDEs or you can use a free standalone software like DBeaver. Once you have your tools ready, you'll have to add a new connection with the following details:
-
 -    Host: `localhost`
 -    Port: `1433`
 -    User: `sa`

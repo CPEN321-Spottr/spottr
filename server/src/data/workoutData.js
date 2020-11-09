@@ -49,6 +49,7 @@ module.exports = {
           .catch((ex) => {
             throw ex;
           });
+
     },
 
     async getWorkoutPlanById(workoutPlanId, dbConfig) {
