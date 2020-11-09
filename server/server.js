@@ -1,8 +1,8 @@
-const express = require("express")
-const app = express()
-const cors = require("cors")
-const bodyParser = require("body-parser")
-const port = process.env.PORT || 3000
+const express = require("express");
+const app = express();
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const port = process.env.PORT || 3000;
 
 const workoutService = require("./src/service/workoutService.js");
 const firebaseService = require("./src/service/firebaseService.js");
@@ -18,7 +18,7 @@ connection.initializeFirebaseApp();
 
 app.listen(port, () => { console.log(`Spottr API listening at http://localhost:${port}`) })
 
-app.get("/", cors(), (req, res) => { res.json(new Date()) })
+app.get("/", cors(), (req, res) => { res.json(new Date()); })
 
 
 //////////                        //////////
@@ -70,7 +70,7 @@ app.post("/firebaseToken", jsonParser, cors(), async function (req, res){
     if (!("firebase-token" in req.body)) {
       throw ("Could not find expected firebase-token key in request body!");
     }
-    if (req.body["firebase-token"] == "") {
+    if (req.body["firebase-token"] === "") {
       throw ("Found token in body contains no value");
     }
 

@@ -109,7 +109,7 @@ module.exports = {
           .then((result) => {
             if (result.recordset.length === 0) {
               throw ("No workout exercises found for given workout plan id: " + workoutPlanId);
-            };
+            }
             return result.recordset;
           })
           .catch((ex) => {
