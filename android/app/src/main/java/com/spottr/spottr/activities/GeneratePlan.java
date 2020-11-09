@@ -27,12 +27,11 @@ import retrofit2.Response;
 
 public class GeneratePlan extends AppCompatActivity {
 
-    private ListView listView;
     private Plan workoutPlan;
     private String names[] = {};
     private int sets[] = {};
     private int reps[] = {};
-    Button returnButton;
+    private Button returnButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +45,7 @@ public class GeneratePlan extends AppCompatActivity {
         //userID 6 was given to
         Call<Plan> call = workoutAPI.getRecommendedPlan("6", 45, 1);
 
-        listView = findViewById(R.id.plan_list);
+        ListView listView = findViewById(R.id.plan_list);
 
         //creation of adapter
         final Adapter adapter = new Adapter(GeneratePlan.this, names, reps, sets);
@@ -87,10 +86,10 @@ public class GeneratePlan extends AppCompatActivity {
 
     class Adapter extends ArrayAdapter<String> {
 
-        Context context;
-        String names[];
-        int sets[];
-        int reps[];
+        private Context context;
+        private String names[];
+        private int sets[];
+        private int reps[];
 
         Adapter (Context c, String names[], int reps[], int sets[]) {
             super(c, R.layout.list_item, R.id.exercise_title, names);
