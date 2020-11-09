@@ -1,5 +1,4 @@
 const util = require("./util.js");
-var serviceAccount = require("../firebaseKey.json");
 var admin = require("firebase-admin");
 
 const connectionData = {
