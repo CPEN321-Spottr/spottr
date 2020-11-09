@@ -22,7 +22,7 @@ module.exports = {
                 server: "eu-az-sql-serv1.database.windows.net",
                 database: "dkxp1krn55tloca"
               };
-        };
+        }
         return util.clone(connectionData);
     },
 
@@ -36,5 +36,5 @@ module.exports = {
     getGoogleAuthClientID() {
         // backend client ID - USE THIS
         return "347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com";
-    }
+    };
 };

@@ -2,7 +2,7 @@ const userMultiplierData = require('../data/userMultiplierData.js');
 const userData = require('../data/userData.js');
 
 module.exports = {
-    createNewUser : async function (sub, email, name, dbConfig) {
+    async createNewUser(sub, email, name, dbConfig) {
         // Create all the data required for a new user in the database structure
         var newUserId = await userData.createUser(dbConfig, sub, email, name);
 
@@ -14,15 +14,15 @@ module.exports = {
         });
     },
 
-    getAllUsers : async function (dbConfig) {
+    async getAllUsers(dbConfig) {
         return new Promise(function(resolve) {
             resolve(await userData.getUsers(dbConfig));
         });
     },
 
-    getUserById : async function (userId, dbConfig) {
+    async getUserById(userId, dbConfig) {
         return new Promise(function(resolve) {
             resolve(await userData.getUserByUserId(userId, dbConfig));
         })
     }
-}
+};
