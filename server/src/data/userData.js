@@ -14,14 +14,14 @@ module.exports = {
               })
               .then((result) => {
                 if (result.recordset.length === 0) {
-                  throw ('No user found for user with id: ' + userId);
+                  throw ("No user found for user with id: " + userId);
                 }
                 return result.recordset[0];
               })
               .catch((ex) => {
                 console.error(ex);
                 throw ex;
-              })
+              });
     },
 
     async getUsers(dbConfig) {
@@ -101,7 +101,7 @@ module.exports = {
           })
           .then((result) => {
             if (result.recordset.length === 0) {
-              throw ('Could not create user with google id: ' + googleID);
+              throw ("Could not create user with google id: " + googleID);
             }
             return result.recordset[0].id;
           })
