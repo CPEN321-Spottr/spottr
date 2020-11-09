@@ -13,11 +13,11 @@ module.exports = {
             );
           })
           .then((result) => {
-            return result.recordset[0]['id'];
+            return result.recordset[0]["id"];
           })
           .catch((ex) => {
             console.error(ex);
             throw ex;
           });
     }
-}
+};

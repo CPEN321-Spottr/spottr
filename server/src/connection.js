@@ -1,4 +1,6 @@
 const util = require("./util.js");
+var serviceAccount = require("../firebaseKey.json");
+var admin = require("firebase-admin");
 
 const connectionData = {
     user: process.env.DB_USER,
@@ -25,9 +27,6 @@ module.exports = {
     },
 
     initializeFirebaseApp(admin) {
-        var serviceAccount = require("../firebaseKey.json");
-        var admin = require("firebase-admin");
-
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
             databaseURL: "sqlserver://eu-az-sql-serv1.database.windows.net:1433;database=dkxp1krn55tloca"
