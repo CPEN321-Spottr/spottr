@@ -1,14 +1,12 @@
 var sql = require("mssql");
-//const CLIENT_ID_1 = "347900541097-jh4h8b5iuglt6s785vo6j73relo9fph4.apps.googleusercontent.com"; //debug
-//const CLIENT_ID_2 = "347900541097-qbvaoqoc68hp2m6joea6728ebgm598lt.apps.googleusercontent.com"; //release
-const CLIENT_ID = "347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com"; //backend client ID - USE THIS
+const connection = require("../connection.js");
 
 module.exports = {
     async verifyToken(client, token) {
         //Verify user token
         const ticket = await client.verifyIdToken({
             idToken: token,
-            audience: CLIENT_ID,
+            audience: connection.getGoogleAuthClientID(),
         });
         const payload = ticket.getPayload();
         return payload;
