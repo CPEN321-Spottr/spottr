@@ -1,6 +1,6 @@
-const { MAX } = require('mssql');
-const util = require('../util.js');
-const workoutData = require('../data/workoutData.js');
+const { MAX } = require("mssql");
+const util = require("../util.js");
+const workoutData = require("../data/workoutData.js");
 
 // Workout plan generation constants
 const MAX_REST_SEC = 45;
@@ -72,7 +72,7 @@ function generateExercise(remainingIds, exercises, planIndex, workoutPlan, exerc
 // Selects exercises a given list of exercises and generates breaks to fill a passed
 // workout plan object. Accounts for user multiplier and desiered length in minutes.
 //
-// Will meet the target length within +-10% seconds and will only repeat exercises once 
+// Will meet the target length within +-10% seconds and will only repeat exercises once
 // all of them have been selected once.
 function fillWorkoutPlan(lengthMinutes, exercises, workoutPlan, multiplier) {
     var exerciseNum = 0;
@@ -90,7 +90,7 @@ function fillWorkoutPlan(lengthMinutes, exercises, workoutPlan, multiplier) {
             var selectedIdx;
             ({ selectedExercise, selectedIdx, planIndex, exerciseNum } = generateExercise(remainingIds, exercises, planIndex, workoutPlan, exerciseNum));
 
-            // Add a rest if there is another exercise next, else add one more set to the last 
+            // Add a rest if there is another exercise next, else add one more set to the last
             // exercise to finish workout if theres still time to spare
             var restTime;
             ({ restTime, curLenSeconds, planIndex, breakNum } = generateRest(selectedExercise, curLenSeconds, multiplier, minimumLenSeconds, workoutPlan, planIndex, breakNum, exerciseNum));
@@ -107,7 +107,7 @@ function fillWorkoutPlan(lengthMinutes, exercises, workoutPlan, multiplier) {
 }
 
 // Adjusts the difficulty of a list of exercises depending on a passed multiplier. A larger multiplier
-// will lead to a greater number of reps per exercise. 
+// will lead to a greater number of reps per exercise.
 function adjustExercises(exercises, multiplier) {
     for (let i = 0; i < exercises.length; i++) {
         let exercise = exercises[parseInt(i, 10)];
@@ -141,20 +141,20 @@ function adjustExercises(exercises, multiplier) {
     return exercises;
 }
 
-// Calculates the number of Spottr Points for a given workout. 
-// 
-// The number of points is based upon both the workout's multiplier and the estimated length in seconds. 
+// Calculates the number of Spottr Points for a given workout.
+//
+// The number of points is based upon both the workout's multiplier and the estimated length in seconds.
 // We use the MULTIPLIER_SHIFT_FACTOR to further extenuate the difference in points for harder vs. easier workouts.
 // Harder workouts => more Spottr Points.
 function calculateSpottrPoints(estimatedLengthSeconds, multiplier) {
     if (multiplier <= 1) {
         return Math.max(
-            MIN_POINTS, 
+            MIN_POINTS,
             Math.round(estimatedLengthSeconds * multiplier * MULTIPLIER_SHIFT_FACTOR / SEC_INCR) * POINT_PER_NORMALIZED_INCR
         );
     } else {
         return Math.max(
-            MIN_POINTS, 
+            MIN_POINTS,
             Math.round(estimatedLengthSeconds * multiplier * (1 / MULTIPLIER_SHIFT_FACTOR) / SEC_INCR) * POINT_PER_NORMALIZED_INCR
         );
     }
@@ -162,9 +162,9 @@ function calculateSpottrPoints(estimatedLengthSeconds, multiplier) {
 
 
 module.exports = {
-    // Generates a new workout plan with the given possible exercises to include, multiplier, 
+    // Generates a new workout plan with the given possible exercises to include, multiplier,
     // desired length in minutes, and the new plan id to associate with the generated plan
-    generateNewWorkoutPlan: function(lengthMinutes, possibleExercises, multiplier, planId) {
+    generateNewWorkoutPlan(lengthMinutes, possibleExercises, multiplier, planId) {
         var workoutPlan = {
             workout_plan_id: parseInt(planId, 10),
             exercises: [],
@@ -174,7 +174,7 @@ module.exports = {
             spottr_points: 0
         };
 
-        // Calculate adjusted standard time and reps 
+        // Calculate adjusted standard time and reps
         var adjustedExercises = adjustExercises(possibleExercises, multiplier);
 
         // Randomly select exercises to meet the target length of workout
@@ -191,9 +191,9 @@ module.exports = {
     // Generates a new "one-up" workout plan from a passed workout plan and multiplier.
     // Order of exercises does not change, only the number of reps.
     //
-    // The multiplier determines how much harder to make the "one-up" workout. Larger 
+    // The multiplier determines how much harder to make the "one-up" workout. Larger
     // multiplier will lead to a more difficult workout being generated.
-    generateOneUpWorkoutPlan: function(oldWorkoutPlan, multiplier, newPlanId) {
+    generateOneUpWorkoutPlan(oldWorkoutPlan, multiplier, newPlanId) {
         var actualDifficultyIncrease = ONE_UP_DIFFICULTY_INCREASE * multiplier;
         var newPlan = util.clone(oldWorkoutPlan);
 

@@ -1,30 +1,29 @@
 var sql = require("mssql");
 
 module.exports = {
-    getUserByUserId: function(userId, dbConfig) {
-        try {
-            return sql
-              .connect(dbConfig)
-              .then((pool) => {
-                return pool
-                  .request()
-                  .input("userId", sql.Int, userId)
-                  .query(
-                    "SELECT * FROM user_profile WHERE id = @userId"
-                  );
-              })
-              .then((result) => {
-                if (result.recordset.length == 0) throw ('No user found for user with id: ' + userId);
-                return result.recordset[0];
-              })
-        } catch(ex) {
-            console.log(ex);
+    async getUserByUserId(userId, dbConfig) {
+        return sql
+          .connect(dbConfig)
+          .then((pool) => {
+            return pool
+              .request()
+              .input("userId", sql.Int, userId)
+              .query(
+                "SELECT * FROM user_profile WHERE id = @userId"
+              );
+          })
+          .then((result) => {
+            if (result.recordset.length === 0) {
+              throw ("No user found for user with id: " + userId);
+            }
+            return result.recordset[0];
+          })
+          .catch((ex) => {
             throw ex;
-        }
+          });
     },
 
-    getUsers: function(dbConfig) {
-      try {
+    async getUsers(dbConfig) {
          return sql
            .connect(dbConfig)
            .then((pool) => {
@@ -37,14 +36,12 @@ module.exports = {
            .then((result) => {
              return result.recordset;
            })
-     } catch(ex) {
-         console.log(ex);
-         return ex;
-     }
+           .catch((ex) => {
+             throw ex;
+           });
    },
 
-   upsertUserMultiplier: function(userId, newMultiplierId, dbConfig) {
-    try {
+   async upsertUserMultiplier(userId, newMultiplierId, dbConfig) {
       return sql
         .connect(dbConfig)
         .then((pool) => {
@@ -59,14 +56,12 @@ module.exports = {
         .then((result) => {
           return 1;
         })
-    } catch(ex) {
-        console.log(ex);
-        throw ex;
-    }
+        .catch((ex) => {
+          throw ex;
+        });
    },
 
-   updateUserSpottrPoints: function(userId, newAmount, dbConfig) {
-    try {
+   async updateUserSpottrPoints(userId, newAmount, dbConfig) {
       return sql
         .connect(dbConfig)
         .then((pool) => {
@@ -81,14 +76,13 @@ module.exports = {
         .then((result) => {
           return 1;
         })
-    } catch(ex) {
-        console.log(ex);
-        throw ex;
-    }
+        .catch((ex) => {
+          throw ex;
+        });
    },
 
-   createUser: async function(dbConfig, googleID, googleEmail, googleName){
-    try {
+   async createUser(dbConfig, googleID, googleEmail, googleName){
+
         return sql
           .connect(dbConfig)
           .then((pool) => {
@@ -102,16 +96,17 @@ module.exports = {
               );
           })
           .then((result) => {
-            if (result.recordset.length == 0) throw ('Could not create user with google id: ' + googleID);
+            if (result.recordset.length === 0) {
+              throw ("Could not create user with google id: " + googleID);
+            }
             return result.recordset[0].id;
           })
-      } catch(ex) {
-          console.log(ex);
-          throw ex;
-      }
+          .catch((ex) => {
+            throw ex;
+          });
     },
-   
-   deleteUser: function(userId) {
+
+   deleteUser(userId) {
       return "Deleting user " + userId;
    }
-}
+};
