@@ -9,6 +9,29 @@ const TIME_ESTIMATE_SHIFT_FACTOR = 0.5;
 
 const ONE_UP_DIFFICULTY_INCREASE = 0.1;
 
+const SEC_INCR = 20;
+const POINT_PER_NORMALIZED_INCR = 5;
+const MIN_POINTS = 25;
+const MULTIPLIER_SHIFT_FACTOR = 0.9;
+
+function calculateSpottrPoints(estimatedLengthSeconds, multiplier) {
+    // Calculation is based upon both the workout"s multiplier and the estimated length in seconds. We use the
+    // MULTIPLIER_SHIFT_FACTOR to further extenuate the difference in points for harder vs. easier workouts.
+    //
+    // Harder workouts == more Spottr Points
+    if (multiplier <= 1) {
+        return Math.max(
+            MIN_POINTS,
+            Math.round(estimatedLengthSeconds * multiplier * MULTIPLIER_SHIFT_FACTOR / SEC_INCR) * POINT_PER_NORMALIZED_INCR
+        );
+    } else {
+        return Math.max(
+            MIN_POINTS,
+            Math.round(estimatedLengthSeconds * multiplier * (1 / MULTIPLIER_SHIFT_FACTOR) / SEC_INCR) * POINT_PER_NORMALIZED_INCR
+        );
+    }
+}
+
 module.exports = {
     // Generates a new workout plan with the given possible exercises to include, multiplier,
     // desired length in minutes, and the new plan id to associate with the generated plan
@@ -118,7 +141,7 @@ module.exports = {
     //
     // The multiplier determines how much harder to make the "one-up" workout. Larger
     // multiplier will lead to a more difficult workout being generated.
-    generateOneUpWorkoutPlan: function(oldWorkoutPlan, multiplier, newPlanId) {
+    generateOneUpWorkoutPlan(oldWorkoutPlan, multiplier, newPlanId) {
         var actualDifficultyIncrease = ONE_UP_DIFFICULTY_INCREASE * multiplier;
         var newPlan = util.clone(oldWorkoutPlan);
 
@@ -134,28 +157,5 @@ module.exports = {
         );
 
         return newPlan;
-    }
-}
-
-const SEC_INCR = 20;
-const POINT_PER_NORMALIZED_INCR = 5;
-const MIN_POINTS = 25;
-const MULTIPLIER_SHIFT_FACTOR = 0.9;
-
-function calculateSpottrPoints(estimatedLengthSeconds, multiplier) {
-    // Calculation is based upon both the workout"s multiplier and the estimated length in seconds. We use the
-    // MULTIPLIER_SHIFT_FACTOR to further extenuate the difference in points for harder vs. easier workouts.
-    //
-    // Harder workouts == more Spottr Points
-    if (multiplier <= 1) {
-        return Math.max(
-            MIN_POINTS,
-            Math.round(estimatedLengthSeconds * multiplier * MULTIPLIER_SHIFT_FACTOR / SEC_INCR) * POINT_PER_NORMALIZED_INCR
-        );
-    } else {
-        return Math.max(
-            MIN_POINTS,
-            Math.round(estimatedLengthSeconds * multiplier * (1 / MULTIPLIER_SHIFT_FACTOR) / SEC_INCR) * POINT_PER_NORMALIZED_INCR
-        );
     }
 }
