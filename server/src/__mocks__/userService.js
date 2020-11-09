@@ -7,9 +7,15 @@ const users = {
 }
 
 module.exports = {
+    createNewUser : async function (sub, email, name, dbConfig) {
+        const newUser = sub + email + name;
+        return new Promise(async function(resolve) {
+            resolve(await newUser);
+        });
+    },
     getAllUsers : async function (dbConfig) {
+        var getUsers = "Successfully found all users";
         return new Promise(function(resolve) {
-            var getUsers = "Successfully found all users";
             resolve(getUsers);
         });
     },

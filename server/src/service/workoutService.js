@@ -4,6 +4,7 @@ const userData = require('../data/userData.js');
 const firebaseService = require('./firebaseService.js');
 const constants = require('../constants.js');
 const util = require('../util.js');
+const e = require('express');
 
 const MULTIPLIER_STEPS = 0.025;
 const MIN_MULTIPLIER = 0.2;
@@ -38,7 +39,9 @@ module.exports = {
         );
         data.createWorkoutExerciseEntries(workoutPlan, dbConfig);
 
-        return workoutPlan;
+        return new Promise(function(resolve) {
+            resolve(workoutPlan);
+        });
     },
 
 
@@ -95,7 +98,9 @@ module.exports = {
 
         await data.updateUserMultiplier(targetMuscleGroup, userMultiplier, user.user_multiplier_id, dbConfig);
         
-        return constants.SUCCESS_RESPONSE;
+        return new Promise(function(resolve) {
+            resolve(constants.SUCCESS_RESPONSE);
+        });
     },
 
 
@@ -129,8 +134,46 @@ module.exports = {
                 );
             }
         }
+        return new Promise (function (resolve) {
+            resolve(1);
+        });
+    }, 
 
-        return 1;
+    getAllMuscleGroups: async function (dbConfig) {
+        return new Promise(function(resolve) {
+            resolve(data.getAllMuscleGroups(dbConfig));
+        });
+    },
+
+    getWorkoutHistory: async function (dbConfig, numEntries, startId) {
+        numEntries = Number(numEntries);
+        startId = Number(startId);
+        var maxWorkoutHistoryId = Number(await data.getMaxWorkoutHistoryId(dbConfig));
+        return new Promise(function(resolve, reject) {
+            if (typeof startId == 'undefined') {
+                resolve(data.getRecentWorkoutHistory(dbConfig, maxWorkoutHistoryId-numEntries, maxWorkoutHistoryId));
+            }
+            else {
+                if (startId > maxWorkoutHistoryId){
+                    console.log("Error: startId is bigger than the number of entries in the workout_history table.")
+                    reject(constants.ERROR_RESPONSE)
+                }
+                console.log(startId+numEntries);
+                upperLimitId = startId+numEntries <= maxWorkoutHistoryId ? startId+numEntries-1 : maxWorkoutHistoryId;
+                console.log(upperLimitId);
+                resolve(data.getRecentWorkoutHistory(dbConfig, startId, upperLimitId));
+            }
+        });
+    },
+
+    getWorkoutPlanById: async function (dbConfig, workoutPlanId){
+        var oldWorkoutPlan = await data.getWorkoutPlanById(workoutPlanId, dbConfig);
+        var oldWorkoutExercises = await data.getWorkoutExercisesByWorkoutPlanId(workoutPlanId);
+        var exerciseData = await data.getExercisesByTargetMuscleGroups(oldWorkoutPlan.major_muscle_group_id, dbConfig)
+
+        return new Promise(async function(resolve) {
+            resolve(reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData));
+        });
     }
 }
 
@@ -155,9 +198,10 @@ function calculateNewMultiplier(percentageDifference, currentMultiplier) {
         changeValue = Math.min(changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
     }
     
-    return util.roundToThree(currentMultiplier + changeValue);
+    return new Promise(function(resolve) {
+        resolve(util.roundToThree(currentMultiplier + changeValue));
+    });
 }
-
 
 // Using data that can be collected from the database tables, this function reconstructs a workout
 // plan and reproduces the same format which the FE expects from the generateNewWorkoutPlan API

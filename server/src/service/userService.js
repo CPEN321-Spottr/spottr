@@ -8,8 +8,10 @@ module.exports = {
         
         var newMultiplierId = await userMultiplierData.createUserMultipler(newUserId, dbConfig);
         await userData.upsertUserMultiplier(newUserId, newMultiplierId, dbConfig);
-        
-        return await userData.getUserByUserId(newUserId, dbConfig);
+
+        return new Promise(async function(resolve){
+            resolve(await userData.getUserByUserId(newUserId, dbConfig))
+        });
     },
 
     getAllUsers : async function (dbConfig) {
