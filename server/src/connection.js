@@ -13,7 +13,7 @@ const connectionData = {
 // the "const dbConfig" line in server.js as specified in the Google Doc file
 module.exports = {
     getDbConfig() {
-        if (connectionData[0] === undefined) {
+        if (typeof connectionData[0] == "undefined") {
             console.log("RESORTING TO DEFAULT DB CONNECTION...\n");
 
             return {

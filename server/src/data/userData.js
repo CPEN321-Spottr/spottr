@@ -2,26 +2,26 @@ var sql = require("mssql");
 
 module.exports = {
     async getUserByUserId(userId, dbConfig) {
-            return sql
-              .connect(dbConfig)
-              .then((pool) => {
-                return pool
-                  .request()
-                  .input("userId", sql.Int, userId)
-                  .query(
-                    "SELECT * FROM user_profile WHERE id = @userId"
-                  );
-              })
-              .then((result) => {
-                if (result.recordset.length === 0) {
-                  throw ("No user found for user with id: " + userId);
-                }
-                return result.recordset[0];
-              })
-              .catch((ex) => {
-                console.error(ex);
-                throw ex;
-              });
+        return sql
+          .connect(dbConfig)
+          .then((pool) => {
+            return pool
+              .request()
+              .input("userId", sql.Int, userId)
+              .query(
+                "SELECT * FROM user_profile WHERE id = @userId"
+              );
+          })
+          .then((result) => {
+            if (result.recordset.length === 0) {
+              throw ("No user found for user with id: " + userId);
+            }
+            return result.recordset[0];
+          })
+          .catch((ex) => {
+            console.error(ex);
+            throw ex;
+          });
     },
 
     async getUsers(dbConfig) {
@@ -40,7 +40,7 @@ module.exports = {
            .catch((ex) => {
              console.error(ex);
              throw ex;
-           })
+           });
    },
 
    async upsertUserMultiplier(userId, newMultiplierId, dbConfig) {
@@ -61,7 +61,7 @@ module.exports = {
         .catch((ex) => {
           console.error(ex);
           throw ex;
-        })
+        });
    },
 
    async updateUserSpottrPoints(userId, newAmount, dbConfig) {
@@ -82,7 +82,7 @@ module.exports = {
         .catch((ex) => {
           console.error(ex);
           throw ex;
-        })
+        });
    },
 
    async createUser(dbConfig, googleID, googleEmail, googleName){
@@ -108,10 +108,10 @@ module.exports = {
           .catch((ex) => {
             console.error(ex);
             throw ex;
-          })
+          });
     },
 
    deleteUser(userId) {
       return "Deleting user " + userId;
    }
-}
+};
