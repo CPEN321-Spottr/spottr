@@ -1,5 +1,9 @@
 var userService = require("../__mocks__/userService.js");
-jest.mock("../data/userData.js");
+
+if(typeof jest !== "undefined") {
+  jest.mock("../data/userData.js");
+}
+
 
 const connection = require("../connection.js");
 var dbConfig = connection.getDbConfig();
