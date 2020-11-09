@@ -11,7 +11,7 @@ module.exports = {
             audience: CLIENT_ID,
         });
         const payload = ticket.getPayload();
-        return payload
+        return payload;
     },
 
     async getUserByGoogleID(dbConfig, googleID){

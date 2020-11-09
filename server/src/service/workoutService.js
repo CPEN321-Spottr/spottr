@@ -13,6 +13,93 @@ const PERCENT_DIFF_RECALC_TRIGGER = 1.15;
 
 const BREAK_ID = 20;
 
+const DIFF_MULTIPLICATION_FACTOR = 0.33;
+const MAX_SINGLE_CHANGE_PERCENT = 0.15;
+
+// Either increases or decreases a user"s multiplier depending on the amount of time they took to
+// complete a workout vs the estimated time for their current multiplier.
+//
+// The percentageDifference is "actual time / estimated time". This means percentageDifference > 1
+// implies that the workout was too hard and the multiplier needs to be decreased.
+//
+// This can be made more complex in the future if it is required to enhance user experience.
+function calculateNewMultiplier(percentageDifference, currentMultiplier) {
+    var changeFactor = (percentageDifference - 1) * -1 * DIFF_MULTIPLICATION_FACTOR;
+
+    var changeValue;
+    if (changeFactor < 0) {
+        changeValue = Math.max(-changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
+    } else {
+        changeValue = Math.min(changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
+    }
+
+    return new Promise(function(resolve) {
+        resolve(util.roundToThree(currentMultiplier + changeValue));
+    });
+}
+
+// Using data that can be collected from the database tables, this function reconstructs a workout
+// plan and reproduces the same format which the FE expects from the generateNewWorkoutPlan API
+function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData) {
+    var reassembledPlan = {
+        workout_plan_id: oldWorkoutPlan.id,
+        exercises: [],
+        breaks: []
+    };
+
+    // Combine the breaks and exercise lists (like the usual plan generation)
+    let exerciseCount = 0;
+    let breakCount = 0;
+
+    for (var i = 0; i < oldWorkoutExercises.length; i++) {
+        var currentExercise = oldWorkoutExercises[i];
+
+        if (currentExercise.exercise_id == BREAK_ID) {
+            var reassembledBreak = {
+                name: "Rest",
+                exercise_id: BREAK_ID,
+                duration_sec: currentExercise.num_reps,
+                workout_order_num: currentExercise.workout_order_num
+            };
+
+            reassembledPlan.breaks[breakCount] = reassembledBreak;
+            breakCount++;
+        } else {
+            var relevantExercise = exerciseData.find((obj) => {
+              return obj.id === currentExercise.exercise_id
+            });
+            
+            if (typeof relevantExercise === "undefined") {
+              throw "Required exercise data is missing for plan reconstruction!";
+            }
+
+            var reassembledExercise = {
+                name: relevantExercise.name,
+                exercise_id: relevantExercise.id,
+                description: relevantExercise.description,
+                major_muscle_group_id: relevantExercise.major_muscle_group_id,
+                sets: currentExercise.num_sets,
+                reps: currentExercise.num_reps,
+                workout_order_num: currentExercise.workout_order_num
+            };
+
+            reassembledPlan.exercises[exerciseCount] = reassembledExercise;
+            exerciseCount++;
+        }
+    }
+
+    // Ensure data is in the correct order within the exercise and break lists
+    reassembledPlan.exercises.sort((a,b) => a.workout_order_num - b.workout_order_num);
+    reassembledPlan.breaks.sort((a,b) => a.workout_order_num - b.workout_order_num);
+
+    // Add final additional data
+    reassembledPlan.est_length_sec = oldWorkoutPlan.est_length_sec;
+    reassembledPlan.associated_multiplier = oldWorkoutPlan.associated_multiplier;
+    reassembledPlan.spottr_points = oldWorkoutPlan.spottr_points;
+
+    return reassembledPlan;
+}
+
 module.exports = {
     // Generates a workout plan via the algorithm, perists it to the database, and returns it to the caller
     async generateWorkoutPlan(userId, lengthMinutes, targetMuscleGroup, dbConfig) {
@@ -94,7 +181,9 @@ module.exports = {
 
         // Generate new multiplier, upsert data, return success response
         userMultiplier += (MULTIPLIER_STEPS * changeFactor);
-        if (userMultiplier < MIN_MULTIPLIER) userMultiplier = MIN_MULTIPLIER;
+        if (userMultiplier < MIN_MULTIPLIER) {
+          userMultiplier = MIN_MULTIPLIER;
+        }
 
         await data.updateUserMultiplier(targetMuscleGroup, userMultiplier, user.user_multiplier_id, dbConfig);
 
@@ -158,7 +247,7 @@ module.exports = {
                     console.error("Error: startId is bigger than the number of entries in the workout_history table.")
                     reject(constants.ERROR_RESPONSE)
                 }
-                upperLimitId = startId+numEntries <= maxWorkoutHistoryId ? startId+numEntries-1 : maxWorkoutHistoryId;
+                let upperLimitId = startId+numEntries <= maxWorkoutHistoryId ? startId+numEntries-1 : maxWorkoutHistoryId;
                 resolve(data.getRecentWorkoutHistory(dbConfig, startId, upperLimitId));
             }
         });
@@ -173,87 +262,4 @@ module.exports = {
             resolve(reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData));
         });
     }
-}
-
-
-const DIFF_MULTIPLICATION_FACTOR = 0.33;
-const MAX_SINGLE_CHANGE_PERCENT = 0.15;
-
-// Either increases or decreases a user"s multiplier depending on the amount of time they took to
-// complete a workout vs the estimated time for their current multiplier.
-//
-// The percentageDifference is "actual time / estimated time". This means percentageDifference > 1
-// implies that the workout was too hard and the multiplier needs to be decreased.
-//
-// This can be made more complex in the future if it is required to enhance user experience.
-function calculateNewMultiplier(percentageDifference, currentMultiplier) {
-    var changeFactor = (percentageDifference - 1) * -1 * DIFF_MULTIPLICATION_FACTOR;
-
-    var changeValue;
-    if (changeFactor < 0) {
-        changeValue = Math.max(-changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
-    } else {
-        changeValue = Math.min(changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
-    }
-
-    return new Promise(function(resolve) {
-        resolve(util.roundToThree(currentMultiplier + changeValue));
-    });
-}
-
-// Using data that can be collected from the database tables, this function reconstructs a workout
-// plan and reproduces the same format which the FE expects from the generateNewWorkoutPlan API
-function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData) {
-    var reassembledPlan = {
-        workout_plan_id: oldWorkoutPlan.id,
-        exercises: [],
-        breaks: []
-    };
-
-    // Combine the breaks and exercise lists (like the usual plan generation)
-    exerciseCount = 0;
-    breakCount = 0;
-
-    for (var i = 0; i < oldWorkoutExercises.length; i++) {
-        var currentExercise = oldWorkoutExercises[i];
-
-        if (currentExercise.exercise_id == BREAK_ID) {
-            var reassembledBreak = {
-                name: "Rest",
-                exercise_id: BREAK_ID,
-                duration_sec: currentExercise.num_reps,
-                workout_order_num: currentExercise.workout_order_num
-            };
-
-            reassembledPlan.breaks[breakCount] = reassembledBreak;
-            breakCount++;
-        } else {
-            var relevantExercise = exerciseData.find(obj => { return obj.id === currentExercise.exercise_id });
-            if (typeof relevantExercise === "undefined") throw "Required exercise data is missing for plan reconstruction!";
-
-            var reassembledExercise = {
-                name: relevantExercise.name,
-                exercise_id: relevantExercise.id,
-                description: relevantExercise.description,
-                major_muscle_group_id: relevantExercise.major_muscle_group_id,
-                sets: currentExercise.num_sets,
-                reps: currentExercise.num_reps,
-                workout_order_num: currentExercise.workout_order_num
-            };
-
-            reassembledPlan.exercises[exerciseCount] = reassembledExercise;
-            exerciseCount++;
-        }
-    }
-
-    // Ensure data is in the correct order within the exercise and break lists
-    reassembledPlan.exercises.sort((a,b) => a.workout_order_num - b.workout_order_num);
-    reassembledPlan.breaks.sort((a,b) => a.workout_order_num - b.workout_order_num);
-
-    // Add final additional data
-    reassembledPlan.est_length_sec = oldWorkoutPlan.est_length_sec;
-    reassembledPlan.associated_multiplier = oldWorkoutPlan.associated_multiplier;
-    reassembledPlan.spottr_points = oldWorkoutPlan.spottr_points;
-
-    return reassembledPlan;
 }
