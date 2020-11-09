@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ImageView imgProfilePic = (ImageView) findViewById(R.id.profile_pic);
-        TextView welcomeBackText = findViewById(R.id.welcome_back_text);
         ListView newsfeed = findViewById(R.id.newsfeed);
         Button workoutButton = (Button) findViewById(R.id.get_workout_button);
         workoutButton.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        TextView welcomeBackText = findViewById(R.id.welcome_back_text);
         welcomeBackText.setText(account.getDisplayName());
 
         ArrayList<NewsfeedPost> arrayOfPosts = new ArrayList<NewsfeedPost>();
