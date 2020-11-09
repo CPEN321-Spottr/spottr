@@ -15,7 +15,7 @@ module.exports = {
           .then((result) => {
             if (result.recordset.length === 0) {
               throw ("No exercises found for given target muscle group: " + targetMuscleGroup);
-            };
+            }
             return result.recordset;
           })
           .catch((ex) => {
@@ -44,7 +44,7 @@ module.exports = {
           .then((result) => {
             if (result.recordset.length === 0) {
               throw ("No user multiplier records found for given user with multiplier id: " + multiplierId);
-            };
+            }
             return result.recordset[0]["arms"];
           })
           .catch((ex) => {
@@ -67,7 +67,7 @@ module.exports = {
           .then((result) => {
             if (result.recordset.length === 0) {
               throw ("No workout plan found for given workout plan id: " + workoutPlanId);
-            };
+            }
             return result.recordset[0];
           })
           .catch((ex) => {
@@ -90,7 +90,7 @@ module.exports = {
           .then((result) => {
             if (result.recordset.length === 0){
               throw ("No workout history found for given workout history id: " + workoutHistoryId);
-            };
+            }
             return result.recordset[0];
           })
           .catch((ex) => {
@@ -111,7 +111,7 @@ module.exports = {
               );
           })
           .then((result) => {
-            if (result.recordset.length == 0) {
+            if (result.recordset.length === 0) {
               throw ("No workout exercises found for given workout plan id: " + workoutPlanId);
             };
             return result.recordset;
@@ -171,29 +171,30 @@ module.exports = {
           .then((pool) => {
             var lastPool;
 
-            for (var i = 0; i < workoutPlan["exercises"].length; i += 1) {
+            for (let excercise of workoutPlan["exercises"]) {
                 lastPool = pool
                           .request()
                           .input("wpid", sql.Int, workoutPlan["workout_plan_id"])
-                          .input("eid", sql.Int, workoutPlan["exercises"][i]["exercise_id"])
-                          .input("nr", sql.Int, workoutPlan["exercises"][i]["reps"])
-                          .input("ns", sql.Int, workoutPlan["exercises"][i]["sets"])
-                          .input("won", sql.Int, workoutPlan["exercises"][i]["workout_order_num"])
+                          .input("eid", sql.Int, excercise["exercise_id"])
+                          .input("nr", sql.Int, excercise["reps"])
+                          .input("ns", sql.Int, excercise["sets"])
+                          .input("won", sql.Int, excercise["workout_order_num"])
                           .query(
                             "INSERT INTO workout_exercise(workout_plan_id, exercise_id, num_reps, num_sets, workout_order_num) VALUES (@wpid, @eid, @nr, @ns, @won)"
                           );
 
-                if (i < workoutPlan["breaks"].length) {
-                  lastPool = pool
-                          .request()
-                          .input("wpid", sql.Int, workoutPlan["workout_plan_id"])
-                          .input("eid", sql.Int, workoutPlan["breaks"][i]["exercise_id"])
-                          .input("len", sql.Int, workoutPlan["breaks"][i]["duration_sec"])
-                          .input("won", sql.Int, workoutPlan["breaks"][i]["workout_order_num"])
-                          .query(
-                            "INSERT INTO workout_exercise(workout_plan_id, exercise_id, num_reps, num_sets, workout_order_num) VALUES (@wpid, @eid, @len, 1, @won)"
-                          );
-                }
+            }
+
+            for (let break of workoutPlan["breaks"]) {
+              lastPool = pool
+                      .request()
+                      .input("wpid", sql.Int, workoutPlan["workout_plan_id"])
+                      .input("eid", sql.Int, break["exercise_id"])
+                      .input("len", sql.Int, break["duration_sec"])
+                      .input("won", sql.Int, break["workout_order_num"])
+                      .query(
+                        "INSERT INTO workout_exercise(workout_plan_id, exercise_id, num_reps, num_sets, workout_order_num) VALUES (@wpid, @eid, @len, 1, @won)"
+                      );
             }
 
             return lastPool;
