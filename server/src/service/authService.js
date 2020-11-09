@@ -6,16 +6,18 @@ const userService = require("./userService.js");
 var CLIENT_ID = connection.getGoogleAuthClientID();
 
 module.exports = {
-    googleTokenVerify: async function(dbConfig, tokenToVerify) {
+    async googleTokenVerify(dbConfig, tokenToVerify) {
         const client = new OAuth2Client(CLIENT_ID);
+        var payload;
+
         try {
-            var payload = await token.verifyToken(client, tokenToVerify);
-        }
-        catch(ex) {
+            payload = await token.verifyToken(client, tokenToVerify);
+        }catch(ex) {
             return new Promise(function(reject){
                 reject(constants.INVALID_TOKEN_RESPONSE)
             });
         }
+
         try {
             return new Promise(async function(resolve){
                 var possibleUserProfile = await token.getUserByGoogleID(dbConfig, payload["sub"]);
@@ -30,8 +32,8 @@ module.exports = {
         }
         catch(ex) {
             return new Promise(function(reject){
-                reject(constants.ERROR_RESPONSE)
+                reject(constants.ERROR_RESPONSE);
             });
         }
     }
-}
+};
