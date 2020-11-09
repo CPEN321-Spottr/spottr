@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # wait for the SQL Server to come up
 sleep 30
 
