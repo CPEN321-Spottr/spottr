@@ -34,6 +34,6 @@ module.exports = {
         .catch((ex) => {
           console.error(ex);
           throw ex;
-        })
+        });
     }
- }
+ };

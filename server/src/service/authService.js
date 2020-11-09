@@ -14,7 +14,7 @@ module.exports = {
             payload = await token.verifyToken(client, tokenToVerify);
         }catch(ex) {
             return new Promise(function(reject){
-                reject(constants.INVALID_TOKEN_RESPONSE)
+                reject(constants.INVALID_TOKEN_RESPONSE);
             });
         }
 

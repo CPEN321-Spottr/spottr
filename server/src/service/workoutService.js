@@ -41,6 +41,9 @@ function calculateNewMultiplier(percentageDifference, currentMultiplier) {
 // Using data that can be collected from the database tables, this function reconstructs a workout
 // plan and reproduces the same format which the FE expects from the generateNewWorkoutPlan API
 function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData) {
+    var relevantExercise;
+    var currentExercise;
+
     var reassembledPlan = {
         workout_plan_id: oldWorkoutPlan.id,
         exercises: [],
@@ -52,7 +55,7 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
     let breakCount = 0;
 
     for (var i = 0; i < oldWorkoutExercises.length; i++) {
-        var currentExercise = oldWorkoutExercises[i];
+        currentExercise = oldWorkoutExercises[i];
 
         if (currentExercise.exercise_id == BREAK_ID) {
             var reassembledBreak = {
@@ -65,10 +68,10 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
             reassembledPlan.breaks[breakCount] = reassembledBreak;
             breakCount++;
         } else {
-            var relevantExercise = exerciseData.find((obj) => {
+            relevantExercise = exerciseData.find((obj) => {
               return obj.id === currentExercise.exercise_id
             });
-            
+
             if (typeof relevantExercise === "undefined") {
               throw "Required exercise data is missing for plan reconstruction!";
             }
@@ -244,8 +247,8 @@ module.exports = {
             }
             else {
                 if (startId > maxWorkoutHistoryId){
-                    console.error("Error: startId is bigger than the number of entries in the workout_history table.")
-                    reject(constants.ERROR_RESPONSE)
+                    console.error("Error: startId is bigger than the number of entries in the workout_history table.");
+                    reject(constants.ERROR_RESPONSE);
                 }
                 let upperLimitId = startId+numEntries <= maxWorkoutHistoryId ? startId+numEntries-1 : maxWorkoutHistoryId;
                 resolve(data.getRecentWorkoutHistory(dbConfig, startId, upperLimitId));
@@ -256,10 +259,10 @@ module.exports = {
     async getWorkoutPlanById (dbConfig, workoutPlanId){
         var oldWorkoutPlan = await data.getWorkoutPlanById(workoutPlanId, dbConfig);
         var oldWorkoutExercises = await data.getWorkoutExercisesByWorkoutPlanId(workoutPlanId);
-        var exerciseData = await data.getExercisesByTargetMuscleGroups(oldWorkoutPlan.major_muscle_group_id, dbConfig)
+        var exerciseData = await data.getExercisesByTargetMuscleGroups(oldWorkoutPlan.major_muscle_group_id, dbConfig);
 
         return new Promise(async function(resolve) {
             resolve(reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData));
         });
     }
-}
+};
