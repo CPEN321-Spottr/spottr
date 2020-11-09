@@ -1,19 +1,19 @@
-const util = require('../util.js');
-const constants = require('../constants.js');
+const util = require("../util.js");
+const constants = require("../constants.js");
 
-var faker = require('faker');
+var faker = require("faker");
 var admin = require("firebase-admin");
-const workoutData = require('../data/workoutData.js');
+const workoutData = require("../data/workoutData.js");
 
 
 module.exports = {
-    firebaseTokenVerify: async function(registrationToken) {
+    async firebaseTokenVerify(registrationToken) {
         return new Promise(function(resolve) {
           resolve(generateNotificationBatch(admin, registrationToken));
         });
     },
 
-    sendWorkoutToFirebase: async function(workoutHistory, userName) {
+    async sendWorkoutToFirebase(workoutHistory, userName) {
       // TODO: Need to figure this out still
 
       // var payload = {
@@ -24,12 +24,12 @@ module.exports = {
       //     workoutHistory: workoutHistory
       //   }
       // };
-    
+
       // var options = {
       //   priority: "high",
       //   timeToLive: 60 * 60 * 24
       // };
-      
+
       // // send message
       // admin.messaging().sendToDevice(registrationToken, payload, options)
       //   .then(function(response) { })
@@ -54,12 +54,12 @@ async function generateNotificationBatch(admin, registrationToken) {
         posted: faker.time.recent().toString()
       }
     };
-  
+
     var options = {
       priority: "high",
       timeToLive: 60 * 60 * 24
     };
-    
+
     // send message
     admin.messaging().sendToDevice(registrationToken, payload, options)
       .then(function(response) {
