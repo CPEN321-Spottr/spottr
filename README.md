@@ -1,0 +1,2 @@
+# spottr
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dcc2cd878b2f4ccc95cd65797dd574b4)](https://app.codacy.com/gh/CPEN321-Spottr/spottr?utm_source=github.com&utm_medium=referral&utm_content=CPEN321-Spottr/spottr&utm_campaign=Badge_Grade_Settings)
