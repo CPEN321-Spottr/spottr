@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.spottr.spottr.apis.APIFactory;
+import com.spottr.spottr.apis.AdminAPI;
 import com.spottr.spottr.events.NewsfeedPostEvent;
 import com.spottr.spottr.models.NewsfeedPost;
 
@@ -12,6 +14,10 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.math.BigInteger;
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
 
@@ -24,22 +30,40 @@ public class NewsfeedNotificationService extends FirebaseMessagingService {
      * the token.
      */
     @Override
-    public void onNewToken(String tkn) {
-        Log.d(TAG, "Refreshed token: " + tkn);
+    public void onNewToken(String token) {
+        Log.d(TAG, "Refreshed token: " + token);
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // FCM registration token to your app server.
-        sendRegistrationToServer(tkn);
+        sendRegistrationToServer(token);
     }
 
     /**
      * Persists token to Spottr back end
      *
-     * @param tkn The new token.
+     * @param token The new token.
      */
-    private void sendRegistrationToServer(String tkn) {
-        // TODO: Implement this method to send token to your app server.
+    private void sendRegistrationToServer(String token) {
+        APIFactory apiFactory = new APIFactory(this);
+        final AdminAPI adminAPI = apiFactory.getAdminAPI();
+
+        Call<Void> firebasetokencall = adminAPI.registerFirebaseDeviceToken(token);
+        firebasetokencall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.code() == 200) {
+                    Log.d("TOKEN", "Successfully registered device token");
+                } else {
+                    Log.d("TOKEN", response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("TOKEN", "Device token registration failed");
+            }
+        });
     }
 
     @Override
