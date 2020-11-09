@@ -26,7 +26,7 @@ module.exports = {
                 "type": "service_account",
                 "project_id": "spottr-1603580674508",
                 "private_key_id": process.env.FIREBASE_PRIVATEKEY_ID,
-                "private_key": process.env.FIREBASE_PRIVATEKEY,
+                "private_key": process.env.FIREBASE_PRIVATEKEY.toString,
                 "client_email": "firebase-adminsdk-gfhkd@spottr-1603580674508.iam.gserviceaccount.com",
                 "client_id": "100129969434392598267",
                 "auth_uri": "https://accounts.google.com/o/oauth2/auth",
