@@ -28,13 +28,8 @@ import retrofit2.Response;
 
 public class GeneratePlan extends AppCompatActivity {
 
-    ListView listView;
-    User user;
-    Plan workoutPlan;
-    //temp Values
-    String[] names = {"Pushup", "Squat", "Lunge", "Crunch", "Pushup2", "Squat2", "Lunge2", "Crunch2"};
-    int[] reps = {10, 10, 10, 10, 10, 10, 10, 10};
-    int[] sets = {4, 5, 6, 7, 4, 5, 6, 7};
+    private ListView listView;
+    private Plan workoutPlan;
 
     Button returnButton;
 
