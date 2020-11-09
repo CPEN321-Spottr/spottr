@@ -12,14 +12,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class APIFactory {
 
     private final Retrofit retrofit;
-    private final AuthorizationInterceptor authInterceptor;
-    private final OkHttpClient okHttpClient;
 
     public APIFactory(Context ctx) {
 
-        authInterceptor = new AuthorizationInterceptor(ctx);
+        AuthorizationInterceptor authInterceptor = new AuthorizationInterceptor(ctx);
 
-        okHttpClient = new OkHttpClient
+        OkHttpClient okHttpClient = new OkHttpClient
                 .Builder()
                 .addInterceptor(authInterceptor)
                 .authenticator(authInterceptor)
