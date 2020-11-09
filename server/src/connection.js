@@ -17,12 +17,23 @@ module.exports = {
     initializeFirebaseApp : function (admin) {
         var serviceAccount = require("../firebaseKey.json");
         var admin = require("firebase-admin");
-
+        /*
         serviceAccount.private_key = process.env.FIREBASE_PRIVATEKEY;
         serviceAccount.private_key_id = process.env.FIREBASE_PRIVATEKEY_ID;
-
+*/
         admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount),
+            credential: admin.credential.cert({
+                "type": "service_account",
+                "project_id": "spottr-1603580674508",
+                "private_key_id": process.env.FIREBASE_PRIVATEKEY_ID,
+                "private_key": process.env.FIREBASE_PRIVATEKEY,
+                "client_email": "firebase-adminsdk-gfhkd@spottr-1603580674508.iam.gserviceaccount.com",
+                "client_id": "100129969434392598267",
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token",
+                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-gfhkd%40spottr-1603580674508.iam.gserviceaccount.com"
+              }),
             databaseURL: "sqlserver://eu-az-sql-serv1.database.windows.net:1433;database=dkxp1krn55tloca"
         });
     },
