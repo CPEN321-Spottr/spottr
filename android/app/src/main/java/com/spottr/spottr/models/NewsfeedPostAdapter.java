@@ -21,10 +21,8 @@ import static android.text.format.DateUtils.getRelativeTimeSpanString;
 
 public class NewsfeedPostAdapter extends ArrayAdapter<NewsfeedPost> {
 
-    private Context context ;
     public NewsfeedPostAdapter(@NonNull Context context, @NonNull List<NewsfeedPost> objects) {
         super(context, 0, objects);
-        this.context = context;
     }
 
     @NonNull
@@ -32,14 +30,16 @@ public class NewsfeedPostAdapter extends ArrayAdapter<NewsfeedPost> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         NewsfeedPost post = getItem(position);
 
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.newsfeed_entry, parent, false);
+        View internal_convertView = convertView;
+
+        if (internal_convertView == null) {
+            internal_convertView = LayoutInflater.from(getContext()).inflate(R.layout.newsfeed_entry, parent, false);
         }
 
-        TextView posttext = convertView.findViewById(R.id.newsfeed_post_text);
-        TextView posttime = convertView.findViewById(R.id.newsfeed_post_time);
+        TextView posttext = internal_convertView.findViewById(R.id.newsfeed_post_text);
+        TextView posttime = internal_convertView.findViewById(R.id.newsfeed_post_time);
 
-        ImageView userimg = convertView.findViewById(R.id.newsfeed_post_image);
+        ImageView userimg = internal_convertView.findViewById(R.id.newsfeed_post_image);
 
         posttext.setText(post.name + " just completed a workout!");
         posttime.setText(getRelativeTimeSpanString(post.posted.getTime()));
@@ -50,7 +50,7 @@ public class NewsfeedPostAdapter extends ArrayAdapter<NewsfeedPost> {
                 .apply(RequestOptions.circleCropTransform())
                 .into(userimg);
 
-        return convertView;
+        return internal_convertView;
     }
 }
 
