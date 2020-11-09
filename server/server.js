@@ -16,7 +16,10 @@ var dbConfig = connection.getDbConfig();
 
 connection.initializeFirebaseApp();
 
-app.listen(port, () => { console.log(`Spottr API listening at http://localhost:${port}`) });
+app.listen(port, () => {
+    console.log(`Spottr API listening at http://localhost:${port}`);
+  }
+);
 
 app.get("/", cors(), (req, res) => { res.json(new Date()); });
 
