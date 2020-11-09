@@ -11,11 +11,7 @@ const authService = require('./src/service/authService.js');
 const connection = require('./src/connection.js');
 const constants = require('./src/constants.js');
 
-const {OAuth2Client} = require('google-auth-library');
-const token = require('./src/data/tokenData.js');
-
 const jsonParser = bodyParser.urlencoded({ extended: true });
-var CLIENT_ID = connection.getGoogleAuthClientID();
 var dbConfig = connection.getDbConfig();
 
 connection.initializeFirebaseApp();
@@ -49,39 +45,19 @@ app.get('/users/:userId', cors(), async function (req, res){
   }
 })
 
-app.delete('/users/:userID', cors(), function (req, res) { // TODO: not yet implemented!
-  res.sendStatus(constants.ERROR_RESPONSE);
-})
-
-
 //////////                           //////////
 //////////  TOKEN VERIFY API CALLS   //////////
 //////////                           //////////
 
 app.post('/token', cors(), async function (req, res){
-
-  // TODO: There is too much logic here. This should be refactored and placed in the authService.js file
-  
-  const client = new OAuth2Client(CLIENT_ID);
   try{
-    var payload = await token.verifyToken(client, req.headers.authorization);
-  }catch(ex){
-      res.status(constants.INVALID_TOKEN_RESPONSE).send(ex);
-  }
-  try{
-    var possibleUserProfile = await token.getUserByGoogleID(dbConfig, payload['sub']);
-    
-    if (Object.keys(possibleUserProfile).length === 0) { //checks if returned a user or an empty list
-      var newUser = userService.createNewUser(payload['sub'], payload['email'], payload['name'], dbConfig);
-      res.json(newUser)
-    } else {
-      res.json(possibleUserProfile)
-    }
-  } catch(ex) {
+    res.json(
+      await authService.googleTokenVerify(dbConfig, req.headers.authorization)
+    );
+  } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 })
-
 
 ////////                            ////////
 //////// FIREBASE VERIFY API CALLS  ////////
@@ -162,6 +138,36 @@ app.post('/users/:userId/workout/complete/:lengthOfWorkoutSeconds&:workoutPlanId
 
     res.sendStatus(constants.SUCCESS_RESPONSE);
   } catch(ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
+
+app.get('/workout/muscleGroups', cors(), async function (req, res) {
+  try{
+    res.send(
+      await workoutService.getAllMuscleGroups(dbConfig)
+    );
+  } catch (ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
+
+app.get('/workout/history/:numEntries/:startId?', cors(), async function (req, res) {
+  try{
+    res.send(
+      await workoutService.getWorkoutHistory(dbConfig, req.params.numEntries, req.params.startId)
+    );
+  } catch (ex) {
+    res.status(constants.ERROR_RESPONSE).send(ex);
+  }
+})
+
+app.get('/workout/workoutplan/:workoutPlanId', cors(), async function (req, res) {
+  try{
+    res.send(
+      await workoutService.getWorkoutPlanById(dbConfig, req.params.workoutPlanId)
+    );
+  } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 })

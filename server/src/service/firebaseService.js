@@ -8,7 +8,9 @@ const workoutData = require('../data/workoutData.js');
 
 module.exports = {
     firebaseTokenVerify: async function(registrationToken) {
-        return generateNotificationBatch(admin, registrationToken);
+        return new Promise(function(resolve) {
+          resolve(generateNotificationBatch(admin, registrationToken));
+        });
     },
 
     sendWorkoutToFirebase: async function(workoutHistory, userName) {
@@ -70,6 +72,7 @@ async function generateNotificationBatch(admin, registrationToken) {
     var timeToWait = Math.floor(Math.random() * 2) - 1 + TIME_BETWEEN_SEC;
     await util.sleep(timeToWait * 1000);
   }
-
-  return constants.SUCCESS_RESPONSE;
+  return new Promise(async function(resolve) {
+    resolve(constants.SUCCESS_RESPONSE);
+  });
 }
