@@ -257,7 +257,7 @@ module.exports = {
        return result.recordset;
      }).catch((ex) => {
        throw ex;
-     })
+     });
   },
 
   async getMaxWorkoutHistoryId(dbConfig) {
