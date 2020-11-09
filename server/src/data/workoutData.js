@@ -178,13 +178,13 @@ module.exports = {
 
             }
 
-            for (let break of workoutPlan["breaks"]) {
+            for (let planbreak of workoutPlan["breaks"]) {
               lastPool = pool
                       .request()
                       .input("wpid", sql.Int, workoutPlan["workout_plan_id"])
-                      .input("eid", sql.Int, break["exercise_id"])
-                      .input("len", sql.Int, break["duration_sec"])
-                      .input("won", sql.Int, break["workout_order_num"])
+                      .input("eid", sql.Int, planbreak["exercise_id"])
+                      .input("len", sql.Int, planbreak["duration_sec"])
+                      .input("won", sql.Int, planbreak["workout_order_num"])
                       .query(
                         "INSERT INTO workout_exercise(workout_plan_id, exercise_id, num_reps, num_sets, workout_order_num) VALUES (@wpid, @eid, @len, 1, @won)"
                       );
