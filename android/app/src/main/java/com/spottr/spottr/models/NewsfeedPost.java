@@ -5,8 +5,6 @@ import android.net.Uri;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Date;
 
 public class NewsfeedPost {

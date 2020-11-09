@@ -2,11 +2,7 @@ package com.spottr.spottr.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
 import com.spottr.spottr.R;
 
 import org.jetbrains.annotations.NotNull;
