@@ -14,8 +14,6 @@ const connectionData = {
 module.exports = {
     getDbConfig() {
         if (typeof connectionData[0] == "undefined") {
-            console.log("RESORTING TO DEFAULT DB CONNECTION...\n");
-
             return {
                 user: "u0tri2ukfid8bnj",
                 password: "Udh!v6payG2cTwuVAXvta%0&y",
