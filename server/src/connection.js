@@ -24,7 +24,7 @@ module.exports = {
         return util.clone(connectionData);
     },
 
-    initializeFirebaseApp(admin) {
+    initializeFirebaseApp() {
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
             databaseURL: "sqlserver://eu-az-sql-serv1.database.windows.net:1433;database=dkxp1krn55tloca"
@@ -34,5 +34,5 @@ module.exports = {
     getGoogleAuthClientID() {
         // backend client ID - USE THIS
         return "347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com";
-    };
+    }
 };
