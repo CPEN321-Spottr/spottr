@@ -10,7 +10,7 @@ const connectionData = {
 // Note: An exception will occur here if you are trying to run the app locally and have not replaced
 // the "const dbConfig" line in server.js as specified in the Google Doc file
 module.exports = {
-    getDbConfig : function () {
+    getDbConfig() {
         if (connectionData[0] === undefined) {
             console.log("RESORTING TO DEFAULT DB CONNECTION...\n");
 
@@ -24,7 +24,7 @@ module.exports = {
         return util.clone(connectionData);
     },
 
-    initializeFirebaseApp : function (admin) {
+    initializeFirebaseApp(admin) {
         var serviceAccount = require("../firebaseKey.json");
         var admin = require("firebase-admin");
 
@@ -34,8 +34,8 @@ module.exports = {
         });
     },
 
-    getGoogleAuthClientID : function () {
+    getGoogleAuthClientID() {
         // backend client ID - USE THIS
         return "347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com";
     }
-}
+};

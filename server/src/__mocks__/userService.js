@@ -4,7 +4,7 @@ const userData = require("../data/userData.js");
 const users = {
     1: {name: "Spottr User 1"},
     2: {name: "Spottr User 2"}
-}
+};
 
 module.exports = {
     async createNewUser(sub, email, name, dbConfig) {
@@ -24,4 +24,4 @@ module.exports = {
             resolve(users[String(userId)]);
         });
     }
-}
+};
