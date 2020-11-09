@@ -4,36 +4,35 @@ var sql = require("mssql");
 const CLIENT_ID = '347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com'; //backend client ID - USE THIS
 
 module.exports = {
-    verifyToken: async function(client, token) {
+    async verifyToken(client, token) {
         //Verify user token
         const ticket = await client.verifyIdToken({
             idToken: token,
             audience: CLIENT_ID,
         });
-        const payload = ticket.getPayload(); 
+        const payload = ticket.getPayload();
         return payload
-    }, 
+    },
 
-    getUserByGoogleID: async function(dbConfig, googleID){
-        try {
-            return sql
-              .connect(dbConfig)
-              .then((pool) => {
-                return pool
-                  .request()
-                  .input("gID", sql.Char(256), googleID)
-                  .query(
-                    "SELECT * FROM user_profile WHERE google_user_id = @gID"
-                  );
-              })
-              .then((result) => {
-                if (result.recordset.length == 0) 
-                    return {};
-                return result.recordset[0];
-              })
-        } catch(ex) {
-            console.log(ex);
-            throw ex;
-        }
+    async getUserByGoogleID(dbConfig, googleID){
+      return sql
+        .connect(dbConfig)
+        .then((pool) => {
+          return pool
+            .request()
+            .input("gID", sql.Char(256), googleID)
+            .query(
+              "SELECT * FROM user_profile WHERE google_user_id = @gID"
+            );
+        })
+        .then((result) => {
+          if (result.recordset.length == 0)
+              return {};
+          return result.recordset[0];
+        })
+        .catch((ex) => {
+          console.log(ex);
+          throw ex;
+        })
     }
  }
