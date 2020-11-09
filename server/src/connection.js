@@ -18,6 +18,9 @@ module.exports = {
         var serviceAccount = require("../firebaseKey.json");
         var admin = require("firebase-admin");
 
+        serviceAccount.private_key = process.env.FIREBASE_PRIVATEKEY;
+        serviceAccount.private_key_id = process.env.FIREBASE_PRIVATEKEY_ID;
+
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
             databaseURL: "sqlserver://eu-az-sql-serv1.database.windows.net:1433;database=dkxp1krn55tloca"
@@ -26,6 +29,6 @@ module.exports = {
 
     getGoogleAuthClientID : function () {
         // backend client ID - USE THIS
-        return process.env.GOOGLE_CLIENT_ID;
+        return '347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com';
     }
 }
