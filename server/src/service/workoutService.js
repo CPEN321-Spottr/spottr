@@ -243,7 +243,6 @@ module.exports = {
             }
             else {
                 if (startId > maxWorkoutHistoryId){
-                    console.error("Error: startId is bigger than the number of entries in the workout_history table.");
                     reject(constants.ERROR_RESPONSE);
                 }
                 let upperLimitId = startId+numEntries <= maxWorkoutHistoryId ? startId+numEntries-1 : maxWorkoutHistoryId;
