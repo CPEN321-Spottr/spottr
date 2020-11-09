@@ -1,8 +1,7 @@
 var sql = require("mssql");
 
 module.exports = {
-    getUserByUserId(userId, dbConfig) {
-        try {
+    async getUserByUserId(userId, dbConfig) {
             return sql
               .connect(dbConfig)
               .then((pool) => {
@@ -14,17 +13,18 @@ module.exports = {
                   );
               })
               .then((result) => {
-                if (result.recordset.length == 0) throw ('No user found for user with id: ' + userId);
+                if (result.recordset.length === 0) {
+                  throw ('No user found for user with id: ' + userId);
+                }
                 return result.recordset[0];
               })
-        } catch(ex) {
-            console.log(ex);
-            throw ex;
-        }
+              .catch((ex) => {
+                console.error(ex);
+                throw ex;
+              })
     },
 
-    getUsers(dbConfig) {
-      try {
+    async getUsers(dbConfig) {
          return sql
            .connect(dbConfig)
            .then((pool) => {
@@ -37,14 +37,13 @@ module.exports = {
            .then((result) => {
              return result.recordset;
            })
-     } catch(ex) {
-         console.log(ex);
-         return ex;
-     }
+           .catch((ex) => {
+             console.error(ex);
+             throw ex;
+           })
    },
 
-   upsertUserMultiplier(userId, newMultiplierId, dbConfig) {
-    try {
+   async upsertUserMultiplier(userId, newMultiplierId, dbConfig) {
       return sql
         .connect(dbConfig)
         .then((pool) => {
@@ -59,14 +58,13 @@ module.exports = {
         .then((result) => {
           return 1;
         })
-    } catch(ex) {
-        console.log(ex);
-        throw ex;
-    }
+        .catch((ex) => {
+          console.error(ex);
+          throw ex;
+        })
    },
 
-   updateUserSpottrPoints(userId, newAmount, dbConfig) {
-    try {
+   async updateUserSpottrPoints(userId, newAmount, dbConfig) {
       return sql
         .connect(dbConfig)
         .then((pool) => {
@@ -81,14 +79,14 @@ module.exports = {
         .then((result) => {
           return 1;
         })
-    } catch(ex) {
-        console.log(ex);
-        throw ex;
-    }
+        .catch((ex) => {
+          console.error(ex);
+          throw ex;
+        })
    },
 
    async createUser(dbConfig, googleID, googleEmail, googleName){
-    try {
+
         return sql
           .connect(dbConfig)
           .then((pool) => {
@@ -102,13 +100,15 @@ module.exports = {
               );
           })
           .then((result) => {
-            if (result.recordset.length == 0) throw ('Could not create user with google id: ' + googleID);
+            if (result.recordset.length === 0) {
+              throw ('Could not create user with google id: ' + googleID);
+            }
             return result.recordset[0].id;
           })
-      } catch(ex) {
-          console.log(ex);
-          throw ex;
-      }
+          .catch((ex) => {
+            console.error(ex);
+            throw ex;
+          })
     },
 
    deleteUser(userId) {

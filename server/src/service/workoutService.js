@@ -1,10 +1,10 @@
-const generator = require('../engine/workoutPlanGenerationEngine.js');
-const data = require('../data/workoutData.js');
-const userData = require('../data/userData.js');
-const firebaseService = require('./firebaseService.js');
-const constants = require('../constants.js');
-const util = require('../util.js');
-const e = require('express');
+const generator = require("../engine/workoutPlanGenerationEngine.js");
+const data = require("../data/workoutData.js");
+const userData = require("../data/userData.js");
+const firebaseService = require("./firebaseService.js");
+const constants = require("../constants.js");
+const util = require("../util.js");
+const e = require("express");
 
 const MULTIPLIER_STEPS = 0.025;
 const MIN_MULTIPLIER = 0.2;
@@ -15,7 +15,7 @@ const BREAK_ID = 20;
 
 module.exports = {
     // Generates a workout plan via the algorithm, perists it to the database, and returns it to the caller
-    generateWorkoutPlan: async function (userId, lengthMinutes, targetMuscleGroup, dbConfig) {
+    async generateWorkoutPlan(userId, lengthMinutes, targetMuscleGroup, dbConfig) {
         // Collect required data from different parts of the database
         const user = await userData.getUserByUserId(userId, dbConfig);
         const userMultiplier = await data.getUserMultiplier(targetMuscleGroup, user.user_multiplier_id, dbConfig);
@@ -23,18 +23,18 @@ module.exports = {
         const workoutPlanId = await data.createWorkoutPlanEntry(dbConfig);
 
         var workoutPlan = generator.generateNewWorkoutPlan(
-            lengthMinutes, 
-            possibleExercises, 
-            userMultiplier, 
+            lengthMinutes,
+            possibleExercises,
+            userMultiplier,
             workoutPlanId
         );
 
         data.updateWorkoutPlan(
-            workoutPlan['workout_plan_id'],
-            workoutPlan['est_length_sec'],
+            workoutPlan["workout_plan_id"],
+            workoutPlan["est_length_sec"],
             targetMuscleGroup,
-            workoutPlan['associated_multiplier'],
-            workoutPlan['spottr_points'],
+            workoutPlan["associated_multiplier"],
+            workoutPlan["spottr_points"],
             dbConfig
         );
         data.createWorkoutExerciseEntries(workoutPlan, dbConfig);
@@ -46,12 +46,12 @@ module.exports = {
 
 
     // Generates a workout plan which is slightly more difficult than another workout plan that
-    // is passed as a parameter. 
-    // 
-    // The exercises in the new plan are the same, all that is changed is the number of reps per set. 
-    // As well, the difficulty added to the workout is also dependent on the user's multiplier for 
+    // is passed as a parameter.
+    //
+    // The exercises in the new plan are the same, all that is changed is the number of reps per set.
+    // As well, the difficulty added to the workout is also dependent on the user"s multiplier for
     // the given muscle group.
-    generateOneUpWorkoutPlan: async function (userId, workoutPlanId, dbConfig) {
+    async generateOneUpWorkoutPlan(userId, workoutPlanId, dbConfig) {
         // Collect data from given user and existing workout plan id and reassemble accordingly
         const oldWorkoutPlan = await data.getWorkoutPlanById(workoutPlanId, dbConfig);
         const exercisesInPlan = await data.getWorkoutExercisesByWorkoutPlanId(workoutPlanId, dbConfig);
@@ -67,17 +67,17 @@ module.exports = {
 
         // Create the new plan, and record the generated data in the database
         var workoutPlan = generator.generateOneUpWorkoutPlan(
-            reassembledWorkoutPlan, 
-            userMultiplier, 
+            reassembledWorkoutPlan,
+            userMultiplier,
             newWorkoutPlanId
         );
 
         data.updateWorkoutPlan(
-            workoutPlan['workout_plan_id'],
-            workoutPlan['est_length_sec'],
-            oldWorkoutPlan['major_muscle_group_id'],
-            workoutPlan['associated_multiplier'],
-            workoutPlan['spottr_points'],
+            workoutPlan["workout_plan_id"],
+            workoutPlan["est_length_sec"],
+            oldWorkoutPlan["major_muscle_group_id"],
+            workoutPlan["associated_multiplier"],
+            workoutPlan["spottr_points"],
             dbConfig
         );
         data.createWorkoutExerciseEntries(workoutPlan, dbConfig);
@@ -86,8 +86,8 @@ module.exports = {
     },
 
 
-    // Changes a user's multiplier for a given muscle group by a given factor
-    modifyWorkoutDifficulty: async function (userId, targetMuscleGroup, changeFactor, dbConfig) {
+    // Changes a user"s multiplier for a given muscle group by a given factor
+    async modifyWorkoutDifficulty(userId, targetMuscleGroup, changeFactor, dbConfig) {
         // Collect current multiplier
         const user = await userData.getUserByUserId(userId, dbConfig);
         var userMultiplier = await data.getUserMultiplier(targetMuscleGroup, user.user_multiplier_id, dbConfig);
@@ -97,39 +97,39 @@ module.exports = {
         if (userMultiplier < MIN_MULTIPLIER) userMultiplier = MIN_MULTIPLIER;
 
         await data.updateUserMultiplier(targetMuscleGroup, userMultiplier, user.user_multiplier_id, dbConfig);
-        
+
         return new Promise(function(resolve) {
             resolve(constants.SUCCESS_RESPONSE);
         });
     },
 
 
-    // Records a workout as complete for a given user. As a result, the user's multiplier may be updated, a Firebase
+    // Records a workout as complete for a given user. As a result, the user"s multiplier may be updated, a Firebase
     // notification is sent to other users, and associated data is added to the database to record the workout as complete.
-    completeWorkout: async function (userId, lengthOfWorkoutSec, workoutPlanId, dbConfig) {
+    async completeWorkout(userId, lengthOfWorkoutSec, workoutPlanId, dbConfig) {
         // Generate new entry in the workout history table for completed workout
         const workoutPlan = await data.getWorkoutPlanById(workoutPlanId, dbConfig);
         const workoutHistoryId = await data.createWorkoutHistoryEntry(workoutPlan, lengthOfWorkoutSec, userId, dbConfig);
         const workoutHistory = await data.getWorkoutHistoryById(workoutHistoryId, dbConfig);
 
-        // Increment the user's Spottr Points
+        // Increment the user"s Spottr Points
         const user = await userData.getUserByUserId(userId, dbConfig);
         userData.updateUserSpottrPoints(userId, user.spottr_points + workoutPlan.spottr_points, dbConfig);
 
-        // Send message to Firebase so other user's are notified in real-time
+        // Send message to Firebase so other user"s are notified in real-time
         firebaseService.sendWorkoutToFirebase(workoutHistory, user.name);
 
-        // Adjust user's multiplier (if they were reasonably off the estimated workout time)
+        // Adjust user"s multiplier (if they were reasonably off the estimated workout time)
         var percentageDifference = lengthOfWorkoutSec / workoutPlan.est_length_sec;
         if (percentageDifference >= PERCENT_DIFF_RECALC_TRIGGER || percentageDifference <= (2 - PERCENT_DIFF_RECALC_TRIGGER)) {
             var userMultiplier = await data.getUserMultiplier(workoutPlan.major_muscle_group_id, user.user_multiplier_id, dbConfig);
-            
+
             // Only trigger change if the workout they were doing was set at their level (ie not from "one upping" someone)
             if (userMultiplier == workoutPlan.associated_multiplier) {
                 data.updateUserMultiplier(
-                    workoutPlan.major_muscle_group_id, 
-                    calculateNewMultiplier(percentageDifference, userMultiplier), 
-                    user.user_multiplier_id, 
+                    workoutPlan.major_muscle_group_id,
+                    calculateNewMultiplier(percentageDifference, userMultiplier),
+                    user.user_multiplier_id,
                     dbConfig
                 );
             }
@@ -137,36 +137,34 @@ module.exports = {
         return new Promise (function (resolve) {
             resolve(1);
         });
-    }, 
+    },
 
-    getAllMuscleGroups: async function (dbConfig) {
+    async getAllMuscleGroups(dbConfig) {
         return new Promise(function(resolve) {
             resolve(data.getAllMuscleGroups(dbConfig));
         });
     },
 
-    getWorkoutHistory: async function (dbConfig, numEntries, startId) {
+    async getWorkoutHistory(dbConfig, numEntries, startId) {
         numEntries = Number(numEntries);
         startId = Number(startId);
         var maxWorkoutHistoryId = Number(await data.getMaxWorkoutHistoryId(dbConfig));
         return new Promise(function(resolve, reject) {
-            if (typeof startId == 'undefined') {
+            if (typeof startId == "undefined") {
                 resolve(data.getRecentWorkoutHistory(dbConfig, maxWorkoutHistoryId-numEntries, maxWorkoutHistoryId));
             }
             else {
                 if (startId > maxWorkoutHistoryId){
-                    console.log("Error: startId is bigger than the number of entries in the workout_history table.")
+                    console.error("Error: startId is bigger than the number of entries in the workout_history table.")
                     reject(constants.ERROR_RESPONSE)
                 }
-                console.log(startId+numEntries);
                 upperLimitId = startId+numEntries <= maxWorkoutHistoryId ? startId+numEntries-1 : maxWorkoutHistoryId;
-                console.log(upperLimitId);
                 resolve(data.getRecentWorkoutHistory(dbConfig, startId, upperLimitId));
             }
         });
     },
 
-    getWorkoutPlanById: async function (dbConfig, workoutPlanId){
+    async getWorkoutPlanById (dbConfig, workoutPlanId){
         var oldWorkoutPlan = await data.getWorkoutPlanById(workoutPlanId, dbConfig);
         var oldWorkoutExercises = await data.getWorkoutExercisesByWorkoutPlanId(workoutPlanId);
         var exerciseData = await data.getExercisesByTargetMuscleGroups(oldWorkoutPlan.major_muscle_group_id, dbConfig)
@@ -181,7 +179,7 @@ module.exports = {
 const DIFF_MULTIPLICATION_FACTOR = 0.33;
 const MAX_SINGLE_CHANGE_PERCENT = 0.15;
 
-// Either increases or decreases a user's multiplier depending on the amount of time they took to 
+// Either increases or decreases a user"s multiplier depending on the amount of time they took to
 // complete a workout vs the estimated time for their current multiplier.
 //
 // The percentageDifference is "actual time / estimated time". This means percentageDifference > 1
@@ -190,14 +188,14 @@ const MAX_SINGLE_CHANGE_PERCENT = 0.15;
 // This can be made more complex in the future if it is required to enhance user experience.
 function calculateNewMultiplier(percentageDifference, currentMultiplier) {
     var changeFactor = (percentageDifference - 1) * -1 * DIFF_MULTIPLICATION_FACTOR;
-    
+
     var changeValue;
     if (changeFactor < 0) {
         changeValue = Math.max(-changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
     } else {
         changeValue = Math.min(changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
     }
-    
+
     return new Promise(function(resolve) {
         resolve(util.roundToThree(currentMultiplier + changeValue));
     });
@@ -211,7 +209,7 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
         exercises: [],
         breaks: []
     };
-    
+
     // Combine the breaks and exercise lists (like the usual plan generation)
     exerciseCount = 0;
     breakCount = 0;
@@ -219,7 +217,7 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
     for (var i = 0; i < oldWorkoutExercises.length; i++) {
         var currentExercise = oldWorkoutExercises[i];
 
-        if (currentExercise.exercise_id == BREAK_ID) { 
+        if (currentExercise.exercise_id == BREAK_ID) {
             var reassembledBreak = {
                 name: "Rest",
                 exercise_id: BREAK_ID,
@@ -231,7 +229,7 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
             breakCount++;
         } else {
             var relevantExercise = exerciseData.find(obj => { return obj.id === currentExercise.exercise_id });
-            if (typeof relevantExercise === 'undefined') throw 'Required exercise data is missing for plan reconstruction!';
+            if (typeof relevantExercise === "undefined") throw "Required exercise data is missing for plan reconstruction!";
 
             var reassembledExercise = {
                 name: relevantExercise.name,
