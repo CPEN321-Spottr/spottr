@@ -13,7 +13,9 @@ module.exports = {
               );
           })
           .then((result) => {
-            if (result.recordset.length == 0) throw ("No exercises found for given target muscle group: " + targetMuscleGroup);
+            if (result.recordset.length === 0) {
+              throw ("No exercises found for given target muscle group: " + targetMuscleGroup);
+            };
             return result.recordset;
           })
           .catch((ex) => {
@@ -28,7 +30,7 @@ module.exports = {
           .then((pool) => {
             // Should probably be checking the database instead of hardcoding this,
             // but it is okay for now... Will need to update db structure to fix properly
-            if (targetMuscleGroup == 1) {
+            if (targetMuscleGroup === 1) {
                 return pool
               .request()
               .input("multiplierId", sql.Int, multiplierId)
@@ -40,7 +42,9 @@ module.exports = {
             }
           })
           .then((result) => {
-            if (result.recordset.length == 0) throw ("No user multiplier records found for given user with multiplier id: " + multiplierId);
+            if (result.recordset.length === 0) {
+              throw ("No user multiplier records found for given user with multiplier id: " + multiplierId);
+            };
             return result.recordset[0]["arms"];
           })
           .catch((ex) => {
@@ -61,7 +65,9 @@ module.exports = {
               );
           })
           .then((result) => {
-            if (result.recordset.length == 0) throw ("No workout plan found for given workout plan id: " + workoutPlanId);
+            if (result.recordset.length === 0) {
+              throw ("No workout plan found for given workout plan id: " + workoutPlanId);
+            };
             return result.recordset[0];
           })
           .catch((ex) => {
@@ -82,7 +88,9 @@ module.exports = {
               );
           })
           .then((result) => {
-            if (result.recordset.length == 0) throw ("No workout history found for given workout history id: " + workoutHistoryId);
+            if (result.recordset.length === 0){
+              throw ("No workout history found for given workout history id: " + workoutHistoryId);
+            };
             return result.recordset[0];
           })
           .catch((ex) => {
@@ -103,7 +111,9 @@ module.exports = {
               );
           })
           .then((result) => {
-            if (result.recordset.length == 0) throw ("No workout exercises found for given workout plan id: " + workoutPlanId);
+            if (result.recordset.length == 0) {
+              throw ("No workout exercises found for given workout plan id: " + workoutPlanId);
+            };
             return result.recordset;
           })
           .catch((ex) => {
@@ -200,7 +210,7 @@ module.exports = {
         .then((pool) => {
           // Should probably be checking the database instead of hardcoding this,
           // but it is okay for now... Will need to update db structure to fix properly
-          if (targetMuscleGroup == 1) {
+          if (targetMuscleGroup === 1) {
             return pool
               .request()
               .input("umid", sql.Int, userMultiplierId)
