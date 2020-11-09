@@ -20,9 +20,6 @@ import com.spottr.spottr.apis.APIFactory;
 import com.spottr.spottr.apis.WorkoutAPI;
 import com.spottr.spottr.models.Plan;
 import com.spottr.spottr.R;
-import com.spottr.spottr.models.User;
-
-import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,15 +27,10 @@ import retrofit2.Response;
 
 public class GeneratePlan extends AppCompatActivity {
 
-    ListView listView;
-    User user;
-    Plan workoutPlan;
-    //temp Values
-    String[] names = {"Pushup", "Squat", "Lunge", "Crunch", "Pushup2", "Squat2", "Lunge2", "Crunch2"};
-    int[] reps = {10, 10, 10, 10, 10, 10, 10, 10};
-    int[] sets = {4, 5, 6, 7, 4, 5, 6, 7};
-
-    Button returnButton;
+    private Plan workoutPlan;
+    private String names[] = {};
+    private int sets[] = {};
+    private int reps[] = {};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +44,7 @@ public class GeneratePlan extends AppCompatActivity {
         //userID 6 was given to
         Call<Plan> call = workoutAPI.getRecommendedPlan("6", 45, 1);
 
-        listView = findViewById(R.id.plan_list);
+        ListView listView = findViewById(R.id.plan_list);
 
         //creation of adapter
         final Adapter adapter = new Adapter(GeneratePlan.this, names, reps, sets);
@@ -82,7 +74,7 @@ public class GeneratePlan extends AppCompatActivity {
         });
 
         //return button
-        returnButton = (Button) findViewById(R.id.workoutcreation_returnButton);
+        Button returnButton = (Button) findViewById(R.id.workoutcreation_returnButton);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,14 +85,12 @@ public class GeneratePlan extends AppCompatActivity {
 
     class Adapter extends ArrayAdapter<String> {
 
-        Context context;
-        String names[];
-        int sets[];
-        int reps[];
+        private String names[];
+        private int sets[];
+        private int reps[];
 
         Adapter (Context c, String names[], int reps[], int sets[]) {
             super(c, R.layout.list_item, R.id.exercise_title, names);
-            this.context = c;
             this.names = names;
             this.reps = reps;
             this.sets = sets;

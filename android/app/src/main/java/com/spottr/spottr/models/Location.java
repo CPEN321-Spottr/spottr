@@ -20,20 +20,12 @@ public class Location {
     /**
      * Getters
      */
-    public double getLatitude() {return this.latitude;}
-
-    public double getLongitude() {return this.longitude;}
-
     public String getName() {return this.name;}
 
     /**
      * Setters
      */
     public void setName(String name) {this.name = name;}
-
-    public void setLatitude(double latitude) {this.latitude = latitude;}
-
-    public void setLongitude(double longitude) {this.longitude = longitude;}
 
     /**
      * Copy
