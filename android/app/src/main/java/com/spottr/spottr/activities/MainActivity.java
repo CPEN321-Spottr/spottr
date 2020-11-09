@@ -1,8 +1,6 @@
 package com.spottr.spottr.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,33 +22,25 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.spottr.spottr.R;
 import com.spottr.spottr.apis.APIFactory;
 import com.spottr.spottr.apis.AdminAPI;
-import com.spottr.spottr.apis.CommunityAPI;
 import com.spottr.spottr.events.NewsfeedPostEvent;
 import com.spottr.spottr.models.NewsfeedPost;
 import com.spottr.spottr.models.NewsfeedPostAdapter;
 import com.spottr.spottr.models.User;
-import com.spottr.spottr.services.AuthorizationService;
+import com.spottr.spottr.services.AuthorizationServiceHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
-
 public class MainActivity extends AppCompatActivity {
 
-    private ImageView imgProfilePic;
-    private Button workoutButton;
-    private TextView welcomeBackText;
-    private ListView newsfeed;
     private NewsfeedPostAdapter adapter;
 
     @Override
@@ -60,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ImageView imgProfilePic = (ImageView) findViewById(R.id.profile_pic);
-        TextView welcomeBackText = findViewById(R.id.welcome_back_text);
         ListView newsfeed = findViewById(R.id.newsfeed);
         Button workoutButton = (Button) findViewById(R.id.get_workout_button);
         workoutButton.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 .apply(RequestOptions.circleCropTransform())
                 .into(imgProfilePic);
 
-        AuthorizationService.silentSignIn(this);
+        AuthorizationServiceHelper.silentSignIn(this);
 
         APIFactory apiFactory = new APIFactory(this);
         final AdminAPI adminAPI = apiFactory.getAdminAPI();
@@ -143,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        TextView welcomeBackText = findViewById(R.id.welcome_back_text);
         welcomeBackText.setText(account.getDisplayName());
 
         ArrayList<NewsfeedPost> arrayOfPosts = new ArrayList<NewsfeedPost>();

@@ -15,7 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.spottr.spottr.R;
 
-public class AuthorizationService  {
+public class AuthorizationServiceHelper {
 
     public static GoogleSignInClient getDefaultSignInClient(Context ctx) {
         // Configure sign-in to request the user's ID, email address, and basic
