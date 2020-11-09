@@ -57,7 +57,7 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
     for (var i = 0; i < oldWorkoutExercises.length; i++) {
         currentExercise = oldWorkoutExercises[i];
 
-        if (currentExercise.exercise_id == BREAK_ID) {
+        if (currentExercise.exercise_id === BREAK_ID) {
             var reassembledBreak = {
                 name: "Rest",
                 exercise_id: BREAK_ID,
@@ -69,7 +69,7 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
             breakCount++;
         } else {
             relevantExercise = exerciseData.find((obj) => {
-              return obj.id === currentExercise.exercise_id
+              return obj.id === currentExercise.exercise_id;
             });
 
             if (typeof relevantExercise === "undefined") {
@@ -217,7 +217,7 @@ module.exports = {
             var userMultiplier = await data.getUserMultiplier(workoutPlan.major_muscle_group_id, user.user_multiplier_id, dbConfig);
 
             // Only trigger change if the workout they were doing was set at their level (ie not from "one upping" someone)
-            if (userMultiplier == workoutPlan.associated_multiplier) {
+            if (userMultiplier === workoutPlan.associated_multiplier) {
                 data.updateUserMultiplier(
                     workoutPlan.major_muscle_group_id,
                     calculateNewMultiplier(percentageDifference, userMultiplier),

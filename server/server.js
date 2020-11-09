@@ -27,9 +27,8 @@ app.get("/", cors(), (req, res) => { res.json(new Date()) })
 
 app.get("/users", cors(), async function (req, res){
   try{
-    res.send(
-      await userService.getAllUsers(dbConfig)
-    );
+    let users = await userService.getAllUsers(dbConfig);
+    res.send(users);
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
