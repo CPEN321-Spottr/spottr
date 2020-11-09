@@ -43,6 +43,7 @@ app.get("/users/:userId", cors(), async function (req, res){
   }
 })
 
+
 //////////                           //////////
 //////////  TOKEN VERIFY API CALLS   //////////
 //////////                           //////////
@@ -57,6 +58,7 @@ app.post("/token", cors(), async function (req, res){
   }
 })
 
+
 ////////                            ////////
 //////// FIREBASE VERIFY API CALLS  ////////
 ////////                            ////////
@@ -66,7 +68,7 @@ app.post("/firebaseToken", jsonParser, cors(), async function (req, res){
   try {
     // Basic error checking
     if (!("firebase-token" in req.body)) {
-      throw ("Could not find expected "firebase-token" key in request body!");
+      throw ("Could not find expected firebase-token key in request body!");
     }
     if (req.body["firebase-token"] == "") {
       throw ("Found token in body contains no value");

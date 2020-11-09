@@ -50,8 +50,9 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
     };
 
     // Combine the breaks and exercise lists (like the usual plan generation)
+    for (let i = 0; i < oldWorkoutExercises.length; i++) {
+        let exercise = oldWorkoutExercises[parseInt(i, 10)];
 
-    for (let exercise in oldWorkoutExercises) {
         if (exercise.exercise_id === BREAK_ID) {
             var reassembledBreak = {
                 name: "Rest",

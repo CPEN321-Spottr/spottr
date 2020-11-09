@@ -15,14 +15,10 @@ module.exports = {
     },
 
     async getAllUsers(dbConfig) {
-        return new Promise(function(resolve) {
-            resolve(await userData.getUsers(dbConfig));
-        });
+        return new Promise(async resolve => resolve(await userData.getUsers(dbConfig)));
     },
 
     async getUserById(userId, dbConfig) {
-        return new Promise(function(resolve) {
-            resolve(await userData.getUserByUserId(userId, dbConfig));
-        })
+        return new Promise(async resolve => resolve(await userData.getUserByUserId(userId, dbConfig)));
     }
 };
