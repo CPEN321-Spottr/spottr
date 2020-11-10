@@ -16,9 +16,9 @@ var dbConfig = connection.getDbConfig();
 
 connection.initializeFirebaseApp();
 
-app.listen(port, () => { console.log(`Spottr API listening at http://localhost:${port}`) })
+app.listen(port, () => { console.log("Spottr API listening at http://localhost:${port}"); });
 
-app.get("/", cors(), (req, res) => { res.json(new Date()); })
+app.get("/", cors(), (req, res) => { res.json(new Date()); });
 
 
 //////////                        //////////
@@ -32,7 +32,7 @@ app.get("/users", cors(), async function (req, res){
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
-})
+});
 
 app.get("/users/:userId", cors(), async function (req, res){
   try{
@@ -41,7 +41,7 @@ app.get("/users/:userId", cors(), async function (req, res){
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
-})
+});
 
 
 //////////                           //////////
@@ -56,7 +56,7 @@ app.post("/token", cors(), async function (req, res){
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
-})
+});
 
 
 ////////                            ////////
@@ -82,7 +82,7 @@ app.post("/firebaseToken", jsonParser, cors(), async function (req, res){
     console.error(console.trace());
     res.status(constants.INVALID_TOKEN_RESPONSE).send(ex);
   }
-})
+});
 
 
 //////////                      //////////
@@ -100,7 +100,7 @@ app.get("/users/:userId/workout/generate-plan/:lengthMinutes&:targetMuscleGroup"
   } catch(ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
-})
+});
 
 app.get("/users/:userId/workout/one-up/:workoutPlanId", cors(), async function (req, res) {
   try {
@@ -112,7 +112,7 @@ app.get("/users/:userId/workout/one-up/:workoutPlanId", cors(), async function (
   } catch(ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
-})
+});
 
 app.put("/users/:userId/workout/change-difficulty/:factor&:targetMuscleGroup", cors(), async function (req, res) {
   try {
@@ -125,7 +125,7 @@ app.put("/users/:userId/workout/change-difficulty/:factor&:targetMuscleGroup", c
   } catch(ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
-})
+});
 
 app.post("/users/:userId/workout/complete/:lengthOfWorkoutSeconds&:workoutPlanId", cors(), async function (req, res) {
   try {
@@ -140,7 +140,7 @@ app.post("/users/:userId/workout/complete/:lengthOfWorkoutSeconds&:workoutPlanId
   } catch(ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
-})
+});
 
 app.get("/workout/muscleGroups", cors(), async function (req, res) {
   try{
@@ -150,7 +150,7 @@ app.get("/workout/muscleGroups", cors(), async function (req, res) {
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
-})
+});
 
 app.get("/workout/history/:numEntries/:startId?", cors(), async function (req, res) {
   try{
@@ -160,7 +160,7 @@ app.get("/workout/history/:numEntries/:startId?", cors(), async function (req, r
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
-})
+});
 
 app.get("/workout/workoutplan/:workoutPlanId", cors(), async function (req, res) {
   try{
@@ -170,4 +170,4 @@ app.get("/workout/workoutplan/:workoutPlanId", cors(), async function (req, res)
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
-})
+});

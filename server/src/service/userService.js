@@ -1,5 +1,5 @@
-const userMultiplierData = require('../data/userMultiplierData.js');
-const userData = require('../data/userData.js');
+const userMultiplierData = require("../data/userMultiplierData.js");
+const userData = require("../data/userData.js");
 
 module.exports = {
     async createNewUser(sub, email, name, dbConfig) {
@@ -10,7 +10,7 @@ module.exports = {
         await userData.upsertUserMultiplier(newUserId, newMultiplierId, dbConfig);
 
         return new Promise(async function(resolve){
-            resolve(await userData.getUserByUserId(newUserId, dbConfig))
+            resolve(await userData.getUserByUserId(newUserId, dbConfig));
         });
     },
 

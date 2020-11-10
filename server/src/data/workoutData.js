@@ -20,7 +20,7 @@ module.exports = {
           })
           .catch((ex) => {
             throw ex;
-          })
+          });
     },
 
     async getUserMultiplier(targetMuscleGroup, multiplierId, dbConfig) {
@@ -48,7 +48,7 @@ module.exports = {
           })
           .catch((ex) => {
             throw ex;
-          })
+          });
     },
 
     async getWorkoutPlanById(workoutPlanId, dbConfig) {
@@ -70,7 +70,7 @@ module.exports = {
           })
           .catch((ex) => {
             throw ex;
-          })
+          });
     },
 
     async getWorkoutHistoryById(workoutHistoryId, dbConfig) {
@@ -92,7 +92,7 @@ module.exports = {
           })
           .catch((ex) => {
             throw ex;
-          })
+          });
     },
 
     async getWorkoutExercisesByWorkoutPlanId(workoutPlanId, dbConfig) {
@@ -114,7 +114,7 @@ module.exports = {
           })
           .catch((ex) => {
             throw ex;
-          })
+          });
     },
 
     async createWorkoutHistoryEntry(workoutPlan, lengthOfWorkoutSec, userId, dbConfig) {
@@ -137,7 +137,7 @@ module.exports = {
           return result.recordset[0]["id"];
         }).catch((ex) => {
           throw ex;
-        })
+        });
   },
 
   async createWorkoutPlanEntry(dbConfig) {
@@ -155,7 +155,7 @@ module.exports = {
         })
         .catch((ex) => {
           throw ex;
-        })
+        });
     },
 
     async createWorkoutExerciseEntries(workoutPlan, dbConfig) {
@@ -194,7 +194,7 @@ module.exports = {
           })
           .catch((ex) => {
             throw ex;
-          })
+          });
   },
 
   async updateUserMultiplier(targetMuscleGroup, newMultiplier, userMultiplierId, dbConfig) {
@@ -220,7 +220,7 @@ module.exports = {
         })
         .catch((ex) => {
           throw ex;
-        })
+        });
   },
 
   async updateWorkoutPlan(workoutPlanId, estLenSec, majorMuscleGroupId, associatedMultiplier, spottrPoints, dbConfig) {
@@ -240,7 +240,7 @@ module.exports = {
         })
         .catch((ex) => {
           throw ex;
-        })
+        });
   },
 
   async getAllMuscleGroups(dbConfig) {
@@ -257,7 +257,7 @@ module.exports = {
        return result.recordset;
      }).catch((ex) => {
        throw ex;
-     })
+     });
   },
 
   async getMaxWorkoutHistoryId(dbConfig) {
@@ -275,7 +275,7 @@ module.exports = {
      })
      .catch((ex) => {
        throw ex;
-     })
+     });
   },
 
   async getRecentWorkoutHistory(dbConfig, startIdBottom, startIdTop) {
@@ -294,6 +294,6 @@ module.exports = {
        })
        .catch((ex) => {
          throw ex;
-       })
+       });
   }
-}
+};
