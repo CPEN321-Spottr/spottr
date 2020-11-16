@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class UITest {
+public class MainTests {
         @Rule
         public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
@@ -31,4 +31,5 @@ public class UITest {
                 onView(withId(R.id.get_workout_button)).perform(click());
                 onView(withId(R.id.generate_plan_layout)).check(matches(isDisplayed()));
         }
+
 }

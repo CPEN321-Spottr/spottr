@@ -24,7 +24,7 @@ public class Plan {
         this.estimated_time_mins = estimated_time_mins;
         this.num_exercises = num_exercises;
         this.num_parts = num_parts;
-
+        this.exercises = new ArrayList<Exercise>();
     }
 
     /**
@@ -66,5 +66,20 @@ public class Plan {
             ret[i] = retList.get(i).intValue();
         }
         return ret;
+    }
+
+    public void addExercise(Exercise ex) {
+        this.exercises.add(ex);
+    }
+
+    @Override
+    public String toString() {
+        return "Plan{" +
+                "workout_plan_id='" + workout_plan_id + '\'' +
+                ", estimated_time_mins=" + estimated_time_mins +
+                ", num_exercises=" + num_exercises +
+                ", num_parts=" + num_parts +
+                ", exercises=" + exercises +
+                '}';
     }
 }

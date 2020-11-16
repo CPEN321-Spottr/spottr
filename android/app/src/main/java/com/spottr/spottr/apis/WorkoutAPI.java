@@ -32,7 +32,7 @@ public interface WorkoutAPI {
     @GET("/users/{userID}/plans")
     Call<List<Plan>> getSavedPlansByUser(@Path("userID") String userID);
 
-    @GET("/users/{userID}/workout-plan/generate/{lengthMinutes}&{targetMuscleGroup}")
+    @GET("/users/{userID}/workout/generate-plan/{lengthMinutes}&{targetMuscleGroup}")
     Call<Plan> getRecommendedPlan(
             @Path("userID") String userID,
             @Path("lengthMinutes") Integer minutes,

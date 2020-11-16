@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:backgroundTint="@color/colorPrimaryDark"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.MainActivity"
+    android:id="@+id/layout_main">
 
     <TextView
         android:id="@+id/welcome_back_text"

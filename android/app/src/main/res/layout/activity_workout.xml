@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    android:background="@color/colorPrimaryDark"
+    android:id="@+id/layout_workout">
 
     <TextView
         android:id="@+id/workout_clock"
@@ -81,7 +82,7 @@
         app:layout_constraintTop_toBottomOf="@+id/workout_clock" />
 
     <Button
-        android:id="@+id/workout_next2"
+        android:id="@+id/workout_prev"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="15dp"

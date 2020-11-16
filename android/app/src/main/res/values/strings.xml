@@ -13,6 +13,7 @@
 
     <!-- Workout Generation Strings -->
     <string name="workoutCreation_return">Return</string>
+    <string name="workoutCreation_start">Start</string>
 
     <!-- Strings used for Google OAuth -->
     <string name="server_client_id">347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com</string>

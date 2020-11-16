@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,8 +19,10 @@ import android.widget.TextView;
 
 import com.spottr.spottr.apis.APIFactory;
 import com.spottr.spottr.apis.WorkoutAPI;
+import com.spottr.spottr.models.Exercise;
 import com.spottr.spottr.models.Plan;
 import com.spottr.spottr.R;
+import com.spottr.spottr.models.Workout;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,12 +37,13 @@ public class GeneratePlan extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generate_plan);
 
         APIFactory apiFactory = new APIFactory(this);
 
-        WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
+        final WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
 
         //userID 6 was given to
         Call<Plan> call = workoutAPI.getRecommendedPlan("6", 45, 1);
@@ -64,7 +68,6 @@ public class GeneratePlan extends AppCompatActivity {
                 } else {
                     Log.d("GENERATE", response.toString());
                 }
-
             }
 
             @Override
@@ -79,6 +82,13 @@ public class GeneratePlan extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        Button startButton = (Button) findViewById(R.id.workoutcreation_startButton);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(GeneratePlan.this, WorkoutActivity.class));
             }
         });
     }
