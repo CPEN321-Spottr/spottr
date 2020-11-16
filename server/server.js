@@ -22,7 +22,6 @@ app.listen(port, () => { console.log("Spottr API listening at http://localhost:$
 
 app.get("/", cors(), (req, res) => { res.json(new Date()); });
 
-
 //////////                        //////////
 //////////  COMMUNITY API CALLS   //////////
 //////////                        //////////
