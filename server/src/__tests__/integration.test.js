@@ -1,3 +1,5 @@
+/*eslint-env jest*/
+
 const workoutData = require("../data/workoutData.js");
 const userData = require("../data/userData.js");
 const firebaseService = require("../service/firebaseService.js");
@@ -9,7 +11,7 @@ const app = require("../../server");
 
 // Mock data
 const mockTokenUser1 = {
-    "sub": 12312321312312,
+    "sub": "12312321312312",
     "email": "test.user@gmail.com",
     "name": "Jim Bob Joe John Jake"
 };
@@ -21,7 +23,7 @@ const mockUser1 = {
     "google_user_id": "12131231231221233",
     "spottr_points": 940
 };
-const mockUser1Multiplier = 1.200;
+const mockUser1Multiplier = 1.2;
 const mockWorkoutPlan1 = {
     "workout_plan_id": 93,
     "exercises": [], // not needed 
@@ -192,14 +194,23 @@ describe("GET /users/:userId/workout/generate-plan/ (Generate Suggested Workout)
         expect(mockCreateWorkoutEntries).toHaveBeenCalled();
 
         // Check the generated data and "database" data to ensure accuracy
-        expect(res.body.associated_multiplier === mockUser1Multiplier 
-            && res.body.associated_multiplier === addedWorkoutEntries.associated_multiplier);
-        expect(res.body.breaks.length > 0 && res.body.breaks === addedWorkoutEntries.breaks);
-        expect(res.body.exercises.length > 0 && res.body.exercises === addedWorkoutEntries.exercises);
-        expect((workoutLength * 60 * 1.1) > res.body.est_length_sec && res.body.est_length_sec > (workoutLength * 60)
-            && res.body.est_length_sec === addedWorkoutEntries.est_length_sec);
-        expect(res.body.spottr_points > 0 && res.body.spottr_points === addedWorkoutEntries.spottr_points);
-        expect(res.body.workout_plan_id === 1 && res.body.workout_plan_id === addedWorkoutEntries.workout_plan_id);
+        expect(res.body.associated_multiplier === mockUser1Multiplier);
+        expect(res.body.associated_multiplier === addedWorkoutEntries.associated_multiplier);
+
+        expect(res.body.breaks.length > 0);
+        expect(res.body.breaks === addedWorkoutEntries.breaks);
+
+        expect(res.body.exercises.length > 0);
+        expect(res.body.exercises === addedWorkoutEntries.exercises);
+        
+        expect(workoutLength * 60 * 1.1) > res.body.est_length_sec && res.body.est_length_sec > (workoutLength * 60);
+        expect(res.body.est_length_sec === addedWorkoutEntries.est_length_sec);
+
+        expect(res.body.spottr_points > 0);
+        expect(res.body.spottr_points === addedWorkoutEntries.spottr_points);
+        
+        expect(res.body.workout_plan_id === 1);
+        expect(res.body.workout_plan_id === addedWorkoutEntries.workout_plan_id);
     });
 });
 
@@ -248,7 +259,8 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
         // Set-up firebase API call to succeed
         firebaseService.sendFirebaseMessage.mockResolvedValue(1);
 
-        let path = "/users/" + mockUser1.id + "/workout/complete/" + mockWorkoutHistory1.actual_length_sec + "&" + mockWorkoutPlan1.workout_plan_id;
+        let path = "/users/" + mockUser1.id + "/workout/complete/" + mockWorkoutHistory1.actual_length_sec + 
+            "&" + mockWorkoutPlan1.workout_plan_id;
         const res = await request(app)
             .post(path)
             .set("Accept", "application/json")
@@ -275,7 +287,8 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
         // Set-up firebase API call to fail
         firebaseService.sendFirebaseMessage.mockResolvedValue(0);
 
-        let path = "/users/" + mockUser1.id + "/workout/complete/" + mockWorkoutHistory1.actual_length_sec + "&" + mockWorkoutPlan1.workout_plan_id;
+        let path = "/users/" + mockUser1.id + "/workout/complete/" + mockWorkoutHistory1.actual_length_sec + 
+            "&" + mockWorkoutPlan1.workout_plan_id;
         const res = await request(app)
             .post(path)
             .set("Accept", "application/json")

@@ -16,8 +16,8 @@ module.exports = {
     },
 
     initializeFirebaseApp() {
-        if (process.env.FIREBASE_PRIVATEKEY === undefined) {
-            console.log("Missing env variable");
+        if (typeof process.env.FIREBASE_PRIVATEKEY === "undefined") {
+            console.error("Missing env variable!");
             return;
         }
 

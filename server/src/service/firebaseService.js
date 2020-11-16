@@ -34,7 +34,7 @@ async function generateNotificationBatch(admin, registrationToken) {
   return new Promise(async function(resolve) {
     resolve(constants.SUCCESS_RESPONSE);
   });
-};
+}
 
 module.exports = {
     async sendFirebaseMessage(registrationToken, payload, options) {
@@ -57,14 +57,14 @@ module.exports = {
       // TODO: Need to figure this out still
       
       // TODO: REMOVE LATER
-      var registrationToken = 123123123;
+      var registrationToken = "123123123";
 
       var payload = {
         data: {
-          profile_img_uri: faker.image.imageUrl(),
-          name: userName,
-          posted: new Date(workoutHistory.date_time_utc).toDateString(),
-          workoutHistory: workoutHistory
+          "profile_img_uri": faker.image.imageUrl(),
+          "name": userName,
+          "posted": new Date(workoutHistory.date_time_utc).toDateString(),
+          "workoutHistory": workoutHistory
         }
       };
 
@@ -76,7 +76,7 @@ module.exports = {
       // send message
       let success = await this.sendFirebaseMessage(registrationToken, payload, options);
       
-      if (!success) throw ("Unable to send firebase message");
-      return new Promise(function(resolve) { resolve(1) });
+      if (!success) { throw ("Unable to send firebase message"); }
+      return new Promise(function(resolve) { resolve(1); });
     }
 };
