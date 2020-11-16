@@ -53,7 +53,7 @@ module.exports = {
         });
     },
 
-    async sendWorkoutToFirebase(workoutHistory, userName) {
+    async sendWorkoutToFirebase(newWorkoutHistory, userName) {
       // TODO: Need to figure this out still
       
       // TODO: REMOVE LATER
@@ -63,8 +63,8 @@ module.exports = {
         data: {
           "profile_img_uri": faker.image.imageUrl(),
           "name": userName,
-          "posted": new Date(workoutHistory.date_time_utc).toDateString(),
-          "workoutHistory": workoutHistory
+          "posted": new Date(newWorkoutHistory.date_time_utc).toDateString(),
+          "workoutHistory": newWorkoutHistory
         }
       };
 
