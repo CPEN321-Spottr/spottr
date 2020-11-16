@@ -20,13 +20,12 @@ module.exports = {
 
         try {
             return new Promise(async function(resolve){
-                var possibleUserProfile = await token.getUserByGoogleID(dbConfig, payload["sub"]);
+                let possibleUserProfile = await token.getUserByGoogleID(dbConfig, payload["sub"]);
                 if (Object.keys(possibleUserProfile).length === 0) { //checks if returned a user or an empty list
-                    var newUser = userService.createNewUser(payload["sub"], payload["email"], payload["name"], dbConfig);
-                    resolve(JSON.parse(newUser));
+                    resolve(await userService.createNewUser(payload["sub"], payload["email"], payload["name"], dbConfig));
                 }
                 else {
-                    resolve(JSON.parse(possibleUserProfile));
+                    resolve(possibleUserProfile);
                 }
             });
         }
