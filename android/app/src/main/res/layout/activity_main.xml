@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    android:backgroundTint="@color/colorPrimaryDark"
     tools:context=".activities.MainActivity">
 
     <TextView
@@ -11,6 +13,8 @@
         android:layout_width="178dp"
         android:layout_height="203dp"
         android:text="Some other text"
+        android:textColor="@color/white"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.931"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -29,7 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.026"
-        tools:srcCompat="@drawable/spottr_logo_black"
+        tools:srcCompat="@drawable/spottr_logo_cyan"
         tools:visibility="visible" />
 
     <ListView
@@ -46,7 +50,9 @@
         android:id="@+id/get_workout_button"
         android:layout_width="387dp"
         android:layout_height="112dp"
+        android:backgroundTint="@color/colorPrimary"
         android:text="@string/get_workout_button_text"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
