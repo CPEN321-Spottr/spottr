@@ -1,3 +1,4 @@
+/*eslint-env jest*/
 var userService = require("../service/userService.js");
 
 if(typeof jest !== "undefined") {
