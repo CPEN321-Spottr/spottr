@@ -12,10 +12,6 @@ import com.spottr.spottr.R;
 
 public class WorkoutActivity extends AppCompatActivity {
 
-    private Plan workoutPlan;
-    private String names[] = {};
-    private int sets[] = {};
-    private int reps[] = {};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
