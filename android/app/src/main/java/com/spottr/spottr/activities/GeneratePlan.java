@@ -19,10 +19,8 @@ import android.widget.TextView;
 
 import com.spottr.spottr.apis.APIFactory;
 import com.spottr.spottr.apis.WorkoutAPI;
-import com.spottr.spottr.models.Exercise;
 import com.spottr.spottr.models.Plan;
 import com.spottr.spottr.R;
-import com.spottr.spottr.models.Workout;
 
 import retrofit2.Call;
 import retrofit2.Callback;
