@@ -15,7 +15,7 @@ for ($i = 0; $i -lt $attempts; $i++) {
   try {
     $response = Invoke-RestMethod -Uri $uri -Method GET
   } catch {
-
+    Write-Error $_
   }
   $end = Get-Date
 
