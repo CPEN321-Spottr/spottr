@@ -203,9 +203,10 @@ module.exports = {
         userData.updateUserSpottrPoints(userId, user.spottr_points + workoutPlan.spottr_points, dbConfig);
 
         // Send message to Firebase so other user"s are notified in real-time
-        firebaseService.sendWorkoutToFirebase(workoutHistory, user.name);
-
-        // Adjust user"s multiplier (if they were reasonably off the estimated workout time)
+        try { await firebaseService.sendWorkoutToFirebase(workoutHistory, user.name); }
+        catch(err) { throw err; }
+        
+        // Adjust user's multiplier (if they were reasonably off the estimated workout time)
         var percentageDifference = lengthOfWorkoutSec / workoutPlan.est_length_sec;
         if (percentageDifference >= PERCENT_DIFF_RECALC_TRIGGER || percentageDifference <= (2 - PERCENT_DIFF_RECALC_TRIGGER)) {
             var userMultiplier = await data.getUserMultiplier(workoutPlan.major_muscle_group_id, user.user_multiplier_id, dbConfig);

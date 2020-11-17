@@ -1,3 +1,5 @@
+/*eslint-env jest*/
+
 var userService = require("../__mocks__/userService.js");
 
 if(typeof jest !== "undefined") {

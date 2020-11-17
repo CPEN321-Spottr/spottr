@@ -16,6 +16,11 @@ module.exports = {
     },
 
     initializeFirebaseApp() {
+        if (typeof process.env.FIREBASE_PRIVATEKEY === "undefined") {
+            console.error("Missing env variable!");
+            return;
+        }
+
         admin.initializeApp({
             credential: admin.credential.cert({
                 type: "service_account",
