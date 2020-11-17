@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import android.widget.Button;
-
-import com.spottr.spottr.models.Plan;
 import com.spottr.spottr.R;
 
 public class WorkoutActivity extends AppCompatActivity {
