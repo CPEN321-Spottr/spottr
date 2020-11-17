@@ -36,38 +36,47 @@ async function generateNotificationBatch(admin, registrationToken) {
   });
 }
 
-
 module.exports = {
+    async sendFirebaseMessage(registrationToken, payload, options) {
+      return await admin.messaging().sendToDevice(registrationToken, payload, options)
+        .then(function(response) { 
+          return 1;
+        })
+        .catch(function(error) {
+          return 0;
+      });
+    },
+
     async firebaseTokenVerify(registrationToken) {
         return new Promise(function(resolve) {
           resolve(generateNotificationBatch(admin, registrationToken));
         });
     },
 
-    async sendWorkoutToFirebase(workoutHistory, userName) {
+    async sendWorkoutToFirebase(newWorkoutHistory, userName) {
       // TODO: Need to figure this out still
+      
+      // TODO: REMOVE LATER
+      var registrationToken = "123123123";
 
-      // var payload = {
-      //   data: {
-      //     profile_img_uri: faker.image.imageUrl(),
-      //     name: userName,
-      //     posted: new Date(workoutHistory.date_time_utc).toDateString(),
-      //     workoutHistory: workoutHistory
-      //   }
-      // };
+      var payload = {
+        data: {
+          "profile_img_uri": faker.image.imageUrl(),
+          "name": userName,
+          "posted": new Date(newWorkoutHistory.date_time_utc).toDateString(),
+          "workoutHistory": newWorkoutHistory
+        }
+      };
 
-      // var options = {
-      //   priority: "high",
-      //   timeToLive: 60 * 60 * 24
-      // };
+      var options = {
+        priority: "high",
+        timeToLive: 60 * 60 * 24
+      };
 
-      // // send message
-      // admin.messaging().sendToDevice(registrationToken, payload, options)
-      //   .then(function(response) { })
-      //   .catch(function(error) {
-      //     console.log("Error sending message:", error);
-      //   });
-
-      // return 1;
+      // send message
+      let success = await this.sendFirebaseMessage(registrationToken, payload, options);
+      
+      if (!success) { throw ("Unable to send firebase message"); }
+      return new Promise(function(resolve) { resolve(1); });
     }
 };
