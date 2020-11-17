@@ -1,6 +1,4 @@
-//const userMultiplierData = require("../../../src/data/userMultiplierData.js");
-//const userData = require("../../../src/data/userData.js");
-const constants = require("../../constants.js")
+const constants = require("../../constants.js");
 
 const users = {
     1: {name: "Spottr User 1"},
@@ -18,14 +16,14 @@ module.exports = {
         var getUsers = "Successfully found all users";
         return new Promise(function(resolve) {
             resolve(getUsers);
-            reject()
         });
     },
     async getUserById(userId, dbConfig) {
         return new Promise(function(resolve, reject) {
-            if(userId==1 || userId==2)
+            if (userId===1 || userId===2) {
                 resolve(users[String(userId)]);
-            else{
+            }
+            else {
                 reject(constants.ERROR_RESPONSE);
             }
         });

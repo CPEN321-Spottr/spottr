@@ -1,70 +1,5 @@
 const constants = require("../../constants.js");
 
-module.exports = {
-    async generateWorkoutPlan(userId, lengthMinutes, targetMuscleGroup, dbConfig) {
-        return new Promise(function(resolve, reject) {
-            if(userId == 1 || userId == 2)
-                resolve(workoutPlan);
-            else
-                reject(constants.ERROR_RESPONSE);
-        });
-    },
-
-    async generateOneUpWorkoutPlan(userId, workoutPlanId, dbConfig) {
-        return new Promise(function(resolve, reject) {
-            if(userId == 1 || userId == 2)
-                resolve(workoutPlan);
-            else
-                reject(constants.ERROR_RESPONSE);
-        });
-    },
-
-    async modifyWorkoutDifficulty(userId, targetMuscleGroup, changeFactor, dbConfig) {
-        return new Promise(function(resolve, reject) {
-            if(userId == 1 || userId == 2)
-                resolve(constants.SUCCESS_RESPONSE);
-            else
-                reject(constants.ERROR_RESPONSE);
-        });
-    },
-
-    async completeWorkout(userId, lengthOfWorkoutSec, workoutPlanId, dbConfig) {
-        return new Promise(function(resolve, reject) {
-            if(userId == 1 || userId == 2)
-                resolve(1);
-            else
-                reject(constants.ERROR_RESPONSE);
-        });
-    },
-
-    async getAllMuscleGroups(dbConfig) {
-        return new Promise(function(resolve) {
-            resolve([{"id":1,"name":"Arms"},{"id":3,"name":"Rest"}]);
-        });
-    },
-
-    async getWorkoutHistory(dbConfig, numEntries, startId) {
-        return new Promise(function(resolve, reject) {
-            if(startId <= 2)
-                resolve([
-                    {"id":1,"user_profile_id":37,"workout_plan_id":93,"actual_length_sec":1100,"major_muscle_group_id":1,"spottr_points":235,"date_time_utc":"2020-10-29T08:42:10.000Z"},
-                    {"id":2,"user_profile_id":37,"workout_plan_id":93,"actual_length_sec":1100,"major_muscle_group_id":1,"spottr_points":235,"date_time_utc":"2020-10-29T09:15:46.000Z"}
-                ]);
-            else
-                reject(constants.ERROR_RESPONSE);
-        });
-    },
-
-    async getWorkoutPlanById (dbConfig, workoutPlanId){
-        return new Promise(function(resolve, reject) {
-            if(workoutPlanId == 1 || workoutPlanId == 2)
-                resolve(workoutPlan);
-            else
-                reject(constants.ERROR_RESPONSE);
-        });
-    }
-};
-
 const workoutPlan = {
     "workout_plan_id": 101,
     "exercises": [{
@@ -101,4 +36,81 @@ const workoutPlan = {
     "est_length_sec": 3605,
     "associated_multiplier": 1.225,
     "spottr_points": 1225
+};
+
+module.exports = {
+    async generateWorkoutPlan(userId, lengthMinutes, targetMuscleGroup, dbConfig) {
+        return new Promise(function(resolve, reject) {
+            if (userId === 1 || userId === 2){
+                resolve(workoutPlan);
+            }
+            else {
+                reject(constants.ERROR_RESPONSE);
+            }
+        });
+    },
+
+    async generateOneUpWorkoutPlan(userId, workoutPlanId, dbConfig) {
+        return new Promise(function(resolve, reject) {
+            if(userId === 1 || userId === 2){
+                resolve(workoutPlan);
+            }
+            else{
+                reject(constants.ERROR_RESPONSE);
+            }
+        });
+    },
+
+    async modifyWorkoutDifficulty(userId, targetMuscleGroup, changeFactor, dbConfig) {
+        return new Promise(function(resolve, reject) {
+            if (userId === 1 || userId === 2) {
+                resolve(constants.SUCCESS_RESPONSE);
+            }
+            else {
+                reject(constants.ERROR_RESPONSE);
+            }
+        });
+    },
+
+    async completeWorkout(userId, lengthOfWorkoutSec, workoutPlanId, dbConfig) {
+        return new Promise(function(resolve, reject) {
+            if(userId === 1 || userId === 2) {
+                resolve(1);
+            }
+            else {
+                reject(constants.ERROR_RESPONSE);
+            }
+        });
+    },
+
+    async getAllMuscleGroups(dbConfig) {
+        return new Promise(function(resolve) {
+            resolve([{"id":1,"name":"Arms"},{"id":3,"name":"Rest"}]);
+        });
+    },
+
+    async getWorkoutHistory(dbConfig, numEntries, startId) {
+        return new Promise(function(resolve, reject) {
+            if(startId <= 2){
+                resolve([
+                    {"id":1,"user_profile_id":37,"workout_plan_id":93,"actual_length_sec":1100,"major_muscle_group_id":1,"spottr_points":235,"date_time_utc":"2020-10-29T08:42:10.000Z"},
+                    {"id":2,"user_profile_id":37,"workout_plan_id":93,"actual_length_sec":1100,"major_muscle_group_id":1,"spottr_points":235,"date_time_utc":"2020-10-29T09:15:46.000Z"}
+                ]);
+            }
+            else {
+                reject(constants.ERROR_RESPONSE);
+            }
+        });
+    },
+
+    async getWorkoutPlanById (dbConfig, workoutPlanId){
+        return new Promise(function(resolve, reject) {
+            if (workoutPlanId === 1 || workoutPlanId === 2) {
+                resolve(workoutPlan);
+            }
+            else {
+                reject(constants.ERROR_RESPONSE);
+            }
+        });
+    }
 };

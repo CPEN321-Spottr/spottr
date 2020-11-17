@@ -1,11 +1,53 @@
-const request = require('supertest');
+const request = require("supertest");
 const app = require("../../server.js");
 const constants = require("../constants.js");
+
+if(typeof jest !== "undefined") {
+    jest.mock("../service/userService.js");
+}
 
 jest.mock("../service/userService.js");
 jest.mock("../service/workoutService.js");
 jest.mock("../service/authService.js");
 jest.mock("../service/firebaseService.js");
+
+const workoutPlan = {
+    "workout_plan_id": 101,
+    "exercises": [{
+        "name": "Floor Dips",
+        "description": "Sit on the floor with your knees bent and hands at your sides, directly underneath your shoulders. Hoist your hips off the floor, like a crab. Next, bend your elbows and lower yourself toward the floor (without touching it), then straighten your arms.",
+        "major_muscle_group_id": 1,
+        "exercise_id": 6,
+        "sets": 3,
+        "reps": 18,
+        "workout_order_num": 0
+    }, {
+        "name": "Burpee With Push-up",
+        "description": "Perform a burpee with a push-up.",
+        "major_muscle_group_id": 1,
+        "exercise_id": 5,
+        "sets": 2,
+        "reps": 12,
+        "workout_order_num": 52
+    }, {
+        "name": "Floor Dips",
+        "description": "Sit on the floor with your knees bent and hands at your sides, directly underneath your shoulders. Hoist your hips off the floor, like a crab. Next, bend your elbows and lower yourself toward the floor (without touching it), then straighten your arms.",
+        "major_muscle_group_id": 1,
+        "exercise_id": 6,
+        "sets": 2,
+        "reps": 18,
+        "workout_order_num": 54
+    }],
+    "breaks": [{
+        "name": "Rest",
+        "exercise_id": "20",
+        "duration_sec": 17,
+        "workout_order_num": 1
+    }],
+    "est_length_sec": 3605,
+    "associated_multiplier": 1.225,
+    "spottr_points": 1225
+};
 
 describe("User Endpoints", () => {
   it("Get all users with valid connection", async (done) => {
@@ -16,7 +58,6 @@ describe("User Endpoints", () => {
   });
   it("Get all users with invalid connection", async (done) => {
     const res = await request(app).get("/users");
-    dbConfig = "invalid";
     expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
     done();
   });
@@ -39,10 +80,10 @@ describe("User Endpoints", () => {
 });
 
 describe("Google Auth Token Endpoint", () => {
-  it('Post google auth token with verifiable token', async (done) => {
+  it("Post google auth token with verifiable token", async (done) => {
     const res = await request(app)
       .post("/token")
-      .set({ "Authorization": "goodToken" })
+      .set({ "Authorization": "goodToken" });
     expect(res.statusCode).toEqual(constants.SUCCESS_RESPONSE);
     expect(res.body).toEqual({"id":10,"name":"New User","email":"newuser@gmail.com","user_multiplier_id":1,"google_user_id":"abc","spottr_points":0});
     done();
@@ -50,7 +91,7 @@ describe("Google Auth Token Endpoint", () => {
   it("Post google auth token with invalid token", async (done) => {
     const res = await request(app)
       .post("/token")
-      .set({ "Authorization": "badToken" })
+      .set({ "Authorization": "badToken" });
     expect(res.statusCode).toEqual(constants.INVALID_TOKEN_RESPONSE);
     done();
   });
@@ -64,18 +105,18 @@ describe("Google Auth Token Endpoint", () => {
 });
 
 describe("Firebase Token Endpoint", () => {
-    it('Post firebase token with verifiable token', async (done) => {
+    it("Post firebase token with verifiable token", async (done) => {
       const res = await request(app)
         .post("/firebaseToken")
-        .send({'firebase-token': "goodToken"});
+        .send({"firebase-token": "goodToken"});
       expect(res.statusCode).toEqual(constants.SUCCESS_RESPONSE);
       expect(res.message).toEqual("Notification batch generated");
       done();
     });
-    it('Post firebase token with empty token', async (done) => {
+    it("Post firebase token with empty token", async (done) => {
         const res = await request(app)
           .post("/firebaseToken")
-          .send([{"firebase-token": "" }])
+          .send([{"firebase-token": "" }]);
         expect(res.statusCode).toEqual(constants.INVALID_TOKEN_RESPONSE);
         done();
       });
@@ -169,44 +210,4 @@ describe("Workout Endpoints", () => {
         expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
         done();
     });
-  });
-
-  const workoutPlan = {
-    "workout_plan_id": 101,
-    "exercises": [{
-        "name": "Floor Dips",
-        "description": "Sit on the floor with your knees bent and hands at your sides, directly underneath your shoulders. Hoist your hips off the floor, like a crab. Next, bend your elbows and lower yourself toward the floor (without touching it), then straighten your arms.",
-        "major_muscle_group_id": 1,
-        "exercise_id": 6,
-        "sets": 3,
-        "reps": 18,
-        "workout_order_num": 0
-    }, {
-        "name": "Burpee With Push-up",
-        "description": "Perform a burpee with a push-up.",
-        "major_muscle_group_id": 1,
-        "exercise_id": 5,
-        "sets": 2,
-        "reps": 12,
-        "workout_order_num": 52
-    }, {
-        "name": "Floor Dips",
-        "description": "Sit on the floor with your knees bent and hands at your sides, directly underneath your shoulders. Hoist your hips off the floor, like a crab. Next, bend your elbows and lower yourself toward the floor (without touching it), then straighten your arms.",
-        "major_muscle_group_id": 1,
-        "exercise_id": 6,
-        "sets": 2,
-        "reps": 18,
-        "workout_order_num": 54
-    }],
-    "breaks": [{
-        "name": "Rest",
-        "exercise_id": "20",
-        "duration_sec": 17,
-        "workout_order_num": 1
-    }],
-    "est_length_sec": 3605,
-    "associated_multiplier": 1.225,
-    "spottr_points": 1225
-};
-
-
+});

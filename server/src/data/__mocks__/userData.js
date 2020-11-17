@@ -21,7 +21,7 @@ module.exports = {
             reject()
         });
     },
-    async getUserById(userId, dbConfig) {
+    async getUserByUserId(userId, dbConfig) {
         return new Promise(function(resolve) {
             resolve(users[String(userId)]);
         });
