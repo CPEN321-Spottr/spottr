@@ -1,5 +1,6 @@
-const userMultiplierData = require("../data/userMultiplierData.js");
-const userData = require("../data/userData.js");
+//const userMultiplierData = require("../../../src/data/userMultiplierData.js");
+//const userData = require("../../../src/data/userData.js");
+const constants = require("../../constants.js");
 
 const users = {
     1: {name: "Spottr User 1"},
@@ -7,21 +8,24 @@ const users = {
 };
 
 module.exports = {
-    async createNewUser(sub, email, name, dbConfig) {
+    async createUser(sub, email, name, dbConfig) {
         const newUser = sub + email + name;
         return new Promise(async function(resolve) {
-            resolve(await newUser);
+            resolve(5);
         });
     },
-    async getAllUsers(dbConfig) {
+    async getUsers(dbConfig) {
         var getUsers = "Successfully found all users";
         return new Promise(function(resolve) {
             resolve(getUsers);
         });
     },
-    async getUserById(userId, dbConfig) {
+    async getUserByUserId(userId, dbConfig) {
         return new Promise(function(resolve) {
             resolve(users[String(userId)]);
         });
+    },
+    async upsertUserMultiplier(newUserId, newMultiplierId, dbConfig){
+        //Mock upsert just edits database
     }
 };

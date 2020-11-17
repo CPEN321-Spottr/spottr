@@ -20,7 +20,6 @@ module.exports = app.listen(port, () => { console.log("Spottr API listening at h
 
 app.get("/", cors(), (req, res) => { res.json(new Date()); });
 
-
 //////////                        //////////
 //////////  COMMUNITY API CALLS   //////////
 //////////                        //////////
