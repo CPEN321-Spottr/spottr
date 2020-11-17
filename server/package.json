@@ -22,11 +22,7 @@
     "mssql": "^6.2.3"
   },
   "devDependencies": {
-<<<<<<< HEAD
-    "jest": "^26.6.3",
-=======
     "jest": "^26.6.1",
->>>>>>> main
     "supertest": "^6.0.1"
   }
 }
