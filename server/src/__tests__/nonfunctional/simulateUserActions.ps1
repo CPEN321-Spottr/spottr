@@ -22,7 +22,7 @@ $GET_endpoints = @(
 )
 $PUT_endpoints = @("$($baseURL)/users/6/workout/change-difficulty/0.5&1", "$($baseURL)/users/6/workout/change-difficulty/2&1")
 
-Write-Host "Started User Simulation: $($id)"
+Write-Output "Started User Simulation: $($id)"
 
 $current = Get-Date
 

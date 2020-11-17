@@ -18,11 +18,11 @@ ForEach($job in $jobs) {
   $failures += $data.failures
 }
 
-Write-Host
-Write-Host "-------------------------------------------------";
-Write-Host "Simultaneous Users Simulated: $($n_users)"
-Write-Host "Total Interactions: $($calls)"
-Write-Host "Total Failed Interactions: $($failures)"
-Write-Host "Failure Rate: $($failures/$calls*100)%"
-Write-Host "-------------------------------------------------";
-Write-Host
+Write-Output
+Write-Output "-------------------------------------------------";
+Write-Output "Simultaneous Users Simulated: $($n_users)"
+Write-Output "Total Interactions: $($calls)"
+Write-Output "Total Failed Interactions: $($failures)"
+Write-Output "Failure Rate: $($failures/$calls*100)%"
+Write-Output "-------------------------------------------------";
+Write-Output

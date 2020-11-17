@@ -26,13 +26,13 @@ for ($i = 0; $i -lt $attempts; $i++) {
 
 $measure = $times | Measure-Object -AllStats
 
-Write-Host
-Write-Host "-------------------------------------------------";
-Write-Host "Testing Endpoint: $($uri)"
-Write-Host "-------------------------------------------------";
-Write-Host "Total Calls: $($measure.Count)";
-Write-Host "Maximum Call Duration: $($measure.Maximum) seconds";
-Write-Host "Average Call Duration: $($measure.Average) seconds";
-Write-Host "Standard Deviation: $($measure.StandardDeviation)";
-Write-Host "-------------------------------------------------";
-Write-Host
+Write-Output
+Write-Output "-------------------------------------------------";
+Write-Output "Testing Endpoint: $($uri)"
+Write-Output "-------------------------------------------------";
+Write-Output "Total Calls: $($measure.Count)";
+Write-Output "Maximum Call Duration: $($measure.Maximum) seconds";
+Write-Output "Average Call Duration: $($measure.Average) seconds";
+Write-Output "Standard Deviation: $($measure.StandardDeviation)";
+Write-Output "-------------------------------------------------";
+Write-Output
