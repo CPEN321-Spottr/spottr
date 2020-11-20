@@ -13,7 +13,7 @@ function confirmPresent(paramsToCheck, presentParams, nameOfLocation, checkInt) 
         }
 
         if (checkInt) {
-            if (isNaN(parseInt(presentParams[param]))) {
+            if (isNaN(parseInt(presentParams[param], 10))) {
                 throw ("Expected '" + param + "' to be an int, but was not!");
             }
         }
