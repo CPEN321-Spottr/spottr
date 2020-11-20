@@ -65,8 +65,8 @@ app.post("/token", cors(), async function (req, res){
 // A working token for testing: "fJDLUk0CRrScpTuhnNjBl9:APA91bGKScW3LwUSRrSfNE-GqkcZf51oOZI8dD9TcRKKQRUpg4KL-JhGj1X_lNT7_HxZttVsE1ztE5uiM5CQz2TZL_T-ZpGDFO9I8QSNv5luyGzegf-z8CO8ljs6KVh_PemvKH_Hc2H_"
 app.post("/firebaseToken", jsonParser, cors(), async function (req, res){
   try {
-    // Basic error checking
-    if (!("firebase-token" in req.body)) {
+    // Basic input validation
+    if (typeof req.body === "undefined" || !("firebase-token" in req.body)) {
       throw ("Could not find expected firebase-token key in request body!");
     }
     if (req.body["firebase-token"] === "") {
@@ -113,12 +113,22 @@ app.get("/users/:userId/workout/one-up/:workoutPlanId", cors(), async function (
   }
 });
 
-app.put("/users/:userId/workout/change-difficulty/:factor&:targetMuscleGroup", cors(), async function (req, res) {
+app.put("/users/:userId/workout/change-difficulty", jsonParser, cors(), async function (req, res) {
   try {
+    // Basic input validation
+    if (typeof req.body === "undefined" || !("factor" in req.body) || !("target-muscle-group" in req.body)) {
+      throw "'factor' and/or 'target-muscle-group' is missing from the request body and are expected";
+    }
+
+    let factor = parseInt(req.body.factor, 10);
+    let targetMuscleGroup = parseInt(req.body["target-muscle-group"], 10);
+
+    if (isNaN(factor) || isNaN(targetMuscleGroup)) throw "'factor' and/or 'target-muscle-group' are not numbers!";
+
     res.sendStatus(await workoutService.modifyWorkoutDifficulty(
       JSON.parse(req.params.userId),
-      JSON.parse(req.params.targetMuscleGroup),
-      JSON.parse(req.params.factor),
+      JSON.parse(targetMuscleGroup),
+      JSON.parse(factor),
       dbConfig
     ));
   } catch(ex) {
@@ -153,7 +163,7 @@ app.get("/workout/muscleGroups", cors(), async function (req, res) {
 
 app.get("/workout/history", cors(), async function (req, res) {
   try{
-    let numEntries = parseInt(req.query.numEntries, 10);
+    let numEntries = parseInt(req.query.entries, 10);
 
     res.send(
       await workoutService.getWorkoutHistory(dbConfig, numEntries)
