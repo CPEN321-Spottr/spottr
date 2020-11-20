@@ -10,6 +10,7 @@ const userService = require("./src/service/userService.js");
 const authService = require("./src/service/authService.js");
 const connection = require("./src/connection.js");
 const constants = require("./src/constants.js");
+const validator = require("./src/paramValidator.js");
 
 const jsonParser = bodyParser.urlencoded({ extended: true });
 var dbConfig = connection.getDbConfig();
@@ -88,12 +89,15 @@ app.post("/firebaseToken", jsonParser, cors(), async function (req, res){
 //////////  WORKOUT API CALLS   //////////
 //////////                      //////////
 
-app.get("/users/:userId/workout/generate-plan/:lengthMinutes&:targetMuscleGroup", cors(), async function (req, res) {
+app.get("/users/:userId/workout/generate-plan", jsonParser, cors(), async function (req, res) {
   try {
+    // Basic input validation
+    validator.isPresentAndInteger(["length-minutes", "target-muscle-group"], req.body);
+
     res.json(await workoutService.generateWorkoutPlan(
         JSON.parse(req.params.userId),
-        JSON.parse(req.params.lengthMinutes),
-        JSON.parse(req.params.targetMuscleGroup),
+        parseInt(req.body["length-minutes"]),
+        parseInt(req.body["target-muscle-group"]),
         dbConfig
     ));
   } catch(ex) {
@@ -101,7 +105,7 @@ app.get("/users/:userId/workout/generate-plan/:lengthMinutes&:targetMuscleGroup"
   }
 });
 
-app.get("/users/:userId/workout/one-up/:workoutPlanId", cors(), async function (req, res) {
+app.get("/users/:userId/workout/one-up/:workout-plan-id", cors(), async function (req, res) {
   try {
     res.json(await workoutService.generateOneUpWorkoutPlan(
         JSON.parse(req.params.userId),
@@ -116,19 +120,12 @@ app.get("/users/:userId/workout/one-up/:workoutPlanId", cors(), async function (
 app.put("/users/:userId/workout/change-difficulty", jsonParser, cors(), async function (req, res) {
   try {
     // Basic input validation
-    if (typeof req.body === "undefined" || !("factor" in req.body) || !("target-muscle-group" in req.body)) {
-      throw "'factor' and/or 'target-muscle-group' is missing from the request body and are expected";
-    }
-
-    let factor = parseInt(req.body.factor, 10);
-    let targetMuscleGroup = parseInt(req.body["target-muscle-group"], 10);
-
-    if (isNaN(factor) || isNaN(targetMuscleGroup)) throw "'factor' and/or 'target-muscle-group' are not numbers!";
+    validator.isPresentAndInteger(["factor", "target-muscle-group"], req.body);
 
     res.sendStatus(await workoutService.modifyWorkoutDifficulty(
       JSON.parse(req.params.userId),
-      JSON.parse(targetMuscleGroup),
-      JSON.parse(factor),
+      parseInt(req.body["target-muscle-group"]),
+      parseInt(req.body["factor"]),
       dbConfig
     ));
   } catch(ex) {
@@ -136,12 +133,15 @@ app.put("/users/:userId/workout/change-difficulty", jsonParser, cors(), async fu
   }
 });
 
-app.post("/users/:userId/workout/complete/:lengthOfWorkoutSeconds&:workoutPlanId", cors(), async function (req, res) {
+app.post("/users/:userId/workout/complete", jsonParser, cors(), async function (req, res) {
   try {
+    // Basic input validation
+    validator.isPresentAndInteger(["length-seconds", "workout-plan-id"], req.body);
+
     await workoutService.completeWorkout(
       JSON.parse(req.params.userId),
-      JSON.parse(req.params.lengthOfWorkoutSeconds),
-      JSON.parse(req.params.workoutPlanId),
+      parseInt(req.body["length-seconds"]),
+      parseInt(req.body["workout-plan-id"]),
       dbConfig
     );
 
@@ -151,7 +151,7 @@ app.post("/users/:userId/workout/complete/:lengthOfWorkoutSeconds&:workoutPlanId
   }
 });
 
-app.get("/workout/muscleGroups", cors(), async function (req, res) {
+app.get("/workout/muscle-groups", cors(), async function (req, res) {
   try{
     res.send(
       await workoutService.getAllMuscleGroups(dbConfig)
@@ -173,7 +173,7 @@ app.get("/workout/history", cors(), async function (req, res) {
   }
 });
 
-app.get("/workout/workoutplan/:workoutPlanId", cors(), async function (req, res) {
+app.get("/workout/plan/:workout-plan-id", cors(), async function (req, res) {
   try{
     res.send(
       await workoutService.getWorkoutPlanById(dbConfig, req.params.workoutPlanId)
