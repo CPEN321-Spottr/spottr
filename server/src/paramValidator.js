@@ -1,3 +1,21 @@
+function validateInObject(expected, allParameters, nameOfLocation) {
+    if (!(expected in allParameters)) {
+        throw ("'" + expected + "' is expected in the " + nameOfLocation + " but was not found!");
+    }
+}
+
+function validateInt(value, param) {
+    if (isNaN(parseInt(value, 10))) {
+        throw ("Expected '" + param + "' to be an int, but was not!");
+    }
+}
+
+function validateNonInt(value, param) {
+    if (value === "") {
+        throw ("'" + param + "' was present, but had no value. A value must be provided");
+    }
+}
+
 function confirmNotEmpty(paramsToCheck, presentParams, nameOfLocation) {
     if (Object.keys(presentParams).length === 0) {
         throw ("Expected the parameters: [" + paramsToCheck.toString() + "] but found 0 parameters in the " + nameOfLocation);
@@ -6,16 +24,14 @@ function confirmNotEmpty(paramsToCheck, presentParams, nameOfLocation) {
 
 function confirmPresent(paramsToCheck, presentParams, nameOfLocation, checkInt) {
     for (let param of paramsToCheck) {
-        if (!(param in presentParams)) {
-            throw ("'" + param + "' is expected in the " + nameOfLocation + " but was not found!");
-        }
+        validateInObject(param, presentParams, nameOfLocation);
 
-        let value = presentParams[param];
-        if (checkInt && isNaN(parseInt(value, 10))) {
-            throw ("Expected '" + param + "' to be an int, but was not!");
+        let value = presentParams[`${param}`];
+        if (checkInt) {
+            validateInt(value, param);
         }
-        else if (value === "") {
-            throw ("'" + param + "' was present, but had no value. A value must be provided");
+        else {
+            validateNonInt(value, param);
         }
     }
 }
