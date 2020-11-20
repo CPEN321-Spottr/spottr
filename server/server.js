@@ -151,10 +151,12 @@ app.get("/workout/muscleGroups", cors(), async function (req, res) {
   }
 });
 
-app.get("/workout/history/:numEntries/:startId?", cors(), async function (req, res) {
+app.get("/workout/history", cors(), async function (req, res) {
   try{
+    let numEntries = parseInt(req.query.numEntries, 10);
+
     res.send(
-      await workoutService.getWorkoutHistory(dbConfig, req.params.numEntries, req.params.startId)
+      await workoutService.getWorkoutHistory(dbConfig, numEntries)
     );
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);

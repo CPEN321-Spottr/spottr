@@ -16,6 +16,8 @@ const BREAK_ID = 20;
 const DIFF_MULTIPLICATION_FACTOR = 0.33;
 const MAX_SINGLE_CHANGE_PERCENT = 0.15;
 
+const DEFAULT_WORKOUT_HISTORY_ENTRIES = 20;
+
 // Either increases or decreases a user"s multiplier depending on the amount of time they took to
 // complete a workout vs the estimated time for their current multiplier.
 //
@@ -232,21 +234,13 @@ module.exports = {
         });
     },
 
-    async getWorkoutHistory(dbConfig, numEntries, startId) {
-        numEntries = Number(numEntries);
-        startId = Number(startId);
-        var maxWorkoutHistoryId = Number(await data.getMaxWorkoutHistoryId(dbConfig));
-        return new Promise(function(resolve, reject) {
-            if (typeof startId == "undefined") {
-                resolve(data.getRecentWorkoutHistory(dbConfig, maxWorkoutHistoryId-numEntries, maxWorkoutHistoryId));
+    async getWorkoutHistory(dbConfig, numEntries) {
+        return new Promise(function(resolve) {
+            if (typeof numEntries == "undefined" || isNaN(numEntries)) {
+                numEntries = DEFAULT_WORKOUT_HISTORY_ENTRIES;
             }
-            else {
-                if (startId > maxWorkoutHistoryId){
-                    reject(constants.ERROR_RESPONSE);
-                }
-                let upperLimitId = startId+numEntries <= maxWorkoutHistoryId ? startId+numEntries-1 : maxWorkoutHistoryId;
-                resolve(data.getRecentWorkoutHistory(dbConfig, startId, upperLimitId));
-            }
+
+            resolve(data.getRecentWorkoutHistory(dbConfig, numEntries));
         });
     },
 
