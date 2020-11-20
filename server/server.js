@@ -67,12 +67,7 @@ app.post("/token", cors(), async function (req, res){
 app.post("/firebaseToken", jsonParser, cors(), async function (req, res){
   try {
     // Basic input validation
-    if (typeof req.body === "undefined" || !("firebase-token" in req.body)) {
-      throw ("Could not find expected firebase-token key in request body!");
-    }
-    if (req.body["firebase-token"] === "") {
-      throw ("Found token in body contains no value");
-    }
+    validator.checkIsPresent(["firebase-token"], req.body);
 
     res.sendStatus(
       await firebaseService.firebaseTokenVerify(req.body["firebase-token"])
@@ -92,12 +87,12 @@ app.post("/firebaseToken", jsonParser, cors(), async function (req, res){
 app.get("/users/:userId/workout/generate-plan", jsonParser, cors(), async function (req, res) {
   try {
     // Basic input validation
-    validator.isPresentAndInteger(["length-minutes", "target-muscle-group"], req.body);
+    validator.checkIsPresent(["length-minutes", "target-muscle-group"], req.body, "body", true);
 
     res.json(await workoutService.generateWorkoutPlan(
         JSON.parse(req.params.userId),
-        parseInt(req.body["length-minutes"]),
-        parseInt(req.body["target-muscle-group"]),
+        parseInt(req.body["length-minutes"], 10),
+        parseInt(req.body["target-muscle-group"], 10),
         dbConfig
     ));
   } catch(ex) {
@@ -120,12 +115,12 @@ app.get("/users/:userId/workout/one-up/:workout-plan-id", cors(), async function
 app.put("/users/:userId/workout/change-difficulty", jsonParser, cors(), async function (req, res) {
   try {
     // Basic input validation
-    validator.isPresentAndInteger(["factor", "target-muscle-group"], req.body);
+    validator.checkIsPresent(["factor", "target-muscle-group"], req.body, "body", true);
 
     res.sendStatus(await workoutService.modifyWorkoutDifficulty(
       JSON.parse(req.params.userId),
-      parseInt(req.body["target-muscle-group"]),
-      parseInt(req.body["factor"]),
+      parseInt(req.body["target-muscle-group"], 10),
+      parseInt(req.body["factor"], 10),
       dbConfig
     ));
   } catch(ex) {
@@ -136,12 +131,12 @@ app.put("/users/:userId/workout/change-difficulty", jsonParser, cors(), async fu
 app.post("/users/:userId/workout/complete", jsonParser, cors(), async function (req, res) {
   try {
     // Basic input validation
-    validator.isPresentAndInteger(["length-seconds", "workout-plan-id"], req.body);
+    validator.checkIsPresent(["length-seconds", "workout-plan-id"], req.body, "body", true);
 
     await workoutService.completeWorkout(
       JSON.parse(req.params.userId),
-      parseInt(req.body["length-seconds"]),
-      parseInt(req.body["workout-plan-id"]),
+      parseInt(req.body["length-seconds"], 10),
+      parseInt(req.body["workout-plan-id"], 10),
       dbConfig
     );
 
