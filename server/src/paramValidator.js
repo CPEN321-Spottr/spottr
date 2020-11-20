@@ -5,22 +5,17 @@ function confirmNotEmpty(paramsToCheck, presentParams, nameOfLocation) {
 }
 
 function confirmPresent(paramsToCheck, presentParams, nameOfLocation, checkInt) {
-    for (let i = 0; i < paramsToCheck.length; i++) {
-        let param = paramsToCheck[i];
-
+    for (let param of paramsToCheck) {
         if (!(param in presentParams)) {
             throw ("'" + param + "' is expected in the " + nameOfLocation + " but was not found!");
         }
 
-        if (checkInt) {
-            if (isNaN(parseInt(presentParams[param], 10))) {
-                throw ("Expected '" + param + "' to be an int, but was not!");
-            }
+        let value = presentParams[param];
+        if (checkInt && isNaN(parseInt(value, 10))) {
+            throw ("Expected '" + param + "' to be an int, but was not!");
         }
-        else {
-            if (param === "") {
-                throw ("'" + param + "' was present, but had no value. A value must be provided");
-            }
+        else if (value === "") {
+            throw ("'" + param + "' was present, but had no value. A value must be provided");
         }
     }
 }
