@@ -6,7 +6,7 @@ const firebaseService = require("../service/firebaseService.js");
 const tokenData = require("../data/tokenData.js");
 const userMultiplerData = require("../data/userMultiplierData.js");
 const request = require("supertest");
-const testData = require("./mock_data/integrationTestData.js");
+const testData = require("../data/__mocks__/integrationTestData.js");
 const util = require("../util.js");
 const app = require("../../server");
 
