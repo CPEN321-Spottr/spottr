@@ -6,84 +6,59 @@ const firebaseService = require("../service/firebaseService.js");
 const tokenData = require("../data/tokenData.js");
 const userMultiplerData = require("../data/userMultiplierData.js");
 const request = require("supertest");
+const testData = require("./mock_data/integrationTestData.js");
 const util = require("../util.js");
 const app = require("../../server");
 
-// Mock data
-const mockTokenUser1 = {
-    "sub": "12312321312312",
-    "email": "test.user@gmail.com",
-    "name": "Jim Bob Joe John Jake"
-};
-const mockUser1 = {
-    "id": 37,
-    "name": mockTokenUser1.name,
-    "email": mockTokenUser1.email,
-    "user_multiplier_id": 23,
-    "google_user_id": "12131231231221233",
-    "spottr_points": 940
-};
-const mockUser1Multiplier = 1.2;
-const mockWorkoutPlan1 = {
-    "workout_plan_id": 93,
-    "exercises": [], // not needed 
-    "breaks": [], // not needed
-    "est_length_sec": 1184,
-    "associated_multiplier": 0.875,
-    "spottr_points": 235
-};
-const mockWorkoutHistory1 = {
-    "id": 1,
-    "user_profile_id": mockUser1.id,
-    "workout_plan_id": mockWorkoutPlan1.workout_plan_id,
-    "actual_length_sec": 1100,
-    "major_muscle_group_id": 1,
-    "spottr_points": 235,
-    "date_time_utc": "2020-10-29T08:42:10.000Z"
-};
-const mockPossibleExercises1 = [
-    {
-        "id": 1,
-        "name": "Plank Tap",
-        "description": "description",
-        "std_reps": 20,
-        "std_reps_time_sec": 45,
-        "major_muscle_group_id": 1,
-        "std_sets": 3
-    },
-    {
-        "id": 2,
-        "name": "Push Ups",
-        "description": "description",
-        "std_reps": 10,
-        "std_reps_time_sec": 30,
-        "major_muscle_group_id": 1,
-        "std_sets": 3
-    },
-    {
-        "id": 3,
-        "name": "Arm Circles",
-        "description": "description",
-        "std_reps": 20,
-        "std_reps_time_sec": 20,
-        "major_muscle_group_id": 1,
-        "std_sets": 4
-    }
-];
 
-jest.mock("../data/workoutData.js");
-jest.mock("../data/userData.js");
-jest.mock("../data/tokenData.js");
-jest.mock("../data/userMultiplierData.js");
+//
+// Overide the mocks located in the ```__mocks__``` files
+//
+
+jest.mock("../data/workoutData.js", () => ({
+    getExercisesByTargetMuscleGroups: jest.fn(),
+    getUserMultiplier: jest.fn(),
+    createWorkoutPlanEntry: jest.fn(),
+    updateWorkoutPlan: jest.fn(),
+    createWorkoutExerciseEntries: jest.fn(),
+    getWorkoutPlanById: jest.fn(),
+    getWorkoutHistoryById: jest.fn(),
+    createWorkoutHistoryEntry: jest.fn(),
+    updateUserMultiplier: jest.fn()
+}));
+jest.mock("../data/userData.js", () => ({
+    getUserByUserId: jest.fn(),
+    getUsers: jest.fn(),
+    createUser: jest.fn(),
+    updateUserSpottrPoints: jest.fn(),
+    upsertUserMultiplier: jest.fn()
+}));
+jest.mock("../data/tokenData.js", () => ({
+    getUserByGoogleID: jest.fn(),
+    verifyToken: jest.fn()
+}));
+jest.mock("../data/userMultiplierData.js", () => ({
+    getUserByGoogleID: jest.fn(),
+    verifyToken: jest.fn(),
+}));
+jest.mock("../data/userMultiplierData.js", () => ({
+    createUserMultipler: jest.fn()
+}));
+jest.unmock('../service/firebaseService.js');
+
+
+//
+// Actually perform the tests
+//
 
 describe("POST /token (User Google Authentication)", function() {
     // Set up testing state and mock data
     afterAll(() => { app.close(); });
 
     beforeEach(() => {
-        tokenData.verifyToken.mockResolvedValue(mockTokenUser1);
-        userData.createUser.mockResolvedValue(mockUser1.id);
-        userData.getUserByUserId.mockResolvedValue(mockUser1);
+        tokenData.verifyToken.mockResolvedValue(testData.mockTokenUser1);
+        userData.createUser.mockResolvedValue(testData.mockUser1.id);
+        userData.getUserByUserId.mockResolvedValue(testData.mockUser1);
     });
 
     // Execute tests
@@ -98,16 +73,16 @@ describe("POST /token (User Google Authentication)", function() {
         // Check response
         expect(res.statusCode).toEqual(200);
 
-        expect(res.body.email === mockUser1.email);
-        expect(res.body.google_user_id === mockUser1.google_user_id);
-        expect(res.body.id === mockUser1.id);
-        expect(res.body.name === mockUser1.name);
-        expect(res.body.spottr_points === mockUser1.spottr_points);
-        expect(res.body.user_multiplier_id === mockUser1.user_multiplier_id);
+        expect(res.body.email === testData.mockUser1.email);
+        expect(res.body.google_user_id === testData.mockUser1.google_user_id);
+        expect(res.body.id === testData.mockUser1.id);
+        expect(res.body.name === testData.mockUser1.name);
+        expect(res.body.spottr_points === testData.mockUser1.spottr_points);
+        expect(res.body.user_multiplier_id === testData.mockUser1.user_multiplier_id);
     });
 
     it("expect existing user returned (user already exists)", async () => {
-        tokenData.getUserByGoogleID.mockResolvedValue([mockUser1]);
+        tokenData.getUserByGoogleID.mockResolvedValue([testData.mockUser1]);
 
         const res = await request(app)
             .post("/token")
@@ -117,12 +92,12 @@ describe("POST /token (User Google Authentication)", function() {
         // Check response
         expect(res.statusCode).toEqual(200);
 
-        expect(res.body.email === mockUser1.email);
-        expect(res.body.google_user_id === mockUser1.google_user_id);
-        expect(res.body.id === mockUser1.id);
-        expect(res.body.name === mockUser1.name);
-        expect(res.body.spottr_points === mockUser1.spottr_points);
-        expect(res.body.user_multiplier_id === mockUser1.user_multiplier_id);
+        expect(res.body.email === testData.mockUser1.email);
+        expect(res.body.google_user_id === testData.mockUser1.google_user_id);
+        expect(res.body.id === testData.mockUser1.id);
+        expect(res.body.name === testData.mockUser1.name);
+        expect(res.body.spottr_points === testData.mockUser1.spottr_points);
+        expect(res.body.user_multiplier_id === testData.mockUser1.user_multiplier_id);
     });
 });
 
@@ -139,10 +114,10 @@ describe("GET /users/:userId/workout/generate-plan/ (Generate Suggested Workout)
     let mockUpdateWorkoutPlan;
 
     beforeEach(() => {
-        mockUser = util.clone(mockUser1);
+        mockUser = util.clone(testData.mockUser1);
 
-        workoutData.getExercisesByTargetMuscleGroups.mockResolvedValue(util.clone(mockPossibleExercises1));
-        workoutData.getUserMultiplier.mockResolvedValue(util.clone(mockUser1Multiplier));
+        workoutData.getExercisesByTargetMuscleGroups.mockResolvedValue(util.clone(testData.mockPossibleExercises1));
+        workoutData.getUserMultiplier.mockResolvedValue(util.clone(testData.mockUser1Multiplier));
         userData.getUserByUserId.mockResolvedValue(mockUser);
 
         mockCreateWorkoutPlan = jest
@@ -180,11 +155,15 @@ describe("GET /users/:userId/workout/generate-plan/ (Generate Suggested Workout)
         let workoutLength = 30;
         let workoutType = 1;
 
-        let path = "/users/" + mockUser1.id + "/workout/generate-plan/" + workoutLength + "&" + workoutType;
+        let path = "/users/" + testData.mockUser1.id + "/workout/generate-plan";
         const res = await request(app)
             .get(path)
             .set("Accept", "application/json")
-            .send();
+            .type('form')
+            .send({
+                "length-minutes": workoutLength,
+                "target-muscle-group": workoutType
+            });
 
         // Check response
         expect(res.statusCode).toEqual(200);
@@ -194,7 +173,7 @@ describe("GET /users/:userId/workout/generate-plan/ (Generate Suggested Workout)
         expect(mockCreateWorkoutEntries).toHaveBeenCalled();
 
         // Check the generated data and "database" data to ensure accuracy
-        expect(res.body.associated_multiplier === mockUser1Multiplier);
+        expect(res.body.associated_multiplier === testData.mockUser1Multiplier);
         expect(res.body.associated_multiplier === addedWorkoutEntries.associated_multiplier);
 
         expect(res.body.breaks.length > 0);
@@ -216,7 +195,10 @@ describe("GET /users/:userId/workout/generate-plan/ (Generate Suggested Workout)
 
 describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() {
     // Set up testing state and mock data
-    afterAll(() => { app.close(); });
+    afterAll(() => { 
+        jest.restoreAllMocks();
+        app.close(); 
+    });
 
     let mockUpdateUserSpottrPoints;
     let mockUpdateUserMultiplier;
@@ -224,13 +206,13 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
     let mockMultiplier;
 
     beforeEach(() => {
-        mockUser = util.clone(mockUser1);
-        mockMultiplier = util.clone(mockUser1Multiplier);
+        mockUser = util.clone(testData.mockUser1);
+        mockMultiplier = util.clone(testData.mockUser1Multiplier);
 
-        workoutData.getWorkoutPlanById.mockResolvedValue(mockWorkoutPlan1);
-        workoutData.getWorkoutHistoryById.mockResolvedValue(mockWorkoutHistory1);
-        workoutData.createWorkoutHistoryEntry.mockResolvedValue(mockWorkoutHistory1.id);
-        workoutData.getUserMultiplier.mockResolvedValue(mockMultiplier);
+        workoutData.getWorkoutPlanById.mockResolvedValue(testData.mockWorkoutPlan1);
+        workoutData.getWorkoutHistoryById.mockResolvedValue(testData.mockWorkoutHistory1);
+        workoutData.createWorkoutHistoryEntry.mockResolvedValue(testData.mockWorkoutHistory1.id);
+        workoutData.getUserMultiplier.mockResolvedValue(testData.mockMultiplier);
         userData.getUserByUserId.mockResolvedValue(mockUser);
 
         mockUpdateUserSpottrPoints = jest
@@ -259,40 +241,46 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
         // Set-up firebase API call to succeed
         firebaseService.sendFirebaseMessage.mockResolvedValue(1);
 
-        let path = "/users/" + mockUser1.id + "/workout/complete/" + mockWorkoutHistory1.actual_length_sec + 
-            "&" + mockWorkoutPlan1.workout_plan_id;
+        let path = "/users/" + testData.mockUser1.id + "/workout/complete";
         const res = await request(app)
             .post(path)
             .set("Accept", "application/json")
-            .send();
+            .type('form')
+            .send({
+                "length-seconds": testData.mockWorkoutHistory1.actual_length_sec,
+                "workout-plan-id": testData.mockWorkoutPlan1.workout_plan_id
+            });
 
         // Check response
         expect(res.statusCode).toEqual(200);
 
         // Check points were updated as expected
-        let newExpectedPoints = parseInt(mockUser1.spottr_points, 10) + parseInt(mockWorkoutPlan1.spottr_points, 10);
+        let newExpectedPoints = parseInt(testData.mockUser1.spottr_points, 10) + parseInt(testData.mockWorkoutPlan1.spottr_points, 10);
         expect(mockUpdateUserSpottrPoints)
             .toHaveBeenCalledWith(
-                mockUser1.id,
+                testData.mockUser1.id,
                 newExpectedPoints,
                 {}
             );
         expect(mockUser.spottr_points === newExpectedPoints);
 
         // Since workout was completed within margin of current skill, multiplier should remain the same
-        expect(mockMultiplier === mockUser1Multiplier);
+        expect(mockMultiplier === testData.mockUser1Multiplier);
     });
 
     it("expect failed request (firebase token invalid)", async () => {
         // Set-up firebase API call to fail
         firebaseService.sendFirebaseMessage.mockResolvedValue(0);
 
-        let path = "/users/" + mockUser1.id + "/workout/complete/" + mockWorkoutHistory1.actual_length_sec + 
-            "&" + mockWorkoutPlan1.workout_plan_id;
+        let path = "/users/" + testData.mockUser1.id + "/workout/complete";
         const res = await request(app)
             .post(path)
             .set("Accept", "application/json")
-            .send();
+            .type('form')
+            .send({
+                "length-seconds": testData.mockWorkoutHistory1.actual_length_sec,
+                "workout-plan-id": testData.mockWorkoutPlan1.workout_plan_id
+            });
 
         // Check response
         expect(res.statusCode).toEqual(500);
@@ -300,18 +288,21 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
 });
 
 describe("GET /users (Retrieve All Users)", function() {
-    // Set up test state
-    afterAll(() => { app.close(); });
+    afterAll(() => { 
+        app.close(); 
+    });
 
     // Set up database mocks
-    userData.getUsers.mockResolvedValue({1: mockUser1});
+    userData.getUsers.mockResolvedValue({1: testData.mockUser1});
 
     // Execute tests
-    it("expect valid json response", function(done) {
-      request(app)
-        .get("/users")
-        .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
-        .expect(200, done);
+    it("expect valid response", function(done) {
+        const res = request(app)
+            .get("/users")
+            .set("Accept", "application/json")
+            .expect(200, done);
+
+        // Check response
+        expect(res.body === testData.mockUser1);
     });
 });
