@@ -1,10 +1,5 @@
 /*eslint-env jest*/
-<<<<<<< HEAD
 var userService = require("../service/userService.js");
-=======
-
-var userService = require("../__mocks__/userService.js");
->>>>>>> main
 
 if(typeof jest !== "undefined") {
   jest.mock("../data/userData.js");
