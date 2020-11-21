@@ -44,7 +44,7 @@ jest.mock("../data/userMultiplierData.js", () => ({
 jest.mock("../data/userMultiplierData.js", () => ({
     createUserMultipler: jest.fn()
 }));
-jest.unmock('../service/firebaseService.js');
+jest.unmock("../service/firebaseService.js");
 
 
 //
@@ -159,7 +159,7 @@ describe("GET /users/:userId/workout/generate-plan/ (Generate Suggested Workout)
         const res = await request(app)
             .get(path)
             .set("Accept", "application/json")
-            .type('form')
+            .type("form")
             .send({
                 "length-minutes": workoutLength,
                 "target-muscle-group": workoutType
@@ -245,7 +245,7 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
         const res = await request(app)
             .post(path)
             .set("Accept", "application/json")
-            .type('form')
+            .type("form")
             .send({
                 "length-seconds": testData.mockWorkoutHistory1.actual_length_sec,
                 "workout-plan-id": testData.mockWorkoutPlan1.workout_plan_id
@@ -276,7 +276,7 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
         const res = await request(app)
             .post(path)
             .set("Accept", "application/json")
-            .type('form')
+            .type("form")
             .send({
                 "length-seconds": testData.mockWorkoutHistory1.actual_length_sec,
                 "workout-plan-id": testData.mockWorkoutPlan1.workout_plan_id
