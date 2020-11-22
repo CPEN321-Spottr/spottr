@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("FIREBASE", token);
 
                         Call<Void> firebasetokencall = adminAPI.registerFirebaseDeviceToken(token);
+
                         firebasetokencall.enqueue(new Callback<Void>() {
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -111,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(Call<Void> call, Throwable t) {
                                 Log.d("TOKEN", "Device token registration failed");
+                                Log.d("TOKEN", t.toString());
                             }
                         });
                     }
@@ -121,7 +124,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.code() == 200) {
-                    Log.d("TOKEN", "Successfully registered token");
+                    Log.d("TOKEN", "Successfully registered ID token");
+                }else{
+                    Log.d("TOKEN", "Failed to register ID token");
                 }
             }
 
