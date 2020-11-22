@@ -8,10 +8,10 @@ const users = {
 };
 
 module.exports = {
-    async createUser(sub, email, name, dbConfig) {
+    async createUser(dbConfig, sub, email, name) {
         const newUser = sub + email + name;
         return new Promise(async function(resolve) {
-            resolve(5);
+            resolve(1);
         });
     },
     async getUsers(dbConfig) {

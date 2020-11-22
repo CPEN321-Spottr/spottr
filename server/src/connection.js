@@ -15,7 +15,7 @@ module.exports = {
         return util.clone(connectionData);
     },
 
-    initializeFirebaseApp() {
+    initializeFirebaseApp() {/*
         if (typeof process.env.FIREBASE_PRIVATEKEY === "undefined") {
             console.error("Missing env variable!");
             return;
@@ -35,7 +35,7 @@ module.exports = {
                 client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-gfhkd%40spottr-1603580674508.iam.gserviceaccount.com"
               }),
             databaseURL: "sqlserver://eu-az-sql-serv1.database.windows.net:1433;database=dkxp1krn55tloca"
-        });
+        });*/
     },
 
     getGoogleAuthClientID() {

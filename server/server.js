@@ -16,6 +16,8 @@ var dbConfig = connection.getDbConfig();
 
 connection.initializeFirebaseApp();
 
+app.use(bodyParser.json())
+
 module.exports = app.listen(port, () => { console.log("Spottr API listening at http://localhost:${port}"); });
 
 app.get("/", cors(), (req, res) => { res.json(new Date()); });
@@ -64,8 +66,11 @@ app.post("/token", cors(), async function (req, res){
 
 // A working token for testing: "fJDLUk0CRrScpTuhnNjBl9:APA91bGKScW3LwUSRrSfNE-GqkcZf51oOZI8dD9TcRKKQRUpg4KL-JhGj1X_lNT7_HxZttVsE1ztE5uiM5CQz2TZL_T-ZpGDFO9I8QSNv5luyGzegf-z8CO8ljs6KVh_PemvKH_Hc2H_"
 app.post("/firebaseToken", jsonParser, cors(), async function (req, res){
+  console.log("First check" );
+  console.log(!("firebase-token" in req.body))
+  console.log("Second check" );
+  console.log(req.body["firebase-token"] === "")
   try {
-    // Basic error checking
     if (!("firebase-token" in req.body)) {
       throw ("Could not find expected firebase-token key in request body!");
     }

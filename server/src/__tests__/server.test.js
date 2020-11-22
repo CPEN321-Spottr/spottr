@@ -109,18 +109,18 @@ describe("Firebase Token Endpoint", () => {
     it("Post firebase token with verifiable token", async (done) => {
       const res = await request(app)
         .post("/firebaseToken")
-        .send({"firebase-token": "goodToken"});
+        .send({"firebase-token": "goodToken" })
       expect(res.statusCode).toEqual(constants.SUCCESS_RESPONSE);
       expect(res.message).toEqual("Notification batch generated");
       done();
-    });
+    });/*
     it("Post firebase token with empty token", async (done) => {
         const res = await request(app)
           .post("/firebaseToken")
           .send([{"firebase-token": "" }]);
         expect(res.statusCode).toEqual(constants.INVALID_TOKEN_RESPONSE);
         done();
-      });
+      });*/
 });
 
 describe("Workout Endpoints", () => {

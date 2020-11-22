@@ -104,9 +104,5 @@ module.exports = {
           .catch((ex) => {
             throw ex;
           });
-    },
-
-   deleteUser(userId) {
-      return "Deleting user " + userId;
-   }
+    }
 };
