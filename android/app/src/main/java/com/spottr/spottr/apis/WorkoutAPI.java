@@ -8,6 +8,8 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -35,7 +37,7 @@ public interface WorkoutAPI {
     @GET("/users/{userID}/workout/generate-plan/{lengthMinutes}&{targetMuscleGroup}")
     Call<Plan> getRecommendedPlan(
             @Path("userID") String userID,
-            @Path("lengthMinutes") Integer minutes,
-            @Path("targetMuscleGroup") Integer group
+            @Query("length-minutes") Integer minutes,
+            @Query("target-muscle-group") Integer group
     );
 }
