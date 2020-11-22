@@ -5,6 +5,7 @@ const userData = require("../data/userData.js");
 const firebaseData = require("../data/firebaseData.js");
 const tokenData = require("../data/tokenData.js");
 const userMultiplerData = require("../data/userMultiplierData.js");
+const connection = require("../connection.js");
 const request = require("supertest");
 const testData = require("../data/__mocks__/integrationTestData.js");
 const util = require("../util.js");
@@ -48,6 +49,8 @@ jest.mock("../data/firebaseData.js", () => ({
     sendFirebaseMessages: jest.fn(),
     getAllFirebaseTokens: jest.fn()
 }));
+
+jest.unmock("../connection.js");
 
 
 //
@@ -260,7 +263,7 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
             .toHaveBeenCalledWith(
                 testData.mockUser1.id,
                 newExpectedPoints,
-                {}
+                connection.getDbConfig()
             );
         expect(mockUser.spottr_points === newExpectedPoints);
 
