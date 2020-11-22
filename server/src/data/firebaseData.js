@@ -4,18 +4,17 @@ var admin = require("firebase-admin");
 module.exports = {
     // Returns 1 if fully successful, 0 otherwise
     async sendFirebaseMessages(tokens, payload, options) {
-        let errorTokens = [];
+        var errorTokens = [];
 
-        for (let token in tokens) {
-            if (tokens.hasOwnProperty(token)) {
-                await admin.messaging().sendToDevice(token, payload, options)
-                .then(function(response) { 
-                    // Do nothing on success
-                 })
-                .catch(function(error) {
-                    errorTokens.append(token);
-                });
-            }
+        for (var token of tokens) {
+            var tokenData = token["token"];
+            await admin.messaging().sendToDevice(tokenData, payload, options)
+            .then(function(response) { 
+                // Do nothing on success
+                })
+            .catch(function(error) {
+                errorTokens.push(tokenData);
+            });
         }
 
         return errorTokens;
@@ -51,7 +50,7 @@ module.exports = {
                     );
                 })
                 .then((result) => {
-                    return result.recordset[0]["id"];
+                    return result.recordset[0];
                 })
                 .catch((ex) => {
                     throw ex;

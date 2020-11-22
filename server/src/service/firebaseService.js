@@ -3,9 +3,9 @@ var faker = require("faker");
 const firebaseData = require("../data/firebaseData.js");
 
 module.exports = {
-    async registerFirebaseToken(registrationToken) {
+    async registerFirebaseToken(registrationToken, dbConfig) {
         return new Promise(function(resolve) {
-          resolve(firebaseData.createFirebaseTokenEntry(registrationToken));
+          resolve(firebaseData.createFirebaseTokenEntry(registrationToken, dbConfig));
         });
     },
 
@@ -16,7 +16,12 @@ module.exports = {
           "profile_img_uri": faker.image.imageUrl(),
           "name": userName,
           "posted": new Date(newWorkoutHistory.date_time_utc).toDateString(),
-          "workoutHistory": newWorkoutHistory
+          "workout_history_id": newWorkoutHistory.id.toString(),
+          "workout_history_actual_length_sec": newWorkoutHistory["actual_length_sec"].toString(),
+          "workout_history_major_muscle_group": newWorkoutHistory["major_muscle_group_id"].toString(),
+          "workout_history_spottr_points": newWorkoutHistory["spottr_points"].toString(),
+          "workout_history_user_profile_id": newWorkoutHistory["user_profile_id"].toString(),
+          "workout_history_workout_plan_id": newWorkoutHistory["workout_plan_id"].toString()
         }
       };
 
