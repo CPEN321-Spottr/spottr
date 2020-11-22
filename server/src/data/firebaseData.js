@@ -13,7 +13,7 @@ module.exports = {
                 // Do nothing on success
                 })
             .catch(function(error) {
-                errorTokens.push(tokenData);
+                errorTokens.push(error);
             });
         }
 
