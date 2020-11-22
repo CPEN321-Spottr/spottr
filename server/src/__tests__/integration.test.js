@@ -2,9 +2,10 @@
 
 const workoutData = require("../data/workoutData.js");
 const userData = require("../data/userData.js");
-const firebaseService = require("../service/firebaseService.js");
+const firebaseData = require("../data/firebaseData.js");
 const tokenData = require("../data/tokenData.js");
 const userMultiplerData = require("../data/userMultiplierData.js");
+const connection = require("../connection.js");
 const request = require("supertest");
 const testData = require("../data/__mocks__/integrationTestData.js");
 const util = require("../util.js");
@@ -44,7 +45,12 @@ jest.mock("../data/userMultiplierData.js", () => ({
 jest.mock("../data/userMultiplierData.js", () => ({
     createUserMultipler: jest.fn()
 }));
-jest.unmock("../service/firebaseService.js");
+jest.mock("../data/firebaseData.js", () => ({
+    sendFirebaseMessages: jest.fn(),
+    getAllFirebaseTokens: jest.fn()
+}));
+
+jest.unmock("../connection.js");
 
 
 //
@@ -226,9 +232,6 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
             .mockImplementation((targetMuscleGroup, newMultiplier, userMultiplierId, dbConfig) => {
                 mockMultiplier = newMultiplier;
             });
-
-        // Only mock the firebase message API calls, leave the rest of the service alone
-        firebaseService.sendFirebaseMessage = jest.fn();
     });
 
     afterEach(() => {
@@ -239,7 +242,7 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
     // Execute tests
     it("expect workout to be successfully completed (firebase token valid)", async () => {
         // Set-up firebase API call to succeed
-        firebaseService.sendFirebaseMessage.mockResolvedValue(1);
+        firebaseData.sendFirebaseMessages.mockReturnValue([]);
 
         let path = "/users/" + testData.mockUser1.id + "/workout/complete";
         const res = await request(app)
@@ -260,7 +263,7 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
             .toHaveBeenCalledWith(
                 testData.mockUser1.id,
                 newExpectedPoints,
-                {}
+                connection.getDbConfig()
             );
         expect(mockUser.spottr_points === newExpectedPoints);
 
@@ -270,7 +273,7 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
 
     it("expect failed request (firebase token invalid)", async () => {
         // Set-up firebase API call to fail
-        firebaseService.sendFirebaseMessage.mockResolvedValue(0);
+        firebaseData.sendFirebaseMessages.mockReturnValue([1234, 123]);
 
         let path = "/users/" + testData.mockUser1.id + "/workout/complete";
         const res = await request(app)
