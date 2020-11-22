@@ -205,8 +205,9 @@ module.exports = {
         userData.updateUserSpottrPoints(userId, user.spottr_points + workoutPlan.spottr_points, dbConfig);
 
         // Send message to Firebase so other user"s are notified in real-time
-        try { await firebaseService.sendWorkoutToFirebase(workoutHistory, user.name); }
-        catch(err) { throw err; }
+        let firebaseErr = null;
+        try { await firebaseService.sendWorkoutToFirebase(workoutHistory, user.name, dbConfig); }
+        catch(err) { firebaseErr = err; }
         
         // Adjust user's multiplier (if they were reasonably off the estimated workout time)
         var percentageDifference = lengthOfWorkoutSec / workoutPlan.est_length_sec;
@@ -222,6 +223,10 @@ module.exports = {
                     dbConfig
                 );
             }
+        }
+
+        if (firebaseErr !== null) {
+            throw ("Workout was completed successfully, however, an error was encountered while sending the messages to firebase. Message: " + firebaseErr);
         }
         return new Promise (function (resolve) {
             resolve(1);

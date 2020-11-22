@@ -70,14 +70,16 @@ app.post("/firebase-token", jsonParser, cors(), async function (req, res){
   try {
     // Basic input validation
     validator.checkIsPresent(["firebase-token"], req.body);
-
-    res.sendStatus(
-      await firebaseService.firebaseTokenVerify(req.body["firebase-token"])
+    
+    await firebaseService.registerFirebaseToken(
+      req.body["firebase-token"],
+      dbConfig
     );
+
+    res.sendStatus(constants.SUCCESS_RESPONSE);
   }
   catch(ex){
-    console.error(console.trace());
-    res.status(constants.INVALID_TOKEN_RESPONSE).send(ex);
+    res.status(constants.INVALID_TOKEN_RESPONSE).send(ex.message);
   }
 });
 
