@@ -64,7 +64,7 @@ app.post("/token", cors(), async function (req, res){
 ////////                            ////////
 
 // A working token for testing: "fJDLUk0CRrScpTuhnNjBl9:APA91bGKScW3LwUSRrSfNE-GqkcZf51oOZI8dD9TcRKKQRUpg4KL-JhGj1X_lNT7_HxZttVsE1ztE5uiM5CQz2TZL_T-ZpGDFO9I8QSNv5luyGzegf-z8CO8ljs6KVh_PemvKH_Hc2H_"
-app.post("/firebaseToken", jsonParser, cors(), async function (req, res){
+app.post("/firebase-token", jsonParser, cors(), async function (req, res){
   try {
     // Basic input validation
     validator.checkIsPresent(["firebase-token"], req.body);
