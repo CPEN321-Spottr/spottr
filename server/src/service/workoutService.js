@@ -205,7 +205,7 @@ module.exports = {
         userData.updateUserSpottrPoints(userId, user.spottr_points + workoutPlan.spottr_points, dbConfig);
 
         // Send message to Firebase so other user"s are notified in real-time
-        try { await firebaseService.sendWorkoutToFirebase(workoutHistory, user.name); }
+        try { await firebaseService.sendWorkoutToFirebase(workoutHistory, user.name, dbConfig); }
         catch(err) { throw err; }
         
         // Adjust user's multiplier (if they were reasonably off the estimated workout time)
