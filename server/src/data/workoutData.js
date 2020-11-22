@@ -278,16 +278,16 @@ module.exports = {
      });
   },
 
-  async getRecentWorkoutHistory(dbConfig, startIdBottom, startIdTop) {
+  async getRecentWorkoutHistory(dbConfig, numEntries) {
      return sql
        .connect(dbConfig)
        .then((pool) => {
-         return pool
-           .request()
-           .input("sIdBottom", sql.Int, startIdBottom)
-           .input("sIdTop", sql.Int, startIdTop)
-           .query("SELECT * FROM workout_history WHERE id >= @sIdBottom and id <= @sIdTop"
-           );
+          return pool
+            .request()
+            .input("ne", sql.Int, numEntries)
+            .query(
+              "SELECT * FROM workout_history ORDER BY ID DESC OFFSET 0 ROWS FETCH FIRST @ne ROW ONLY"
+            );
        })
        .then((result) => {
          return result.recordset;
