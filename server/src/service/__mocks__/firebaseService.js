@@ -1,7 +1,9 @@
 module.exports = {
-    async firebaseTokenVerify(registrationToken) {
+    async registerFirebaseToken(registrationToken) {
+        if(registrationToken === "badToken")
+          throw ("Invalid Token");
         return new Promise(function(resolve) {
-          resolve("Notification batch generated");
+          resolve("Registration of token successful");
         });
     }
 };
