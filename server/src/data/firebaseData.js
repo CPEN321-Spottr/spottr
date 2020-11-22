@@ -6,14 +6,16 @@ module.exports = {
     async sendFirebaseMessages(tokens, payload, options) {
         let errorTokens = [];
 
-        for (token in tokens) {
-            await admin.messaging().sendToDevice(registrationToken, payload, options)
+        for (let token in tokens) {
+            if (tokens.hasOwnProperty(token)) {
+                await admin.messaging().sendToDevice(token, payload, options)
                 .then(function(response) { 
                     // Do nothing on success
                  })
                 .catch(function(error) {
                     errorTokens.append(token);
                 });
+            }
         }
 
         return errorTokens;
