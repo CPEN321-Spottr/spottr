@@ -4,17 +4,19 @@ var admin = require("firebase-admin");
 module.exports = {
     // Returns 1 if fully successful, 0 otherwise
     async sendFirebaseMessages(tokens, payload, options) {
+        let errorTokens = [];
+
         for (token in tokens) {
             await admin.messaging().sendToDevice(registrationToken, payload, options)
                 .then(function(response) { 
                     // Do nothing on success
                  })
                 .catch(function(error) {
-                    return 0;
+                    errorTokens.append(token);
                 });
         }
 
-        return 1;
+        return errorTokens;
     },
 
     async getAllFirebaseTokens(dbConfig) {

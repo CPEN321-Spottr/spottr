@@ -27,9 +27,11 @@ module.exports = {
 
       // Collect tokens and send message
       let tokens = await firebaseData.getAllFirebaseTokens(dbConfig);
-      let success = await firebaseData.sendFirebaseMessages(tokens, payload, options);
+      let errorTokens = await firebaseData.sendFirebaseMessages(tokens, payload, options);
       
-      if (!success) { throw ("Unable to send firebase message"); }
+      if (errorTokens.length !== 0) { 
+        throw ("Attempted to send firebase messages. Could not send messages to the following tokens: " + errorTokens.toString()); 
+      }
       return new Promise(function(resolve) { resolve(1); });
     }
 };

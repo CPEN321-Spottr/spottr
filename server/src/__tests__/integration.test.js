@@ -239,7 +239,7 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
     // Execute tests
     it("expect workout to be successfully completed (firebase token valid)", async () => {
         // Set-up firebase API call to succeed
-        firebaseData.sendFirebaseMessages.mockReturnValue(1);
+        firebaseData.sendFirebaseMessages.mockReturnValue([]);
 
         let path = "/users/" + testData.mockUser1.id + "/workout/complete";
         const res = await request(app)
@@ -270,7 +270,7 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
 
     it("expect failed request (firebase token invalid)", async () => {
         // Set-up firebase API call to fail
-        firebaseData.sendFirebaseMessages.mockReturnValue(0);
+        firebaseData.sendFirebaseMessages.mockReturnValue([1234, 123]);
 
         let path = "/users/" + testData.mockUser1.id + "/workout/complete";
         const res = await request(app)
