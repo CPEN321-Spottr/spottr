@@ -8,6 +8,27 @@ const connectionData = {
     database: process.env.DB_DATABASE
 };
 
+// Inserts "\n" to restore key to usable state
+function generateUsableKey(originalKey) {
+    let newKey = "";
+
+    // Append "-----BEGIN PRIVATE KEY-----", start at index 27
+    newKey += "-----BEGIN PRIVATE KEY-----";
+
+    // Loop through main body (1624 chars)
+    for (let i = 0; i < 1624; i++) {
+        if (i % 64 === 0) {
+            newKey += "\n";
+        }
+        newKey += originalKey.charAt(parseInt(i + 27));
+    }
+
+    // Append "\n-----END PRIVATE KEY-----\n"
+    newKey += "\n-----END PRIVATE KEY-----\n";
+
+    return newKey;
+}
+
 // Note: An exception will occur here if you are trying to run the app locally and have not replaced
 // the "const dbConfig" line in server.js as specified in the Google Doc file
 module.exports = {
@@ -26,7 +47,7 @@ module.exports = {
                 type: "service_account",
                 project_id: "spottr-1603580674508",
                 private_key_id: process.env.FIREBASE_PRIVATEKEY_ID,
-                private_key: process.env.FIREBASE_PRIVATEKEY,
+                private_key: generateUsableKey(process.env.FIREBASE_PRIVATEKEY),
                 client_email: "firebase-adminsdk-gfhkd@spottr-1603580674508.iam.gserviceaccount.com",
                 client_id: "100129969434392598267",
                 auth_uri: "https://accounts.google.com/o/oauth2/auth",
