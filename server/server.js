@@ -10,6 +10,7 @@ const userService = require("./src/service/userService.js");
 const authService = require("./src/service/authService.js");
 const connection = require("./src/connection.js");
 const constants = require("./src/constants.js");
+const validator = require("./src/paramValidator.js");
 
 const jsonParser = bodyParser.urlencoded({ extended: true });
 var dbConfig = connection.getDbConfig();
@@ -65,18 +66,10 @@ app.post("/token", cors(), async function (req, res){
 ////////                            ////////
 
 // A working token for testing: "fJDLUk0CRrScpTuhnNjBl9:APA91bGKScW3LwUSRrSfNE-GqkcZf51oOZI8dD9TcRKKQRUpg4KL-JhGj1X_lNT7_HxZttVsE1ztE5uiM5CQz2TZL_T-ZpGDFO9I8QSNv5luyGzegf-z8CO8ljs6KVh_PemvKH_Hc2H_"
-app.post("/firebaseToken", jsonParser, cors(), async function (req, res){
-  console.log("First check" );
-  console.log(!("firebase-token" in req.body))
-  console.log("Second check" );
-  console.log(req.body["firebase-token"] === "")
+app.post("/firebase-token", jsonParser, cors(), async function (req, res){
   try {
-    if (!("firebase-token" in req.body)) {
-      throw ("Could not find expected firebase-token key in request body!");
-    }
-    if (req.body["firebase-token"] === "") {
-      throw ("Found token in body contains no value");
-    }
+    // Basic input validation
+    validator.checkIsPresent(["firebase-token"], req.body);
 
     res.sendStatus(
       await firebaseService.firebaseTokenVerify(req.body["firebase-token"])
@@ -93,12 +86,15 @@ app.post("/firebaseToken", jsonParser, cors(), async function (req, res){
 //////////  WORKOUT API CALLS   //////////
 //////////                      //////////
 
-app.get("/users/:userId/workout/generate-plan/:lengthMinutes&:targetMuscleGroup", cors(), async function (req, res) {
+app.get("/users/:userId/workout/generate-plan", jsonParser, cors(), async function (req, res) {
   try {
+    // Basic input validation
+    validator.checkIsPresent(["length-minutes", "target-muscle-group"], req.body, "body", true);
+
     res.json(await workoutService.generateWorkoutPlan(
         JSON.parse(req.params.userId),
-        JSON.parse(req.params.lengthMinutes),
-        JSON.parse(req.params.targetMuscleGroup),
+        parseInt(req.body["length-minutes"], 10),
+        parseInt(req.body["target-muscle-group"], 10),
         dbConfig
     ));
   } catch(ex) {
@@ -106,7 +102,7 @@ app.get("/users/:userId/workout/generate-plan/:lengthMinutes&:targetMuscleGroup"
   }
 });
 
-app.get("/users/:userId/workout/one-up/:workoutPlanId", cors(), async function (req, res) {
+app.get("/users/:userId/workout/one-up/:workout-plan-id", cors(), async function (req, res) {
   try {
     res.json(await workoutService.generateOneUpWorkoutPlan(
         JSON.parse(req.params.userId),
@@ -118,12 +114,15 @@ app.get("/users/:userId/workout/one-up/:workoutPlanId", cors(), async function (
   }
 });
 
-app.put("/users/:userId/workout/change-difficulty/:factor&:targetMuscleGroup", cors(), async function (req, res) {
+app.put("/users/:userId/workout/change-difficulty", jsonParser, cors(), async function (req, res) {
   try {
+    // Basic input validation
+    validator.checkIsPresent(["factor", "target-muscle-group"], req.body, "body", true);
+
     res.sendStatus(await workoutService.modifyWorkoutDifficulty(
       JSON.parse(req.params.userId),
-      JSON.parse(req.params.targetMuscleGroup),
-      JSON.parse(req.params.factor),
+      parseInt(req.body["target-muscle-group"], 10),
+      parseInt(req.body["factor"], 10),
       dbConfig
     ));
   } catch(ex) {
@@ -131,12 +130,15 @@ app.put("/users/:userId/workout/change-difficulty/:factor&:targetMuscleGroup", c
   }
 });
 
-app.post("/users/:userId/workout/complete/:lengthOfWorkoutSeconds&:workoutPlanId", cors(), async function (req, res) {
+app.post("/users/:userId/workout/complete", jsonParser, cors(), async function (req, res) {
   try {
+    // Basic input validation
+    validator.checkIsPresent(["length-seconds", "workout-plan-id"], req.body, "body", true);
+
     await workoutService.completeWorkout(
       JSON.parse(req.params.userId),
-      JSON.parse(req.params.lengthOfWorkoutSeconds),
-      JSON.parse(req.params.workoutPlanId),
+      parseInt(req.body["length-seconds"], 10),
+      parseInt(req.body["workout-plan-id"], 10),
       dbConfig
     );
 
@@ -146,7 +148,7 @@ app.post("/users/:userId/workout/complete/:lengthOfWorkoutSeconds&:workoutPlanId
   }
 });
 
-app.get("/workout/muscleGroups", cors(), async function (req, res) {
+app.get("/workout/muscle-groups", cors(), async function (req, res) {
   try{
     res.send(
       await workoutService.getAllMuscleGroups(dbConfig)
@@ -156,17 +158,19 @@ app.get("/workout/muscleGroups", cors(), async function (req, res) {
   }
 });
 
-app.get("/workout/history/:numEntries/:startId?", cors(), async function (req, res) {
+app.get("/workout/history", cors(), async function (req, res) {
   try{
+    let numEntries = parseInt(req.query.entries, 10);
+
     res.send(
-      await workoutService.getWorkoutHistory(dbConfig, req.params.numEntries, req.params.startId)
+      await workoutService.getWorkoutHistory(dbConfig, numEntries)
     );
   } catch (ex) {
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 });
 
-app.get("/workout/workoutplan/:workoutPlanId", cors(), async function (req, res) {
+app.get("/workout/plan/:workout-plan-id", cors(), async function (req, res) {
   try{
     res.send(
       await workoutService.getWorkoutPlanById(dbConfig, req.params.workoutPlanId)
