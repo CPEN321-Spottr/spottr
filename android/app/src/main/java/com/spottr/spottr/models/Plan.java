@@ -33,7 +33,6 @@ public class Plan {
     public String[] getRoutineNames() {
         ArrayList<String> retList = new ArrayList<String>();
         for (Exercise exercise : exercises) {
-            Log.d("TEST", exercise.name);
             retList.add(exercise.name);
         }
         String[] ret = new String[retList.size()];
@@ -45,7 +44,6 @@ public class Plan {
 
     public int[] getRoutineReps() {
         ArrayList<Integer> retList = new ArrayList<Integer>();
-        Log.d("TEST", exercises.toString());
         for (Exercise exercise : exercises) {
             retList.add(exercise.reps);
         }
