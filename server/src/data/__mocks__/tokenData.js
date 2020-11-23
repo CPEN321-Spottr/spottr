@@ -27,15 +27,17 @@ module.exports = {
     },
 
     async verifyToken(client, token) {
+        if (token === "badToken") {
+            throw ("Bad google token");
+        }
+
         if (token === "tokenWithDatabaseIssue") {
             return errorPayload;
         }
         else if (token === "existingUser") {
             return payloadExistingUser;
         } 
-        else if (token === "badToken") {
-            throw ("Bad google token");
-        }
+        
         return payloadNewUser;
     }
 };
