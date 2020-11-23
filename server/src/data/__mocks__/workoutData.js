@@ -90,15 +90,13 @@ module.exports = {
         if (workoutPlanId === 1) {
             return workoutPlan;
         }
-        return {};
+        return;
     },
     async getWorkoutExercisesByWorkoutPlanId(workoutPlanId, dbConfig) {
         if(workoutPlanId === 1){
             return exercises;
         }
-        else {
-            return {};
-        }
+        return;
     },
     async updateUserMultiplier(targetMuscleGroup, newMultiplier, userMultiplierId, dbConfig) {
 
@@ -107,7 +105,7 @@ module.exports = {
         return 1;
     },
     async getWorkoutHistoryById(workoutHistoryId, dbConfig) {
-        return {};
+        return;
     },
     async getAllMuscleGroups(dbConfig) {
         return [{"id":1,"name":"Arms"},{"id":3,"name":"Rest"}];
