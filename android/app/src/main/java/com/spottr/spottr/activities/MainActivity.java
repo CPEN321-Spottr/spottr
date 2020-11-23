@@ -1,7 +1,9 @@
 package com.spottr.spottr.activities;
 
+import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView imgProfilePic = (ImageView) findViewById(R.id.profile_pic);
         ListView newsfeed = findViewById(R.id.newsfeed);
+
         Button workoutButton = (Button) findViewById(R.id.get_workout_button);
         workoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +127,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.code() == 200) {
-                    Log.d("TOKEN", "Successfully registered ID token");
+                    SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
+                    preferences.edit().putInt("userID", Integer.parseInt(response.body().getId())).apply();
+                    Log.d("TOKEN", "Successfully registered ID token for user: " + response.body().getId());
                 }else{
                     Log.d("TOKEN", "Failed to register ID token");
                 }

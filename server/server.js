@@ -98,6 +98,7 @@ app.get("/users/:userId/workout/generate-plan", jsonParser, cors(), async functi
         dbConfig
     ));
   } catch(ex) {
+    console.log(ex);
     res.status(constants.ERROR_RESPONSE).send(ex);
   }
 });

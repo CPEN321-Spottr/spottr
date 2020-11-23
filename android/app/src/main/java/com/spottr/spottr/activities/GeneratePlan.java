@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,8 +42,10 @@ public class GeneratePlan extends AppCompatActivity {
 
         WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
 
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
+
         //userID 6 was given to
-        Call<Plan> call = workoutAPI.getRecommendedPlan("6", 45, 1);
+        Call<Plan> call = workoutAPI.getRecommendedPlan(preferences.getInt("userID", -1), 45, 1);
 
         ListView listView = findViewById(R.id.plan_list);
 
