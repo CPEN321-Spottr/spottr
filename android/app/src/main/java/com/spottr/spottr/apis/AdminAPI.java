@@ -13,6 +13,6 @@ public interface AdminAPI {
     Call<User> registerToken();
 
     @FormUrlEncoded
-    @POST("/firebaseToken")
-    Call<Void> registerFirebaseDeviceToken(@Field("firebase-token") String  token);
+    @POST("/firebase-token")
+    Call<Void> registerFirebaseDeviceToken(@Field("firebase-token") String token);
 }

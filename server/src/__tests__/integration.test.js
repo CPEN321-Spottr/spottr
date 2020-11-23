@@ -161,15 +161,13 @@ describe("GET /users/:userId/workout/generate-plan/ (Generate Suggested Workout)
         let workoutLength = 30;
         let workoutType = 1;
 
-        let path = "/users/" + testData.mockUser1.id + "/workout/generate-plan";
+        let path = "/users/" + testData.mockUser1.id + "/workout/generate-plan?length-minutes=" + workoutLength
+            + "&target-muscle-group=" + workoutType;
         const res = await request(app)
             .get(path)
             .set("Accept", "application/json")
             .type("form")
-            .send({
-                "length-minutes": workoutLength,
-                "target-muscle-group": workoutType
-            });
+            .send();
 
         // Check response
         expect(res.statusCode).toEqual(200);
