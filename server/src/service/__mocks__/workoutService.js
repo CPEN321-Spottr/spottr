@@ -53,7 +53,6 @@ module.exports = {
 
     async generateOneUpWorkoutPlan(userId, workoutPlanId, dbConfig) {
         return new Promise(function(resolve, reject) {
-            util.roundToThree(10);
             if(userId === 1 || userId === 2){
                 resolve(workoutPlan);
             }
@@ -86,6 +85,9 @@ module.exports = {
     },
 
     async getAllMuscleGroups(dbConfig) {
+        if (dbConfig !== "validConfig"){
+            throw ("Invalid DB Config");
+        }
         return new Promise(function(resolve) {
             resolve([{"id":1,"name":"Arms"},{"id":3,"name":"Rest"}]);
         });
