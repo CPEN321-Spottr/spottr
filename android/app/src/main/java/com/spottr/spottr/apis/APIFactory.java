@@ -2,7 +2,10 @@ package com.spottr.spottr.apis;
 
 import android.content.Context;
 
+import com.spottr.spottr.constants.TimeoutConstants;
 import com.spottr.spottr.services.AuthorizationInterceptor;
+
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 
@@ -21,6 +24,8 @@ public class APIFactory {
                 .Builder()
                 .addInterceptor(authInterceptor)
                 .authenticator(authInterceptor)
+                .readTimeout(TimeoutConstants.READ, TimeUnit.SECONDS)
+                .connectTimeout(TimeoutConstants.CONNECT, TimeUnit.SECONDS)
                 .build();
 
         retrofit = new Retrofit.Builder()
