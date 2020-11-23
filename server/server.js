@@ -89,7 +89,7 @@ app.post("/firebase-token", jsonParser, cors(), async function (req, res){
 app.get("/users/:userId/workout/generate-plan", jsonParser, cors(), async function (req, res) {
   try {
     // Basic input validation
-    validator.checkIsPresent(["length-minutes", "target-muscle-group"], req.body, "body", true);
+    validator.checkIsPresent(["length-minutes", "target-muscle-group"], req.query, "query", true);
 
     res.json(await workoutService.generateWorkoutPlan(
         JSON.parse(req.params.userId),
