@@ -3,8 +3,6 @@ const request = require("supertest");
 const app = require("../../server.js");
 const constants = require("../constants.js");
 
-let connection = require("../connection.js");
-
 if(typeof jest !== "undefined") {
     jest.mock("../service/userService.js");
 }

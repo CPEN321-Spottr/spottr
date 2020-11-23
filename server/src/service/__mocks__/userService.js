@@ -12,19 +12,8 @@ module.exports = {
             resolve(await newUser);
         });
     },
-    async getAllUsers(dbConfig) { /*
-        return new Promise(async function(resolve, reject){
-            try{
-                if (dbConfig != "validConfig") {
-                    throw ("Invalid DB config");
-                }
-                resolve("Successfully found all users");
-            }
-            catch(ex){
-                reject("Database connection not valid");
-            }
-        });*/
-        if (dbConfig != "validConfig") {
+    async getAllUsers(dbConfig) { 
+        if (dbConfig !== "validConfig") {
             throw ("Invalid DB config");
         }
         var getUsers = "Successfully found all users";
