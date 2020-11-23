@@ -90,9 +90,7 @@ module.exports = {
         if (workoutPlanId === 1) {
             return workoutPlan;
         }
-        else {
-            return {};
-        }
+        return {};
     },
     async getWorkoutExercisesByWorkoutPlanId(workoutPlanId, dbConfig) {
         if(workoutPlanId === 1){

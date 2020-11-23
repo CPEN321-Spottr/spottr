@@ -34,7 +34,7 @@ module.exports = {
             return errorPayload;
         }
         else if (token === "existingUser") {
-            return payloadExistingUser
+            return payloadExistingUser;
         } 
         return payloadNewUser;
     }

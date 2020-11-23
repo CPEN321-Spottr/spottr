@@ -1,3 +1,4 @@
+/*eslint-env jest*/
 const constants = require("../constants.js");
 const workoutService = require("../service/workoutService");
 
@@ -66,34 +67,24 @@ const workoutPlanById = {
     "exercises": [
         {
             "description": "Sit on the floor with your knees bent and hands at your sides, directly underneath your shoulders. Hoist your hips off the floor, like a crab. Next, bend your elbows and lower yourself toward the floor (without touching it), then straighten your arms.", 
-            "exercise_id": undefined, 
             "major_muscle_group_id": 1, 
             "name": "Floor Dips", 
-            "reps": undefined, 
-            "sets": undefined, 
             "workout_order_num": 0
         }, 
         {
             "description": "Sit on the floor with your knees bent and hands at your sides, directly underneath your shoulders. Hoist your hips off the floor, like a crab. Next, bend your elbows and lower yourself toward the floor (without touching it), then straighten your arms.", 
-            "exercise_id": undefined, 
             "major_muscle_group_id": 1, 
             "name": "Floor Dips", 
-            "reps": undefined, 
-            "sets": undefined, 
             "workout_order_num": 52
         }, 
         {
             "description": "Sit on the floor with your knees bent and hands at your sides, directly underneath your shoulders. Hoist your hips off the floor, like a crab. Next, bend your elbows and lower yourself toward the floor (without touching it), then straighten your arms.", 
-            "exercise_id": undefined, 
             "major_muscle_group_id": 1, 
             "name": "Floor Dips", 
-            "reps": undefined, 
-            "sets": undefined, 
             "workout_order_num": 54
         }
     ], 
-    "spottr_points": 1225, 
-    "workout_plan_id": undefined
+    "spottr_points": 1225
 };
 
 describe("Generate Workout Plan Tests", () => {
@@ -147,9 +138,17 @@ describe("Get Workout History Tests", () => {
 });
 
 describe("Get workout plan by ID Tests", () => {
-    it("get workout plan by id with valid parameters", () => {
+    it("get workout plan by id with valid parameters - est length in seconds", () => {
         return workoutService.getWorkoutPlanById (dbConfig, 1)
-            .then((data) => expect(data).toEqual(workoutPlanById));
+            .then((data) => expect(data.est_length_sec).toEqual(workoutPlanById.est_length_sec));
+    });
+    it("get workout plan by id with valid parameters - associated multiplier", () => {
+        return workoutService.getWorkoutPlanById (dbConfig, 1)
+            .then((data) => expect(data.associated_multiplier).toEqual(workoutPlanById.associated_multiplier));
+    });
+    it("get workout plan by id with valid parameters - spottr points", () => {
+        return workoutService.getWorkoutPlanById (dbConfig, 1)
+            .then((data) => expect(data.spottr_points).toEqual(workoutPlanById.spottr_points));
     });
 });
 

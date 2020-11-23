@@ -19,22 +19,22 @@ const dbConfig = {};
 
 describe("AuthService Tests", () => {
     it("test googleTokenVerify with valid token of new user", () => {
-        token = "goodToken";
+        const token = "goodToken";
         return authService.googleTokenVerify(dbConfig, token)
             .then((data) => expect(data).toEqual(payloadNewUser["sub"] + payloadNewUser["email"] + payloadNewUser["name"]));
     });
     it("test googleTokenVerify with invalid token", () => {
-        token = "badToken";
+        const token = "badToken";
         return authService.googleTokenVerify(dbConfig, token)
             .then((data) => expect(data).toEqual(constants.INVALID_TOKEN_RESPONSE));
     });
     it("test googleTokenVerify with valid token of existing user", () => {
-        token = "existingUser";
+        const token = "existingUser";
         return authService.googleTokenVerify(dbConfig, token)
             .then((data) => expect(data).toEqual(payloadExistingUser));
     });
     it("test googleTokenVerify with valid token causing database exception", () => {
-        token = "tokenWithDatabaseIssue";
+        const token = "tokenWithDatabaseIssue";
         return authService.googleTokenVerify(dbConfig, token)
             .then((data) => expect(data).toEqual(constants.ERROR_RESPONSE));
     });
