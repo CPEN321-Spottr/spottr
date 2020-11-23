@@ -3,8 +3,8 @@
 const constants = require("../../constants.js");
 
 const users = {
-    1: {name: "Spottr User 1"},
-    2: {name: "Spottr User 2"}
+    1: {name: "Spottr User 1", user_multiplier_id: 1},
+    2: {name: "Spottr User 2", user_multiplier_id: 2}
 };
 
 module.exports = {
@@ -27,5 +27,8 @@ module.exports = {
     },
     async upsertUserMultiplier(newUserId, newMultiplierId, dbConfig){
         //Mock upsert just edits database
+    },
+    async updateUserSpottrPoints(userId, newAmount, dbConfig) {
+        return 1;
     }
 };

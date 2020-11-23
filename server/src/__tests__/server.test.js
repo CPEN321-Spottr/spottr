@@ -56,12 +56,7 @@ describe("User Endpoints", () => {
     expect(res.statusCode).toEqual(constants.SUCCESS_RESPONSE);
     expect(res.text).toEqual("Successfully found all users");
     done();
-  });/*
-  it("Get all users with invalid connection", async (done) => {
-    const res = await request(app).get("/users");
-    expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
-    done();
-  });*/
+  });
   it("Get user ID with not existing ID", async (done) => {
     const res = await request(app).get("/users/10");
     expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
@@ -177,6 +172,29 @@ describe("Workout Endpoints", () => {
       expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
       done();
     }); 
+    it("Generate workout plan with workout length as String", async (done) => {
+      const res = await request(app)
+        .get("/users/1/workout/generate-plan")
+        .set("Accept", "application/json")
+        .type("form")
+        .send({
+          "length-minutes": "fifty",
+          "target-muscle-group": 1
+        });
+      expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
+      done();
+    });
+    it("Generate workout plan with no target muscle group", async (done) => {
+      const res = await request(app)
+        .get("/users/1/workout/generate-plan")
+        .set("Accept", "application/json")
+        .type("form")
+        .send({
+          "length-minutes": 50
+        });
+      expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
+      done();
+    });
     it("Generate One Up workout plan with valid parameters", async (done) => {
         const res = await request(app)
           .get("/users/1/workout/one-up/101")

@@ -1,4 +1,5 @@
 const constants = require("../../constants.js");
+const util = require("../../util.js");
 
 const workoutPlan = {
     "workout_plan_id": 101,
@@ -52,6 +53,7 @@ module.exports = {
 
     async generateOneUpWorkoutPlan(userId, workoutPlanId, dbConfig) {
         return new Promise(function(resolve, reject) {
+            util.roundToThree(10);
             if(userId === 1 || userId === 2){
                 resolve(workoutPlan);
             }

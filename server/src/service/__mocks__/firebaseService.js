@@ -5,5 +5,8 @@ module.exports = {
         return new Promise(function(resolve) {
           resolve("Registration of token successful");
         });
+    },
+    async sendWorkoutToFirebase(newWorkoutHistory, userName, dbConfig) {
+      return new Promise(function(resolve) { resolve(1); });
     }
 };
