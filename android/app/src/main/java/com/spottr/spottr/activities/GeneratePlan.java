@@ -96,7 +96,7 @@ public class GeneratePlan extends AppCompatActivity {
             this.names = names;
             this.reps = reps;
             this.sets = sets;
-            
+
         }
 
         @NonNull
