@@ -154,9 +154,7 @@ describe("Workout Endpoints", () => {
     it("Generate workout plan with valid parameters", async (done) => {
       const res = await request(app)
         .get("/users/1/workout/generate-plan")
-        .set("Accept", "application/json")
-        .type("form")
-        .send({
+        .query({
             "length-minutes": 60,
             "target-muscle-group": 1
         });
@@ -167,9 +165,7 @@ describe("Workout Endpoints", () => {
     it("Generate workout plan with invalid parameters", async (done) => {
       const res = await request(app)
         .get("/users/5/workout/generate-plan")
-        .set("Accept", "application/json")
-        .type("form")
-        .send({
+        .query({
           "length-minutes": 50,
           "target-muscle-group": 1
       });
@@ -179,23 +175,19 @@ describe("Workout Endpoints", () => {
     it("Generate workout plan with workout length as String", async (done) => {
       const res = await request(app)
         .get("/users/1/workout/generate-plan")
-        .set("Accept", "application/json")
-        .type("form")
-        .send({
+        .query({
           "length-minutes": "fifty",
           "target-muscle-group": 1
-        });
+      });
       expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
       done();
     });
     it("Generate workout plan with no target muscle group", async (done) => {
       const res = await request(app)
         .get("/users/1/workout/generate-plan")
-        .set("Accept", "application/json")
-        .type("form")
-        .send({
-          "length-minutes": 50
-        });
+        .query({
+          "length-minutes": 60
+      });
       expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
       done();
     });
