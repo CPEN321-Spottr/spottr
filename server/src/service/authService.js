@@ -22,7 +22,7 @@ module.exports = {
             return new Promise(async function(resolve){
                 let possibleUserProfile = await token.getUserByGoogleID(dbConfig, payload["sub"]);
                 if (Object.keys(possibleUserProfile).length === 0) { //checks if returned a user or an empty list
-                    resolve(await userService.createNewUser(payload["sub"], payload["email"], payload["name"], dbConfig));
+                    resolve(await userService.createNewUser(payload["sub"], payload["email"], payload["name"], payload["picture"], dbConfig));
                 }
                 else {
                     resolve(possibleUserProfile);

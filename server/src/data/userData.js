@@ -81,8 +81,7 @@ module.exports = {
         });
    },
 
-   async createUser(dbConfig, googleID, googleEmail, googleName){
-
+   async createUser(dbConfig, googleID, googleEmail, googlePicture, googleName){
         return sql
           .connect(dbConfig)
           .then((pool) => {
@@ -91,8 +90,9 @@ module.exports = {
               .input("gID", sql.Char(256), googleID)
               .input("gEmail", sql.VarChar(50), googleEmail)
               .input("gName", sql.VarChar(50), googleName)
+              .input("gPic", sql.VarChar(255), googlePicture)
               .query(
-                "insert into user_profile (email, google_user_id, name) OUTPUT Inserted.id values (@gEmail, @gID, @gName)"
+                "insert into user_profile (email, google_user_id, name, google_profile_image) OUTPUT Inserted.id values (@gEmail, @gID, @gName, @gPic)"
               );
           })
           .then((result) => {

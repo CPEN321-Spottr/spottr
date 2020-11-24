@@ -9,7 +9,8 @@ exports.mockUser1 = {
     "email": this.mockTokenUser1.email,
     "user_multiplier_id": 23,
     "google_user_id": "12131231231221233",
-    "spottr_points": 940
+    "spottr_points": 940,
+    "google_profile_image": "https://img.apmcdn.org/768cb350c59023919f564341090e3eea4970388c/normal/5034f3-20180309-rick-astley.jpg"
 };
 exports.mockUser1Multiplier = 1.2;
 exports.mockWorkoutPlan1 = {
