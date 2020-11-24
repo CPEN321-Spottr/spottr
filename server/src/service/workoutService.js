@@ -206,7 +206,7 @@ module.exports = {
 
         // Send message to Firebase so other user"s are notified in real-time
         let firebaseErr = null;
-        try { await firebaseService.sendWorkoutToFirebase(workoutHistory, user.name, dbConfig); }
+        try { await firebaseService.sendWorkoutToFirebase(workoutHistory, user.name, user.google_profile_image, dbConfig); }
         catch(err) { firebaseErr = err; }
         
         // Adjust user's multiplier (if they were reasonably off the estimated workout time)
@@ -239,13 +239,31 @@ module.exports = {
         });
     },
 
+    // Returns a given number of entries, formatted in a list of the same objects as the
+    // firebase notification data
     async getWorkoutHistory(dbConfig, numEntries) {
-        return new Promise(function(resolve) {
-            if (typeof numEntries == "undefined" || isNaN(numEntries)) {
-                numEntries = DEFAULT_WORKOUT_HISTORY_ENTRIES;
-            }
+        if (typeof numEntries == "undefined" || isNaN(numEntries)) {
+            numEntries = DEFAULT_WORKOUT_HISTORY_ENTRIES;
+        }
 
-            resolve(data.getRecentWorkoutHistory(dbConfig, numEntries));
+        let workoutHistory = await data.getRecentWorkoutHistory(dbConfig, numEntries);
+        let ret = [];
+        
+        for (let i = 0; i < workoutHistory.length; i++) {
+            ret.push(firebaseService.generateWorkoutHistoryMessage(
+                workoutHistory[i]["name"],
+                workoutHistory[i]["google_profile_image"],
+                workoutHistory[i]["user_profile_id"].toString(),
+                new Date(workoutHistory[i]["date_time_utc"]).toDateString(),
+                workoutHistory[i]["actual_length_sec"].toString(),
+                workoutHistory[i]["major_muscle_group_id"].toString(),
+                workoutHistory[i]["spottr_points"].toString(),
+                workoutHistory[i]["workout_plan_id"].toString()
+            ));
+        }
+
+        return new Promise(function(resolve) {
+            resolve(ret);
         });
     },
 
