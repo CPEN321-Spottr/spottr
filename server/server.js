@@ -102,7 +102,7 @@ app.get("/users/:userId/workout/generate-plan", jsonParser, cors(), async functi
   }
 });
 
-app.get("/users/:userId/workout/one-up/:workout-plan-id", cors(), async function (req, res) {
+app.get("/users/:userId/workout/one-up/:workoutPlanId", cors(), async function (req, res) {
   try {
     res.json(await workoutService.generateOneUpWorkoutPlan(
         JSON.parse(req.params.userId),
@@ -170,7 +170,7 @@ app.get("/workout/history", cors(), async function (req, res) {
   }
 });
 
-app.get("/workout/plan/:workout-plan-id", cors(), async function (req, res) {
+app.get("/workout/plan/:workoutPlanId", cors(), async function (req, res) {
   try{
     res.send(
       await workoutService.getWorkoutPlanById(dbConfig, req.params.workoutPlanId)

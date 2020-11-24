@@ -249,7 +249,7 @@ module.exports = {
         });
     },
 
-    async getWorkoutPlanById (dbConfig, workoutPlanId){
+    async getWorkoutPlanById (dbConfig, workoutPlanId) {
         var oldWorkoutPlan = await data.getWorkoutPlanById(workoutPlanId, dbConfig);
         var oldWorkoutExercises = await data.getWorkoutExercisesByWorkoutPlanId(workoutPlanId);
         var exerciseData = await data.getExercisesByTargetMuscleGroups(oldWorkoutPlan.major_muscle_group_id, dbConfig);

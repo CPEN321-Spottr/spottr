@@ -12,7 +12,10 @@ module.exports = {
             resolve(await newUser);
         });
     },
-    async getAllUsers(dbConfig) {
+    async getAllUsers(dbConfig) { 
+        if (dbConfig !== "validConfig") {
+            throw ("Invalid DB config");
+        }
         var getUsers = "Successfully found all users";
         return new Promise(function(resolve) {
             resolve(getUsers);

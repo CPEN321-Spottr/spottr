@@ -1,4 +1,5 @@
 const constants = require("../../constants.js");
+const util = require("../../util.js");
 
 const workoutPlan = {
     "workout_plan_id": 101,
@@ -84,14 +85,17 @@ module.exports = {
     },
 
     async getAllMuscleGroups(dbConfig) {
+        if (dbConfig !== "validConfig"){
+            throw ("Invalid DB Config");
+        }
         return new Promise(function(resolve) {
             resolve([{"id":1,"name":"Arms"},{"id":3,"name":"Rest"}]);
         });
     },
 
-    async getWorkoutHistory(dbConfig, numEntries, startId) {
+    async getWorkoutHistory(dbConfig, numEntries) {
         return new Promise(function(resolve, reject) {
-            if(startId <= 2){
+            if(numEntries >= 0){
                 resolve([
                     {"id":1,"user_profile_id":37,"workout_plan_id":93,"actual_length_sec":1100,"major_muscle_group_id":1,"spottr_points":235,"date_time_utc":"2020-10-29T08:42:10.000Z"},
                     {"id":2,"user_profile_id":37,"workout_plan_id":93,"actual_length_sec":1100,"major_muscle_group_id":1,"spottr_points":235,"date_time_utc":"2020-10-29T09:15:46.000Z"}
@@ -105,7 +109,7 @@ module.exports = {
 
     async getWorkoutPlanById (dbConfig, workoutPlanId){
         return new Promise(function(resolve, reject) {
-            if (workoutPlanId === 1 || workoutPlanId === 2) {
+            if (parseInt(workoutPlanId,10) === parseInt(1,10) || parseInt(workoutPlanId, 10) === parseInt(2, 10)) {
                 resolve(workoutPlan);
             }
             else {
