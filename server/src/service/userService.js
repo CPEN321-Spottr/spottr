@@ -15,7 +15,8 @@ module.exports = {
     },
 
     async getAllUsers(dbConfig) {
-        return new Promise(async (resolve) => resolve(await userData.getUsers(dbConfig)));
+        let data = await userData.getUsers(dbConfig);
+        return new Promise(async (resolve) => resolve(data));
     },
 
     async getUserById(userId, dbConfig) {
