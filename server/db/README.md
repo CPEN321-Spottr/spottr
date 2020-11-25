@@ -18,11 +18,11 @@ Just a quick note before getting into the details: this process will be a lot le
 
 ## Connecting to local development enviroment
 To connect to a set-up local development enviroment, you'll require database management software. If you are using a JetBrain product, then you'll have a database management tool built into your IDE. Otherwise, extentions exist for other IDEs or you can use a free standalone software like DBeaver. Once you have your tools ready, you'll have to add a new connection with the following details:
-- Host: `localhost`
-- Port: `1433`
-- User: `sa`
-- Password: `Password123!`
-- Database: `master`
+-   Host: `localhost`
+-   Port: `1433`
+-   User: `sa`
+-   Password: `Password123!`
+-   Database: `master`
 
 ------
 
@@ -37,8 +37,8 @@ Once a file is created and applied to a database (by running `migrate.docker-com
 
 ## Manually Performing Migration
 To manually perform the migration, first edit the URL, user, and password entries in the `flyway.conf` file. Do not include quotation marks around the values you add.
-- For the URL, put: jdbc:sqlserver://eu-az-sql-serv1.database.windows.net:1433;databaseName=dkxp1krn55tloca
-- For the user and password, enter the value found in the database dashboard
+-   For the URL, put: jdbc:sqlserver://eu-az-sql-serv1.database.windows.net:1433;databaseName=dkxp1krn55tloca
+-   For the user and password, enter the value found in the database dashboard
 
 Then, navigate to `~/server/db` and execute `flyway -configFiles=conf/flyway.conf info` and `flyway -configFiles=conf/flyway.conf migrate`.
 
