@@ -250,15 +250,16 @@ module.exports = {
         let ret = [];
         
         for (let i = 0; i < workoutHistory.length; i++) {
+            int 
             ret.push(firebaseService.generateWorkoutHistoryMessage(
-                workoutHistory[i]["name"],
-                workoutHistory[i]["google_profile_image"],
-                workoutHistory[i]["user_profile_id"].toString(),
-                new Date(workoutHistory[i]["date_time_utc"]).toDateString(),
-                workoutHistory[i]["actual_length_sec"].toString(),
-                workoutHistory[i]["major_muscle_group_id"].toString(),
-                workoutHistory[i]["spottr_points"].toString(),
-                workoutHistory[i]["workout_plan_id"].toString()
+                workoutHistory[parseInt(i, 10)]["name"],
+                workoutHistory[parseInt(i, 10)]["google_profile_image"],
+                workoutHistory[parseInt(i, 10)]["user_profile_id"].toString(),
+                new Date(workoutHistory[parseInt(i, 10)]["date_time_utc"]).toDateString(),
+                workoutHistory[parseInt(i, 10)]["actual_length_sec"].toString(),
+                workoutHistory[parseInt(i, 10)]["major_muscle_group_id"].toString(),
+                workoutHistory[parseInt(i, 10)]["spottr_points"].toString(),
+                workoutHistory[parseInt(i, 10)]["workout_plan_id"].toString()
             ));
         }
 

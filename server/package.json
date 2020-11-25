@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./server.js",
-    "test": "jest --silent --maxWorkers=1 --forceExit --verbose"
+    "test": "jest --silent --maxWorkers=1 --forceExit --detectOpenHandles --verbose"
   },
   "author": "",
   "license": "ISC",
