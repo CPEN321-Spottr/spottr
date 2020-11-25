@@ -1,3 +1,5 @@
+/*eslint detect-possible-timing-attacks: 0*/
+
 const payloadExistingUser = {
     "sub" : 123,
     "email" : "abc@shaw.ca",
