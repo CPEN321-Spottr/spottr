@@ -286,7 +286,7 @@ module.exports = {
             .request()
             .input("ne", sql.Int, numEntries)
             .query(
-              "SELECT * FROM workout_history ORDER BY ID DESC OFFSET 0 ROWS FETCH FIRST @ne ROW ONLY"
+              "SELECT workout_history.*, user_profile.name, user_profile.google_profile_image FROM workout_history INNER JOIN user_profile ON workout_history.user_profile_id = user_profile.id ORDER BY ID DESC OFFSET 0 ROWS FETCH FIRST @ne ROW ONLY"
             );
        })
        .then((result) => {

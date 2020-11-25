@@ -1,28 +1,39 @@
-var faker = require("faker");
-
 const firebaseData = require("../data/firebaseData.js");
 
 module.exports = {
+    generateWorkoutHistoryMessage(name, profileImg, userProfileId, datePosted, length, muscleGroup, 
+      spottrPoints, planId) {
+        return {
+          "user_name": name,
+          "user_profile_img_url": profileImg,
+          "user_profile_id": userProfileId,
+          "posted": datePosted,
+          "workout_history_actual_length_sec": length,
+          "workout_history_major_muscle_group": muscleGroup,
+          "workout_history_spottr_points": spottrPoints,
+          "workout_plan_id": planId
+        };
+    },
+  
     async registerFirebaseToken(registrationToken, dbConfig) {
         return new Promise(function(resolve) {
           resolve(firebaseData.createFirebaseTokenEntry(registrationToken, dbConfig));
         });
     },
 
-    async sendWorkoutToFirebase(newWorkoutHistory, userName, dbConfig) {
+    async sendWorkoutToFirebase(newWorkoutHistory, userName, profileImg, dbConfig) {
       // Generate message
       var payload = {
-        data: {
-          "profile_img_uri": faker.image.imageUrl(),
-          "name": userName,
-          "posted": new Date(newWorkoutHistory.date_time_utc).toDateString(),
-          "workout_history_id": newWorkoutHistory.id.toString(),
-          "workout_history_actual_length_sec": newWorkoutHistory["actual_length_sec"].toString(),
-          "workout_history_major_muscle_group": newWorkoutHistory["major_muscle_group_id"].toString(),
-          "workout_history_spottr_points": newWorkoutHistory["spottr_points"].toString(),
-          "workout_history_user_profile_id": newWorkoutHistory["user_profile_id"].toString(),
-          "workout_history_workout_plan_id": newWorkoutHistory["workout_plan_id"].toString()
-        }
+        data: this.generateWorkoutHistoryMessage(
+          userName,
+          profileImg,
+          newWorkoutHistory["user_profile_id"].toString(),
+          new Date(newWorkoutHistory.date_time_utc).toDateString(),
+          newWorkoutHistory["actual_length_sec"].toString(),
+          newWorkoutHistory["major_muscle_group_id"].toString(),
+          newWorkoutHistory["spottr_points"].toString(),
+          newWorkoutHistory["workout_plan_id"].toString()
+        )
       };
 
       var options = {
