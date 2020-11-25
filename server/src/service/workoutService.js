@@ -258,7 +258,7 @@ module.exports = {
                 workoutHistory[parseInt(i, 10)]["name"],
                 workoutHistory[parseInt(i, 10)]["google_profile_image"],
                 workoutHistory[parseInt(i, 10)]["user_profile_id"].toString(),
-                new Date(workoutHistory[parseInt(i, 10)]["date_time_utc"]).toDateString(),
+                new Date(workoutHistory[parseInt(i, 10)]["date_time_utc"]).toUTCString(),
                 workoutHistory[parseInt(i, 10)]["actual_length_sec"].toString(),
                 workoutHistory[parseInt(i, 10)]["major_muscle_group_id"].toString(),
                 workoutHistory[parseInt(i, 10)]["spottr_points"].toString(),
