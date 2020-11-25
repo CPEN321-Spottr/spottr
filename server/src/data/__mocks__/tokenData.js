@@ -15,10 +15,10 @@ const errorPayload = {
 
 module.exports = {
     async getUserByGoogleID(dbConfig, googleID) {
-        if (googleID === 456) {
+        if (456 === googleID) {
             return {};
         }
-        else if (googleID === 123) {
+        else if (123 === googleID) {
             return payloadExistingUser;
         }
         else {
@@ -27,14 +27,14 @@ module.exports = {
     },
 
     async verifyToken(client, token) {
-        if (token === "badToken") {
+        if ("badToken" === token) {
             throw ("Bad google token");
         }
 
-        if (token === "tokenWithDatabaseIssue") {
+        if ("tokenWithDatabaseIssue" === token) {
             return errorPayload;
         }
-        else if (token === "existingUser") {
+        else if ("existingUser" === token) {
             return payloadExistingUser;
         } 
         

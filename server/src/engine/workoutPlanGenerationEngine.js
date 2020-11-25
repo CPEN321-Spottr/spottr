@@ -198,7 +198,7 @@ module.exports = {
         var newPlan = util.clone(oldWorkoutPlan);
 
         for (var i = 0; i < newPlan.exercises.length; i++) {
-            newPlan.exercises[i].reps = Math.ceil(newPlan.exercises[i].reps * (1 + actualDifficultyIncrease));
+            newPlan.exercises[parseInt(i, 10)].reps = Math.ceil(newPlan.exercises[parseInt(i, 10)].reps * (1 + actualDifficultyIncrease));
         }
 
         newPlan.workout_plan_id = newPlanId;
