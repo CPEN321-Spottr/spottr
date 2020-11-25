@@ -1,5 +1,3 @@
-var faker = require("faker");
-
 const firebaseData = require("../data/firebaseData.js");
 
 module.exports = {

@@ -70,6 +70,42 @@ const workoutPlan = {
     "spottr_points": 1225
 };
 
+const recentWorkoutHistory1 = [
+    {
+        "name": "Test User 1",
+        "google_profile_image": "test.png",
+        "user_profile_id": 1,
+        "date_time_utc": "Tue Nov 24 2020",
+        "actual_length_sec": 1234,
+        "major_muscle_group_id": 1,
+        "spottr_points": 123,
+        "workout_plan_id": 123
+    },
+    {
+        "name": "Test User 2",
+        "google_profile_image": "test2.png",
+        "user_profile_id": 2,
+        "date_time_utc": "Tue Nov 24 2020",
+        "actual_length_sec": 1234,
+        "major_muscle_group_id": 1,
+        "spottr_points": 123,
+        "workout_plan_id": 123
+    }
+];
+
+const recentWorkoutHistory2 = [
+    {
+        "name": "Test User 1",
+        "google_profile_image": "test.png",
+        "user_profile_id": 1,
+        "date_time_utc": "Tue Nov 24 2020",
+        "actual_length_sec": 1234,
+        "major_muscle_group_id": 1,
+        "spottr_points": 123,
+        "workout_plan_id": 123
+    }
+];
+
 module.exports = {
     async getUserMultiplier(targetMuscleGroup, multiplierId, dbConfig) {
         return 1;
@@ -111,7 +147,12 @@ module.exports = {
         return [{"id":1,"name":"Arms"},{"id":3,"name":"Rest"}];
     },
     async getRecentWorkoutHistory(dbConfig, numEntries){
-        return "workoutHistory";
+        if (numEntries === 1) {
+            return recentWorkoutHistory2;
+        }
+        else {
+            return recentWorkoutHistory1;
+        }
     }
 
 };

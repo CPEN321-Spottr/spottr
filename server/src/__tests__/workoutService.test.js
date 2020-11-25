@@ -87,6 +87,42 @@ const workoutPlanById = {
     "spottr_points": 1225
 };
 
+const recentWorkoutHistory1 = [
+    {
+        "user_name": "Test User 1",
+        "user_profile_img_url": "test.png",
+        "user_profile_id": "1",
+        "posted": "Tue Nov 24 2020",
+        "workout_history_actual_length_sec": "1234",
+        "workout_history_major_muscle_group": "1",
+        "workout_history_spottr_points": "123",
+        "workout_plan_id": "123"
+    },
+    {
+        "user_name": "Test User 2",
+        "user_profile_img_url": "test2.png",
+        "user_profile_id": "2",
+        "posted": "Tue Nov 24 2020",
+        "workout_history_actual_length_sec": "1234",
+        "workout_history_major_muscle_group": "1",
+        "workout_history_spottr_points": "123",
+        "workout_plan_id": "123"
+    }
+];
+
+const recentWorkoutHistory2 = [
+    {
+        "user_name": "Test User 1",
+        "user_profile_img_url": "test.png",
+        "user_profile_id": "1",
+        "posted": "Tue Nov 24 2020",
+        "workout_history_actual_length_sec": "1234",
+        "workout_history_major_muscle_group": "1",
+        "workout_history_spottr_points": "123",
+        "workout_plan_id": "123"
+    }
+];
+
 describe("Generate Workout Plan Tests", () => {
     it("generate workout plan with valid parameters - check multiplier", () => {
         return workoutService.generateWorkoutPlan(userId, 20, 1, dbConfig)
@@ -128,12 +164,12 @@ describe("Get all Muscle Groups Test", () => {
 
 describe("Get Workout History Tests", () => {
     it("get workout history with valid num entries", () => {
-        return workoutService.getWorkoutHistory(dbConfig, 3)
-            .then((data) => expect(data).toEqual("workoutHistory"));
+        return workoutService.getWorkoutHistory(dbConfig, 1)
+            .then((data) => expect(data).toEqual(recentWorkoutHistory2));
     });
     it("get workout history with invalid num entries", () => {
         return workoutService.getWorkoutHistory(dbConfig, "notANumber")
-            .then((data) => expect(data).toEqual("workoutHistory"));
+            .then((data) => expect(data).toEqual(recentWorkoutHistory1));
     });
 });
 
