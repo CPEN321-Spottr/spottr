@@ -1,4 +1,4 @@
-/*eslint security_detect-possible-timing-attacks: 0*/
+/*eslint security/detect-possible-timing-attacks: 0*/
 
 const payloadExistingUser = {
     "sub" : 123,
