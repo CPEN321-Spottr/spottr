@@ -290,14 +290,14 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
 
 describe("GET /users (Retrieve All Users)", function() {
     afterAll(() => { 
+        jest.restoreAllMocks();
         app.close(); 
     });
 
-    // Set up database mocks
-    userData.getUsers.mockResolvedValue({1: testData.mockUser1});
-
     // Execute tests
     it("expect valid response", function(done) {
+        userData.getUsers.mockResolvedValue({1: testData.mockUser1});
+
         const res = request(app)
             .get("/users")
             .set("Accept", "application/json")
@@ -305,5 +305,20 @@ describe("GET /users (Retrieve All Users)", function() {
 
         // Check response
         expect(res.body === testData.mockUser1);
+    });
+
+    it("should fail with status code 500 (db error)", async function() {
+        userData.getUsers.mockImplementationOnce(() => {
+            throw "Error occured";
+        });
+
+        const res = await request(app)
+            .get("/users")
+            .set("Accept", "application/json")
+            .send();
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.body === "Error occured");
     });
 });

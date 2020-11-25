@@ -28,7 +28,7 @@ module.exports = {
           userName,
           profileImg,
           newWorkoutHistory["user_profile_id"].toString(),
-          new Date(newWorkoutHistory.date_time_utc).toDateString(),
+          new Date(newWorkoutHistory.date_time_utc).toUTCString(),
           newWorkoutHistory["actual_length_sec"].toString(),
           newWorkoutHistory["major_muscle_group_id"].toString(),
           newWorkoutHistory["spottr_points"].toString(),

@@ -99,6 +99,23 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
     return reassembledPlan;
 }
 
+async function adjustMultiplier(lengthOfWorkoutSec, workoutPlan, user, dbConfig) {
+    var percentageDifference = lengthOfWorkoutSec / workoutPlan.est_length_sec;
+    if (percentageDifference >= PERCENT_DIFF_RECALC_TRIGGER || percentageDifference <= (2 - PERCENT_DIFF_RECALC_TRIGGER)) {
+        var userMultiplier = await data.getUserMultiplier(workoutPlan.major_muscle_group_id, user.user_multiplier_id, dbConfig);
+
+        // Only trigger change if the workout they were doing was set at their level (ie not from "one upping" someone)
+        if (userMultiplier === workoutPlan.associated_multiplier) {
+            data.updateUserMultiplier(
+                workoutPlan.major_muscle_group_id,
+                calculateNewMultiplier(percentageDifference, userMultiplier),
+                user.user_multiplier_id,
+                dbConfig
+            );
+        }
+    }
+}
+
 module.exports = {
     // Generates a workout plan via the algorithm, perists it to the database, and returns it to the caller
     async generateWorkoutPlan(userId, lengthMinutes, targetMuscleGroup, dbConfig) {
@@ -210,20 +227,7 @@ module.exports = {
         catch(err) { firebaseErr = err; }
         
         // Adjust user's multiplier (if they were reasonably off the estimated workout time)
-        var percentageDifference = lengthOfWorkoutSec / workoutPlan.est_length_sec;
-        if (percentageDifference >= PERCENT_DIFF_RECALC_TRIGGER || percentageDifference <= (2 - PERCENT_DIFF_RECALC_TRIGGER)) {
-            var userMultiplier = await data.getUserMultiplier(workoutPlan.major_muscle_group_id, user.user_multiplier_id, dbConfig);
-
-            // Only trigger change if the workout they were doing was set at their level (ie not from "one upping" someone)
-            if (userMultiplier === workoutPlan.associated_multiplier) {
-                data.updateUserMultiplier(
-                    workoutPlan.major_muscle_group_id,
-                    calculateNewMultiplier(percentageDifference, userMultiplier),
-                    user.user_multiplier_id,
-                    dbConfig
-                );
-            }
-        }
+        await adjustMultiplier(lengthOfWorkoutSec, workoutPlan, user, dbConfig);
 
         if (firebaseErr !== null) {
             throw ("Workout was completed successfully, however, an error was encountered while sending the messages to firebase. Message: " + firebaseErr);
@@ -254,7 +258,7 @@ module.exports = {
                 workoutHistory[parseInt(i, 10)]["name"],
                 workoutHistory[parseInt(i, 10)]["google_profile_image"],
                 workoutHistory[parseInt(i, 10)]["user_profile_id"].toString(),
-                new Date(workoutHistory[parseInt(i, 10)]["date_time_utc"]).toDateString(),
+                new Date(workoutHistory[parseInt(i, 10)]["date_time_utc"]).toUTCString(),
                 workoutHistory[parseInt(i, 10)]["actual_length_sec"].toString(),
                 workoutHistory[parseInt(i, 10)]["major_muscle_group_id"].toString(),
                 workoutHistory[parseInt(i, 10)]["spottr_points"].toString(),
