@@ -250,7 +250,6 @@ module.exports = {
         let ret = [];
         
         for (let i = 0; i < workoutHistory.length; i++) {
-            int 
             ret.push(firebaseService.generateWorkoutHistoryMessage(
                 workoutHistory[parseInt(i, 10)]["name"],
                 workoutHistory[parseInt(i, 10)]["google_profile_image"],
