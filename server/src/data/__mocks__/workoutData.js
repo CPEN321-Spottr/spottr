@@ -150,9 +150,8 @@ module.exports = {
         if (numEntries === 1) {
             return recentWorkoutHistory2;
         }
-        else {
-            return recentWorkoutHistory1;
-        }
+        
+        return recentWorkoutHistory1;
     }
 
 };

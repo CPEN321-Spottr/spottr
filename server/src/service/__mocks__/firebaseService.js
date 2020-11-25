@@ -12,7 +12,7 @@ module.exports = {
     },
     generateWorkoutHistoryMessage(name, profileImg, userProfileId, datePosted, length, muscleGroup, 
       spottrPoints, planId) {
-        return {
+        let retData = {
           "user_name": name,
           "user_profile_img_url": profileImg,
           "user_profile_id": userProfileId,
@@ -22,5 +22,7 @@ module.exports = {
           "workout_history_spottr_points": spottrPoints,
           "workout_plan_id": planId
         };
+
+        return retData;
     }
 };
