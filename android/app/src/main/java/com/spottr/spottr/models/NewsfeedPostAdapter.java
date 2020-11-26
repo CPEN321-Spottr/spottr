@@ -22,7 +22,6 @@ import com.spottr.spottr.R;
 
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
 import static android.text.format.DateUtils.getRelativeTimeSpanString;
 
 public class NewsfeedPostAdapter extends ArrayAdapter<NewsfeedPost> {

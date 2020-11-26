@@ -1,12 +1,10 @@
 package com.spottr.spottr.services;
 
-import android.net.Uri;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.spottr.spottr.events.NewsfeedPostEvent;
 import com.spottr.spottr.models.NewsfeedPost;
@@ -14,9 +12,6 @@ import com.spottr.spottr.models.NewsfeedPost;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.math.BigInteger;
-import java.util.Date;
 
 import static android.content.ContentValues.TAG;
 
