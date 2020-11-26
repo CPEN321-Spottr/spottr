@@ -19,15 +19,17 @@ const users = {
   2: {name: "Spottr User 2", user_multiplier_id: 2}
 };
 
-describe("User Service Tests", () => {
+describe("userService Tests", () => {
   it("test getAllUsers", () => {
       return userService.getAllUsers(dbConfig)
           .then((data) => expect(data).toEqual("Successfully found all users"));
   });
+
   it("test getUserByUserId", () => {
     return userService.getUserById(1, dbConfig)
           .then((data) => expect(data.name).toEqual("Spottr User 1"));
   });
+  
   it("test createNewUser", () => {
     return userService.createNewUser(test_sub, test_email, test_name, dbConfig)
           .then((data) => expect(data).toEqual(users[1]));

@@ -20,6 +20,7 @@ module.exports = {
     },
 
     async getUserById(userId, dbConfig) {
-        return new Promise(async (resolve) => resolve(await userData.getUserByUserId(userId, dbConfig)));
+        let data = await userData.getUserByUserId(userId, dbConfig);
+        return new Promise(async (resolve) => resolve(data));
     }
 };

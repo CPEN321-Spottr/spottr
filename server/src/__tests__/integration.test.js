@@ -47,7 +47,8 @@ jest.mock("../data/userMultiplierData.js", () => ({
 }));
 jest.mock("../data/firebaseData.js", () => ({
     sendFirebaseMessages: jest.fn(),
-    getAllFirebaseTokens: jest.fn()
+    getAllFirebaseTokens: jest.fn(),
+    createFirebaseTokenEntry: jest.fn()
 }));
 
 jest.unmock("../connection.js");
@@ -56,6 +57,78 @@ jest.unmock("../connection.js");
 //
 // Actually perform the tests
 //
+
+describe("GET /users (Retrieve All Users)", function() {
+    afterAll(() => { 
+        jest.restoreAllMocks();
+        app.close(); 
+    });
+
+    // Execute tests
+    it("expect valid response", function(done) {
+        userData.getUsers.mockResolvedValue({1: testData.mockUser1});
+
+        const res = request(app)
+            .get("/users")
+            .set("Accept", "application/json")
+            .expect(200, done);
+
+        // Check response
+        expect(res.body === testData.mockUser1);
+    });
+
+    it("should fail with status code 500 (db error)", async function() {
+        userData.getUsers.mockImplementationOnce(() => {
+            throw "Error occured";
+        });
+
+        const res = await request(app)
+            .get("/users")
+            .set("Accept", "application/json")
+            .send();
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("Error occured");
+    });
+});
+
+
+describe("GET /users/:userId (Retrieve User By Id)", function() {
+    afterAll(() => { 
+        jest.restoreAllMocks();
+        app.close(); 
+    });
+
+    // Execute tests
+    it("expect valid response", function(done) {
+        userData.getUserByUserId.mockResolvedValue({1: testData.mockUser1});
+
+        const res = request(app)
+            .get("/users/1")
+            .set("Accept", "application/json")
+            .expect(200, done);
+
+        // Check response
+        expect(res.body === testData.mockUser1);
+    });
+
+    it("should fail with status code 500 (db error)", async function() {
+        userData.getUserByUserId.mockImplementationOnce(() => {
+            throw "Error occured";
+        });
+
+        const res = await request(app)
+            .get("/users/1")
+            .set("Accept", "application/json")
+            .send();
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("Error occured");
+    });
+});
+
 
 describe("POST /token (User Google Authentication)", function() {
     // Set up testing state and mock data
@@ -105,7 +178,109 @@ describe("POST /token (User Google Authentication)", function() {
         expect(res.body.spottr_points === testData.mockUser1.spottr_points);
         expect(res.body.user_multiplier_id === testData.mockUser1.user_multiplier_id);
     });
+
+    it("should fail with status code 500 (token verification error)", async function() {
+        tokenData.verifyToken.mockImplementationOnce(() => {
+            throw "Invalid token";
+        });
+
+        const res = await request(app)
+            .post("/token")
+            .set({"Accept": "application/json", "authorization": "138123912"})
+            .send();
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("Invalid token");
+    });
+
+    it("should fail with status code 500 (db error)", async function() {
+        tokenData.getUserByGoogleID.mockImplementationOnce(() => {
+            throw "Error obtaining user by Google Id";
+        });
+
+        const res = await request(app)
+            .post("/token")
+            .set({"Accept": "application/json", "authorization": "138123912"})
+            .send();
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("Error obtaining user by Google Id");
+    });
+
+    it("should fail with status code 500 (missing 'authorization' in header)", async function() {
+        const res = await request(app)
+            .post("/token")
+            .set({"Accept": "application/json"})
+            .send();
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("'authorization' is expected in the header but was not found!");
+    });
 });
+
+
+describe("POST /firebase-token (Record User Firebase Token)", function() {
+    // Set up testing state and mock data
+    afterAll(() => { app.close(); });
+
+    it("expect data added successfully (OK response)", async () => {
+        const res = await request(app)
+            .post("/firebase-token")
+            .type("form")
+            .send({
+                "firebase-token": "12312312asdasd12312"
+            });
+
+        // Check response
+        expect(res.statusCode).toEqual(200);
+        expect(res.text).toEqual("OK");
+    });
+
+    it("should fail with status code 500 (db error)", async function() {
+        firebaseData.createFirebaseTokenEntry.mockImplementationOnce(() => {
+            throw "Error occured";
+        });
+
+        const res = await request(app)
+            .post("/firebase-token")
+            .type("form")
+            .send({
+                "firebase-token": "12312312asdasd12312"
+            });
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("Error occured");
+    });
+
+    it("should fail with status code 500 (missing 'firebase-token' in body)", async function() {
+        const res = await request(app)
+            .post("/firebase-token")
+            .type("form")
+            .send();
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("Expected the parameters: [firebase-token] but found 0 parameters in the body");
+    });
+
+    it("should fail with status code 500 (missing value for 'firebase-token' in body)", async function() {
+        const res = await request(app)
+            .post("/firebase-token")
+            .type("form")
+            .send({
+                "firebase-token": ""
+            });
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("'firebase-token' was present, but had no value. A value must be provided");
+    });
+});
+
 
 describe("GET /users/:userId/workout/generate-plan/ (Generate Suggested Workout)", function() {
     // Set up testing state and mock data
@@ -195,7 +370,60 @@ describe("GET /users/:userId/workout/generate-plan/ (Generate Suggested Workout)
         expect(res.body.workout_plan_id === 1);
         expect(res.body.workout_plan_id === addedWorkoutEntries.workout_plan_id);
     });
+
+    it("should fail with status code 500 (missing 'target-muscle-group' in query)", async () => {
+        let path = "/users/1/workout/generate-plan?length-minutes=60";
+        const res = await request(app)
+            .get(path)
+            .set("Accept", "application/json")
+            .type("form")
+            .send();
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("'target-muscle-group' is expected in the query but was not found!");
+    });
+
+    it("should fail with status code 500 (missing 'length-minutes' in query)", async () => {
+        let path = "/users/1/workout/generate-plan?target-muscle-group=1";
+        const res = await request(app)
+            .get(path)
+            .set("Accept", "application/json")
+            .type("form")
+            .send();
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("'length-minutes' is expected in the query but was not found!");
+    });
+
+    it("should fail with status code 500 (missing all expected param in query)", async () => {
+        let path = "/users/1/workout/generate-plan";
+        const res = await request(app)
+            .get(path)
+            .set("Accept", "application/json")
+            .type("form")
+            .send();
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("Expected the parameters: [length-minutes,target-muscle-group] but found 0 parameters in the query");
+    });
+
+    it("should fail with status code 500 (unexpected non-int in query)", async () => {
+        let path = "/users/1/workout/generate-plan?target-muscle-group=1&length-minutes='asdasdaqsd'";
+        const res = await request(app)
+            .get(path)
+            .set("Accept", "application/json")
+            .type("form")
+            .send();
+
+        // Check response
+        expect(res.statusCode).toEqual(500);
+        expect(res.text).toEqual("Expected 'length-minutes' to be an int, but was not!");
+    });
 });
+
 
 describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() {
     // Set up testing state and mock data
@@ -238,7 +466,7 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
     });
 
     // Execute tests
-    it("expect workout to be successfully completed (firebase token valid)", async () => {
+    it("expect workout to be successfully completed", async () => {
         // Set-up firebase API call to succeed
         firebaseData.sendFirebaseMessages.mockReturnValue([]);
 
@@ -269,7 +497,7 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
         expect(mockMultiplier === testData.mockUser1Multiplier);
     });
 
-    it("expect failed request (firebase token invalid)", async () => {
+    it("expect failed request (firebase messaging error)", async () => {
         // Set-up firebase API call to fail
         firebaseData.sendFirebaseMessages.mockReturnValue([1234, 123]);
 
@@ -285,40 +513,5 @@ describe("POST /users/:userId/workout/complete/ (Complete Workout)", function() 
 
         // Check response
         expect(res.statusCode).toEqual(500);
-    });
-});
-
-describe("GET /users (Retrieve All Users)", function() {
-    afterAll(() => { 
-        jest.restoreAllMocks();
-        app.close(); 
-    });
-
-    // Execute tests
-    it("expect valid response", function(done) {
-        userData.getUsers.mockResolvedValue({1: testData.mockUser1});
-
-        const res = request(app)
-            .get("/users")
-            .set("Accept", "application/json")
-            .expect(200, done);
-
-        // Check response
-        expect(res.body === testData.mockUser1);
-    });
-
-    it("should fail with status code 500 (db error)", async function() {
-        userData.getUsers.mockImplementationOnce(() => {
-            throw "Error occured";
-        });
-
-        const res = await request(app)
-            .get("/users")
-            .set("Accept", "application/json")
-            .send();
-
-        // Check response
-        expect(res.statusCode).toEqual(500);
-        expect(res.body === "Error occured");
     });
 });

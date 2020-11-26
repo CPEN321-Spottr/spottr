@@ -10,13 +10,11 @@ module.exports = {
         const client = new OAuth2Client(CLIENT_ID);
         var payload;
 
-        try {
-            payload = await token.verifyToken(client, tokenToVerify);
+        try { 
+            payload = await token.verifyToken(client, tokenToVerify); 
         }
         catch(ex) {
-            return new Promise(function(reject){
-                reject(constants.INVALID_TOKEN_RESPONSE);
-            });
+            throw ex;
         }
 
         try {
@@ -31,9 +29,7 @@ module.exports = {
             });
         }
         catch(ex) {
-            return new Promise(function(reject){
-                reject(constants.ERROR_RESPONSE);
-            });
+            throw ex;
         }
     }
 };
