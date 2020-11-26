@@ -2,6 +2,8 @@ package com.spottr.spottr.apis;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.spottr.spottr.constants.TimeoutConstants;
 import com.spottr.spottr.services.AuthorizationInterceptor;
 
@@ -28,9 +30,13 @@ public class APIFactory {
                 .connectTimeout(TimeoutConstants.CONNECT, TimeUnit.SECONDS)
                 .build();
 
+        Gson gson = new GsonBuilder()
+                .setDateFormat("EEE, d MMM yyyy HH:mm:ss z")
+                .create();
+
         retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl("https://spottr-be.herokuapp.com/")
                 .build();
     }

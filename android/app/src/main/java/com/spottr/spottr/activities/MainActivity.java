@@ -24,6 +24,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.spottr.spottr.R;
 import com.spottr.spottr.apis.APIFactory;
 import com.spottr.spottr.apis.AdminAPI;
+import com.spottr.spottr.apis.WorkoutAPI;
 import com.spottr.spottr.events.NewsfeedPostEvent;
 import com.spottr.spottr.models.NewsfeedPost;
 import com.spottr.spottr.models.NewsfeedPostAdapter;
@@ -34,7 +35,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -143,11 +146,32 @@ public class MainActivity extends AppCompatActivity {
         TextView welcomeBackText = findViewById(R.id.welcome_back_text);
         welcomeBackText.setText(account.getDisplayName());
 
-        ArrayList<NewsfeedPost> arrayOfPosts = new ArrayList<NewsfeedPost>();
-
-        adapter = new NewsfeedPostAdapter(this, arrayOfPosts);
-
+        adapter = new NewsfeedPostAdapter(this, new ArrayList<NewsfeedPost>());
         newsfeed.setAdapter(adapter);
+
+        WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
+
+
+        Call<List<NewsfeedPost>> getNewsfeedPosts = workoutAPI.getGlobalWorkoutHistory(10);
+        getNewsfeedPosts.enqueue(new Callback<List<NewsfeedPost>>() {
+            @Override
+            public void onResponse(Call<List<NewsfeedPost>> call, Response<List<NewsfeedPost>> response) {
+                if(response.code() == 200) {
+                    List<NewsfeedPost> arrayOfPosts = response.body();
+                    adapter.addAll(arrayOfPosts);
+                    adapter.notifyDataSetChanged();
+                }else{
+                    Log.d("NEWSFEED", "Failed to retrieve newsfeed posts " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<NewsfeedPost>> call, Throwable t) {
+                Log.d("NEWSFEED", t.toString());
+                Log.d("NEWSFEED", "Failed to retrieve newsfeed posts");
+            }
+        });
+
     }
 
     @Override

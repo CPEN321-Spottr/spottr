@@ -5,10 +5,15 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.spottr.spottr.events.NewsfeedPostEvent;
 import com.spottr.spottr.models.NewsfeedPost;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -16,6 +21,7 @@ import java.util.Date;
 import static android.content.ContentValues.TAG;
 
 public class NewsfeedNotificationService extends FirebaseMessagingService {
+    private Gson gson = new Gson();
 
     /**
      * Called if FCM registration token is updated. This may occur if the security of
@@ -54,12 +60,15 @@ public class NewsfeedNotificationService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.d("FIREBASE", "Message data payload: " + remoteMessage.getData());
 
-            String name = remoteMessage.getData().getOrDefault("name", "NAME_PLACEHOLDER");
-            Date posted = new Date(new BigInteger(remoteMessage.getData().get("posted")).longValue());
-            Uri profile_img_uri = Uri.parse(remoteMessage.getData().get("profile_img_uri"));
-            NewsfeedPost newsfeedPost = new NewsfeedPost(name, posted, profile_img_uri);
+            JsonObject jsonObj = gson.toJsonTree(remoteMessage.getData()).getAsJsonObject();
 
-            EventBus.getDefault().post(new NewsfeedPostEvent(newsfeedPost));
+            try {
+                JSONObject data = new JSONObject(jsonObj.toString());
+                NewsfeedPost newsfeedPost = new NewsfeedPost(data);
+                EventBus.getDefault().post(new NewsfeedPostEvent(newsfeedPost));
+            } catch (JSONException e) {
+                Log.d("NEWSFEED", e.toString());
+            }
         }
 
         // Check if message contains a notification payload.
