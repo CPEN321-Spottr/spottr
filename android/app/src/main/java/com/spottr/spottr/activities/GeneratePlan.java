@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.spottr.spottr.apis.APIFactory;
 import com.spottr.spottr.apis.WorkoutAPI;
 import com.spottr.spottr.models.Plan;
@@ -40,7 +42,7 @@ public class GeneratePlan extends AppCompatActivity {
 
         APIFactory apiFactory = new APIFactory(this);
 
-        WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
+        final WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
 
         SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
 
@@ -60,10 +62,13 @@ public class GeneratePlan extends AppCompatActivity {
                     Log.d("GENERATE", "Successfully generated a workout");
                     Log.d("GENERATE", response.body().toString());
                     workoutPlan = response.body();
+                    Log.d("TEST", workoutPlan.toString());
+                    workoutPlan.num_exercises = response.body().exercises.size();
                     adapter.names = workoutPlan.getRoutineNames();
                     adapter.reps = workoutPlan.getRoutineReps();
                     adapter.sets = workoutPlan.getRoutineSets();
                     adapter.notifyDataSetChanged();
+
                 } else {
                     Log.d("GENERATE", response.toString());
                 }
@@ -83,6 +88,23 @@ public class GeneratePlan extends AppCompatActivity {
                 finish();
             }
         });
+        Button startButton = (Button) findViewById(R.id.workoutcreation_startButton);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                passInfo();
+            }
+        });
+    }
+
+    private void passInfo() {
+        Intent newIntent = new Intent(GeneratePlan.this, WorkoutActivity.class);
+
+        Gson gson = new Gson();
+        String gsonString = gson.toJson(workoutPlan);
+        newIntent.putExtra("PLAN", gsonString);
+        Log.d("TEST", gsonString);
+        startActivity(newIntent);
     }
 
     class Adapter extends ArrayAdapter<String> {

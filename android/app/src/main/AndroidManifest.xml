@@ -12,6 +12,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name=".activities.GeneratePlan" />
         <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.WorkoutActivity" />
         <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

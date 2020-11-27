@@ -11,30 +11,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:text="MM:SS"
+        android:text="Reps/Time"
         android:textColor="@color/white"
-        android:textSize="50sp"
+        android:textSize="35sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-    <Button
-        android:id="@+id/workout_pause"
-        android:layout_width="103dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="15dp"
-        android:background="@color/colorPrimary"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Pause"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/workout_clock" />
+        app:layout_constraintTop_toBottomOf="@+id/mainImage" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/mainImage"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_marginTop="10dp"
@@ -45,13 +31,13 @@
         app:srcCompat="@drawable/ic_baseline_directions_run_24" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/spottrLogo"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/workout_clock"
         app:srcCompat="@drawable/spottr_logo_cyan" />
 
     <Button
@@ -64,32 +50,28 @@
         android:backgroundTint="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.588"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toEndOf="@+id/spottrLogo"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/workout_next"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="80dp"
         android:background="@drawable/ic_baseline_arrow_forward_24"
         android:backgroundTint="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.028"
-        app:layout_constraintStart_toEndOf="@+id/workout_pause"
         app:layout_constraintTop_toBottomOf="@+id/workout_clock" />
 
     <Button
-        android:id="@+id/workout_next2"
+        android:id="@+id/workout_prev"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="35dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/ic_baseline_arrow_back_24"
         android:backgroundTint="@color/colorPrimary"
-        app:layout_constraintEnd_toStartOf="@+id/workout_pause"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/workout_clock" />
 
@@ -97,12 +79,12 @@
         android:id="@+id/workout_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="80dp"
         android:text="ExerciseName"
         android:textColor="@color/white"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
