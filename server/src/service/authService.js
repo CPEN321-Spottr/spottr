@@ -1,7 +1,6 @@
 const {OAuth2Client} = require("google-auth-library");
 const connection = require("../connection.js");
 const token = require("../data/tokenData.js");
-const constants = require("../constants.js");
 const userService = require("./userService.js");
 var CLIENT_ID = connection.getGoogleAuthClientID();
 

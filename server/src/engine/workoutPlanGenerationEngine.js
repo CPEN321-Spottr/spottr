@@ -5,7 +5,6 @@ const workoutData = require("../data/workoutData.js");
 // Workout plan generation constants
 const MAX_REST_SEC = 45;
 const MIN_REST_SEC = 15;
-const WORKOUT_TO_REST_RATIO = 5;
 const TIME_ESTIMATE_SHIFT_FACTOR = 0.5;
 
 // One up constants
@@ -20,9 +19,8 @@ const MULTIPLIER_SHIFT_FACTOR = 0.9;
 
 // Helper method to calculate rest time
 function calculateRest(lengthOfExercise, multiplier) {
-    var restTime = Math.round(lengthOfExercise / WORKOUT_TO_REST_RATIO * ((1 - multiplier) + 1));
-    restTime = restTime < MIN_REST_SEC ? MIN_REST_SEC : restTime;
-    restTime = restTime > MAX_REST_SEC ? MAX_REST_SEC : restTime;
+    var restTime = Math.round(lengthOfExercise * (1 / Math.exp(multiplier)));
+    restTime = Math.max(Math.min(restTime, MAX_REST_SEC), MIN_REST_SEC);
     return restTime;
 }
 
