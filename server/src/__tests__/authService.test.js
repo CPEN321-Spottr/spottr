@@ -1,5 +1,4 @@
 /*eslint-env jest*/
-var constants = require("../constants.js");
 var authService = require("../service/authService.js");
 
 jest.mock("../data/tokenData.js");
@@ -17,25 +16,42 @@ const payloadExistingUser = {
 };
 const dbConfig = {};
 
-describe("AuthService Tests", () => {
+describe("authService Tests", () => {
     it("test googleTokenVerify with valid token of new user", () => {
         const token = "goodToken";
         return authService.googleTokenVerify(dbConfig, token)
             .then((data) => expect(data).toEqual(payloadNewUser["sub"] + payloadNewUser["email"] + payloadNewUser["name"]));
     });
-    it("test googleTokenVerify with invalid token", () => {
+
+    it("test googleTokenVerify with invalid token", async() => {
         const token = "badToken";
-        return authService.googleTokenVerify(dbConfig, token)
-            .then((data) => expect(data).toEqual(constants.INVALID_TOKEN_RESPONSE));
+        let thrownError;
+        try {
+            await authService.googleTokenVerify(dbConfig, token);
+        }
+        catch (error) {
+            thrownError = error;
+        }
+            
+        expect(thrownError).toEqual("Bad google token");
     });
+
     it("test googleTokenVerify with valid token of existing user", () => {
         const token = "existingUser";
         return authService.googleTokenVerify(dbConfig, token)
             .then((data) => expect(data).toEqual(payloadExistingUser));
     });
-    it("test googleTokenVerify with valid token causing database exception", () => {
+
+    it("test googleTokenVerify with valid token causing database exception", async () => {
         const token = "tokenWithDatabaseIssue";
-        return authService.googleTokenVerify(dbConfig, token)
-            .then((data) => expect(data).toEqual(constants.ERROR_RESPONSE));
+        let thrownError;
+        try {
+            await authService.googleTokenVerify(dbConfig, token);
+        }
+        catch (error) {
+            thrownError = error;
+        }
+            
+        expect(thrownError).toEqual("Invalid Google ID");
     });
 });

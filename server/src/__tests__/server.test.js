@@ -122,7 +122,7 @@ describe("Firebase Token Endpoint", () => {
         .send({
           "firebase-token": "badToken"
       });
-      expect(res.statusCode).toEqual(constants.INVALID_TOKEN_RESPONSE);
+      expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
       done();
     });
     it("Post firebase request with empty token", async (done) => {
@@ -133,7 +133,7 @@ describe("Firebase Token Endpoint", () => {
         .send({
           "firebase-token": ""
       });
-      expect(res.statusCode).toEqual(constants.INVALID_TOKEN_RESPONSE);
+      expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
       done();
     });
     it("Post firebase request with no token", async (done) => {
@@ -143,7 +143,7 @@ describe("Firebase Token Endpoint", () => {
         .type("form")
         .send({
       });
-      expect(res.statusCode).toEqual(constants.INVALID_TOKEN_RESPONSE);
+      expect(res.statusCode).toEqual(constants.ERROR_RESPONSE);
       done();
     });
 });

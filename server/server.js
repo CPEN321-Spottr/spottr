@@ -50,6 +50,9 @@ app.get("/users/:userId", cors(), async function (req, res){
 
 app.post("/token", cors(), async function (req, res){
   try{
+    // Basic input validation
+    validator.checkIsPresent(["authorization"], req.headers, "header");
+
     res.json(
       await authService.googleTokenVerify(dbConfig, req.headers.authorization)
     );
@@ -77,7 +80,7 @@ app.post("/firebase-token", jsonParser, cors(), async function (req, res){
     res.sendStatus(constants.SUCCESS_RESPONSE);
   }
   catch(ex){
-    res.status(constants.INVALID_TOKEN_RESPONSE).send(ex.message);
+    res.status(constants.ERROR_RESPONSE).send(ex);
   }
 });
 

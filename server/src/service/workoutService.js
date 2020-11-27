@@ -30,7 +30,7 @@ function calculateNewMultiplier(percentageDifference, currentMultiplier) {
 
     var changeValue;
     if (changeFactor < 0) {
-        changeValue = Math.max(-changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
+        changeValue = Math.max(changeFactor, -MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
     } else {
         changeValue = Math.min(changeFactor, MAX_SINGLE_CHANGE_PERCENT) * currentMultiplier;
     }
@@ -70,7 +70,7 @@ function reassembleWorkoutPlan(oldWorkoutPlan, oldWorkoutExercises, exerciseData
             });
 
             if (typeof relevantExercise === "undefined") {
-              throw "Required exercise data is missing for plan reconstruction!";
+              throw "Required exercise data is missing for plan reconstruction! At a minimum, missing exercise id #" + exercise.exercise_id;
             }
 
             var reassembledExercise = {
@@ -108,7 +108,7 @@ async function adjustMultiplier(lengthOfWorkoutSec, workoutPlan, user, dbConfig)
         if (userMultiplier === workoutPlan.associated_multiplier) {
             data.updateUserMultiplier(
                 workoutPlan.major_muscle_group_id,
-                calculateNewMultiplier(percentageDifference, userMultiplier),
+                await calculateNewMultiplier(percentageDifference, userMultiplier),
                 user.user_multiplier_id,
                 dbConfig
             );
@@ -238,9 +238,8 @@ module.exports = {
     },
 
     async getAllMuscleGroups(dbConfig) {
-        return new Promise(function(resolve) {
-            resolve(data.getAllMuscleGroups(dbConfig));
-        });
+        let res = await data.getAllMuscleGroups(dbConfig);
+        return new Promise(async (resolve) => resolve(res));
     },
 
     // Returns a given number of entries, formatted in a list of the same objects as the

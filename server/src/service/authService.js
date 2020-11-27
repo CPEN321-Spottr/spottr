@@ -1,7 +1,6 @@
 const {OAuth2Client} = require("google-auth-library");
 const connection = require("../connection.js");
 const token = require("../data/tokenData.js");
-const constants = require("../constants.js");
 const userService = require("./userService.js");
 var CLIENT_ID = connection.getGoogleAuthClientID();
 
@@ -10,13 +9,11 @@ module.exports = {
         const client = new OAuth2Client(CLIENT_ID);
         var payload;
 
-        try {
-            payload = await token.verifyToken(client, tokenToVerify);
+        try { 
+            payload = await token.verifyToken(client, tokenToVerify); 
         }
         catch(ex) {
-            return new Promise(function(reject){
-                reject(constants.INVALID_TOKEN_RESPONSE);
-            });
+            throw ex;
         }
 
         try {
@@ -31,9 +28,7 @@ module.exports = {
             });
         }
         catch(ex) {
-            return new Promise(function(reject){
-                reject(constants.ERROR_RESPONSE);
-            });
+            throw ex;
         }
     }
 };

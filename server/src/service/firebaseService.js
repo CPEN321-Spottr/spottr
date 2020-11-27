@@ -16,9 +16,7 @@ module.exports = {
     },
   
     async registerFirebaseToken(registrationToken, dbConfig) {
-        return new Promise(function(resolve) {
-          resolve(firebaseData.createFirebaseTokenEntry(registrationToken, dbConfig));
-        });
+      await firebaseData.createFirebaseTokenEntry(registrationToken, dbConfig);
     },
 
     async sendWorkoutToFirebase(newWorkoutHistory, userName, profileImg, dbConfig) {
