@@ -7,19 +7,43 @@
     android:background="@color/colorPrimaryDark"
     android:backgroundTint="@color/colorPrimaryDark">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/spottr_logo_cyan" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_width="407dp"
+        android:layout_height="401dp"
         android:orientation="vertical"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="4dp">
 
         <ListView
             android:id="@+id/plan_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/listGrey"
+            android:scrollbars="vertical"
             android:visibility="visible"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

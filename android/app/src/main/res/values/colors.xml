@@ -9,6 +9,7 @@
     <color name="purple">#6600FF</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="listGrey">#4D4B4A</color>
 
     <!-- Spottr colours -->
     <color name="colorPrimary">#44BCD8</color>

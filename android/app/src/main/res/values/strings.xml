@@ -15,6 +15,14 @@
     <string name="workoutCreation_return">Return</string>
     <string name="workoutCreation_start">Start</string>
 
+    <!-- Review Strings -->
+    <string name="review_toohard">Too Hard</string>
+    <string name="review_difficult">Difficult</string>
+    <string name="review_justright">Just Right</string>
+    <string name="review_fair">Fair</string>
+    <string name="review_tooeasy">Too Easy</string>
+
+
     <!-- Strings used for Google OAuth -->
     <string name="server_client_id">347900541097-0g1k5jd34m9189jontkd1o9mpv8b8o1o.apps.googleusercontent.com</string>
 
@@ -25,5 +33,11 @@
     <!-- Strings used by Newsfeed -->
     <string name="newsfeed_image_content_desc">Profile Picture</string>
     <string name="get_workout_button_text">Get Your Recommended Workout!</string>
+    <string name="title_activity_review">ReviewActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
 
 </resources>
