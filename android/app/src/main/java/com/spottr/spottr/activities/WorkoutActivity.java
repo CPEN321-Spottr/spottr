@@ -31,9 +31,12 @@ public class WorkoutActivity extends AppCompatActivity {
     private Exercise currentExercise;
     private Rest currentRest;
     private Plan workoutPlan;
-    private CountDownTimer restTimer;
     private Date now;
     private long startTime;
+
+    private String muscleId;
+    private String workoutId;
+    private int userId;
 
 
     @Override
@@ -42,13 +45,17 @@ public class WorkoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
+
+        muscleId = getIntent().getStringExtra("muscleId");
+        workoutId = getIntent().getStringExtra("workoutId");
+        userId = getIntent().getIntExtra("userId", -1);
+
         Gson gson = new Gson();
         String gsonString = getIntent().getStringExtra("PLAN");
         workoutPlan = gson.fromJson(gsonString, Plan.class);
         workoutPlan.num_exercises = workoutPlan.exercises.size();
         Log.d("TEST", String.valueOf(workoutPlan.exercises.get(exerciseCounter)));
         Log.d("TEST", String.valueOf(workoutPlan.exercises.get(exerciseCounter).name));
-
 
         currentExercise = workoutPlan.exercises.get(exerciseCounter);
         currentRest = workoutPlan.breaks.get(restCounter);
@@ -61,7 +68,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
         now = new Date();
         startTime = now.getTime();
-
 
         //Buttons
         Button exitButton = (Button) findViewById(R.id.workout_exit);
@@ -84,9 +90,12 @@ public class WorkoutActivity extends AppCompatActivity {
         toSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long timeDiff = now.getTime() - startTime;
+                int timeDiff = (int) (now.getTime() - startTime)/1000;
                 Intent newIntent = new Intent(WorkoutActivity.this, ReviewActivity.class);
-                newIntent.putExtra("time", timeDiff);
+                newIntent.putExtra("duration", timeDiff);
+                newIntent.putExtra("muscleId", muscleId);
+                newIntent.putExtra("userId", userId);
+                newIntent.putExtra("workoutId", workoutId);
                 startActivity(newIntent);
             }
         });
@@ -137,7 +146,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private void createCountdownTimer(int seconds, TextView clock) {
         final TextView thisClock = clock;
-        restTimer = new CountDownTimer(seconds * 1000, 10) {
+        new CountDownTimer(seconds * 1000, 10) {
 
             public void onTick(long millisUntilFinished) {
                 thisClock.setText("" + new SimpleDateFormat("mm:ss:SS").format(new Date(millisUntilFinished)));

@@ -33,6 +33,9 @@ import retrofit2.Response;
 public class GeneratePlan extends AppCompatActivity {
 
     private Plan workoutPlan;
+    private String workoutId;
+    private String muscleId;
+    private int userId;
     private ArrayList<Exercise> exercises = new ArrayList<Exercise>();
 
     @Override
@@ -45,9 +48,11 @@ public class GeneratePlan extends AppCompatActivity {
         final WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
 
         SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
+        userId = preferences.getInt("userID", -1);
 
         //userID 6 was given to
-        Call<Plan> call = workoutAPI.getRecommendedPlan(preferences.getInt("userID", -1), 5, 1);
+        muscleId = "1";
+        Call<Plan> call = workoutAPI.getRecommendedPlan(userId, 5, Integer.valueOf(muscleId));
 
         ListView listView = findViewById(R.id.plan_list);
 
@@ -62,6 +67,7 @@ public class GeneratePlan extends AppCompatActivity {
                     Log.d("GENERATE", "Successfully generated a workout");
                     Log.d("GENERATE", response.body().toString());
                     workoutPlan = response.body();
+                    workoutId = workoutPlan.workout_plan_id;
                     Log.d("TEST", workoutPlan.toString());
                     exercises.addAll(workoutPlan.exercises);
                     adapter.notifyDataSetChanged();
@@ -99,6 +105,9 @@ public class GeneratePlan extends AppCompatActivity {
         Gson gson = new Gson();
         String gsonString = gson.toJson(workoutPlan);
         newIntent.putExtra("PLAN", gsonString);
+        newIntent.putExtra("muscleId", muscleId);
+        newIntent.putExtra("userId", userId);
+        newIntent.putExtra("workoutId", workoutId);
         Log.d("TEST", gsonString);
         startActivity(newIntent);
     }
