@@ -1,7 +1,6 @@
 package com.spottr.spottr.apis;
 
-import com.spottr.spottr.constants.MuscleGroup;
-import com.spottr.spottr.models.Exercise;
+import com.spottr.spottr.models.NewsfeedPost;
 import com.spottr.spottr.models.Plan;
 
 import java.util.List;
@@ -15,9 +14,9 @@ import retrofit2.http.Query;
 
 public interface WorkoutAPI {
 
-    @GET("/exercises")
-    Call<List<Exercise>> getExercises(
-            @Query("mgroup") MuscleGroup mgroup
+    @GET("/workout/history")
+    Call<List<NewsfeedPost>> getGlobalWorkoutHistory(
+            @Query("entries") Integer entries
     );
 
     @GET("/plans")

@@ -1,6 +1,7 @@
 package com.spottr.spottr.models;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.spottr.spottr.R;
 
 import java.util.List;
@@ -38,17 +43,29 @@ public class NewsfeedPostAdapter extends ArrayAdapter<NewsfeedPost> {
 
         TextView posttext = internal_convertView.findViewById(R.id.newsfeed_post_text);
         TextView posttime = internal_convertView.findViewById(R.id.newsfeed_post_time);
-
         ImageView userimg = internal_convertView.findViewById(R.id.newsfeed_post_image);
 
-        posttext.setText(post.name + " just completed a workout!");
+        posttext.setText(post.user_name + " just completed a workout!");
         posttime.setText(getRelativeTimeSpanString(post.posted.getTime()));
 
         Glide.with(parent)
-                .load(post.profile_img_uri)
-                .override(200, 200)
-                .apply(RequestOptions.circleCropTransform())
-                .into(userimg);
+            .load(post.user_profile_img_url)
+            .override(200, 200)
+            .apply(RequestOptions.circleCropTransform())
+            .listener(new RequestListener() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target target, boolean isFirstResource) {
+                    Log.d("NEWSFEED", "Load failed", e);
+                    return false;
+                }
+
+                @Override
+                public boolean onResourceReady(Object resource, Object model, Target target, DataSource dataSource, boolean isFirstResource) {
+                    return false;
+                }
+
+            })
+            .into(userimg);
 
         return internal_convertView;
     }
