@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.spottr.spottr.apis.APIFactory;
 import com.spottr.spottr.apis.WorkoutAPI;
@@ -109,6 +110,10 @@ public class GeneratePlan extends AppCompatActivity {
         newIntent.putExtra("userId", userId);
         newIntent.putExtra("workoutId", workoutId);
         Log.d("TEST", gsonString);
+
+        GoogleSignInAccount account = (GoogleSignInAccount) getIntent().getExtras().get("account");
+        newIntent.putExtra("account", account);
+
         startActivity(newIntent);
     }
 

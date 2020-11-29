@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.spottr.spottr.R;
 import com.spottr.spottr.models.Exercise;
@@ -96,6 +97,10 @@ public class WorkoutActivity extends AppCompatActivity {
                 newIntent.putExtra("muscleId", muscleId);
                 newIntent.putExtra("userId", userId);
                 newIntent.putExtra("workoutId", workoutId);
+
+                GoogleSignInAccount account = (GoogleSignInAccount) getIntent().getExtras().get("account");
+                newIntent.putExtra("account", account);
+
                 startActivity(newIntent);
             }
         });
