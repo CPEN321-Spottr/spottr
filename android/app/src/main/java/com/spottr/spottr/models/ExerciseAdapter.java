@@ -18,8 +18,6 @@ import java.util.ArrayList;
 
 public class ExerciseAdapter extends ArrayAdapter {
 
-    View thisView;
-
     public ExerciseAdapter(Context context, ArrayList<Exercise> exercises) {
         super(context, 0, exercises);
     }
