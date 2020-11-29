@@ -1,7 +1,6 @@
 package com.spottr.spottr.models;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -82,17 +81,11 @@ public class Plan implements Parcelable {
     /**
      * Getters
      */
-    public Exercise getExerciseAtIndex(int i) {
-        return this.exercises.get(i);
-    }
-    public Rest getBreakAtIndex(int i) {
-        return this.breaks.get(i);
-    }
 
     public String[] getRoutineNames() {
         ArrayList<String> retList = new ArrayList<String>();
         for (Exercise exercise : exercises) {
-            Log.d("TEST", exercise.name);
+            //Log.d("TEST", exercise.name);
             retList.add(exercise.name);
         }
         String[] ret = new String[retList.size()];
@@ -104,7 +97,6 @@ public class Plan implements Parcelable {
 
     public int[] getRoutineReps() {
         ArrayList<Integer> retList = new ArrayList<Integer>();
-        Log.d("TEST", exercises.toString());
         for (Exercise exercise : exercises) {
             retList.add(exercise.reps);
         }

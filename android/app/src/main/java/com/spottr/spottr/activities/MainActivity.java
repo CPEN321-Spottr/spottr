@@ -59,7 +59,10 @@ public class MainActivity extends AppCompatActivity {
         workoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, GeneratePlan.class));
+                Intent newIntent = new Intent(MainActivity.this, GeneratePlan.class);
+                GoogleSignInAccount account = (GoogleSignInAccount) getIntent().getExtras().get("account");
+                newIntent.putExtra("account", account);
+                startActivity(newIntent);
             }
         });
 

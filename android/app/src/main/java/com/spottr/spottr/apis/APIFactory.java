@@ -44,6 +44,9 @@ public class APIFactory {
     public CommunityAPI getCommunityAPI() {
         return retrofit.create(CommunityAPI.class);
     }
+    public ReviewAPI getReviewAPI() {
+        return retrofit.create(ReviewAPI.class);
+    }
 
     public WorkoutAPI getWorkoutAPI() {
         return retrofit.create(WorkoutAPI.class);

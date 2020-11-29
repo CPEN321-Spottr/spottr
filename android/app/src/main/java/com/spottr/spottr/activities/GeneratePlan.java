@@ -14,15 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.Gson;
 import com.spottr.spottr.apis.APIFactory;
 import com.spottr.spottr.apis.WorkoutAPI;
+import com.spottr.spottr.models.Exercise;
+import com.spottr.spottr.models.ExerciseAdapter;
 import com.spottr.spottr.models.Plan;
 import com.spottr.spottr.R;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,9 +34,10 @@ import retrofit2.Response;
 public class GeneratePlan extends AppCompatActivity {
 
     private Plan workoutPlan;
-    private String names[] = {};
-    private int sets[] = {};
-    private int reps[] = {};
+    private String workoutId;
+    private String muscleId;
+    private int userId;
+    private ArrayList<Exercise> exercises = new ArrayList<Exercise>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +49,16 @@ public class GeneratePlan extends AppCompatActivity {
         final WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
 
         SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
+        userId = preferences.getInt("userID", -1);
 
         //userID 6 was given to
-        Call<Plan> call = workoutAPI.getRecommendedPlan(preferences.getInt("userID", -1), 45, 1);
+        muscleId = "1";
+        Call<Plan> call = workoutAPI.getRecommendedPlan(userId, 5, Integer.valueOf(muscleId));
 
         ListView listView = findViewById(R.id.plan_list);
 
         //creation of adapter
-        final Adapter adapter = new Adapter(GeneratePlan.this, names, reps, sets);
+        final ExerciseAdapter adapter = new ExerciseAdapter(this, exercises);
         listView.setAdapter(adapter);
 
         call.enqueue(new Callback<Plan>() {
@@ -62,13 +68,10 @@ public class GeneratePlan extends AppCompatActivity {
                     Log.d("GENERATE", "Successfully generated a workout");
                     Log.d("GENERATE", response.body().toString());
                     workoutPlan = response.body();
+                    workoutId = workoutPlan.workout_plan_id;
                     Log.d("TEST", workoutPlan.toString());
-                    workoutPlan.num_exercises = response.body().exercises.size();
-                    adapter.names = workoutPlan.getRoutineNames();
-                    adapter.reps = workoutPlan.getRoutineReps();
-                    adapter.sets = workoutPlan.getRoutineSets();
+                    exercises.addAll(workoutPlan.exercises);
                     adapter.notifyDataSetChanged();
-
                 } else {
                     Log.d("GENERATE", response.toString());
                 }
@@ -103,41 +106,15 @@ public class GeneratePlan extends AppCompatActivity {
         Gson gson = new Gson();
         String gsonString = gson.toJson(workoutPlan);
         newIntent.putExtra("PLAN", gsonString);
+        newIntent.putExtra("muscleId", muscleId);
+        newIntent.putExtra("userId", userId);
+        newIntent.putExtra("workoutId", workoutId);
         Log.d("TEST", gsonString);
+
+        GoogleSignInAccount account = (GoogleSignInAccount) getIntent().getExtras().get("account");
+        newIntent.putExtra("account", account);
+
         startActivity(newIntent);
     }
 
-    class Adapter extends ArrayAdapter<String> {
-
-        private String names[];
-        private int sets[];
-        private int reps[];
-
-        Adapter (Context c, String names[], int reps[], int sets[]) {
-            super(c, R.layout.list_item, R.id.exercise_title, names);
-            this.names = names;
-            this.reps = reps;
-            this.sets = sets;
-
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = layoutInflater.inflate(R.layout.list_item, parent, false);
-            TextView exerciseTitle = row.findViewById(R.id.exercise_title);
-            TextView repNum = row.findViewById(R.id.reps_num);
-            TextView setNum = row.findViewById(R.id.sets_num);
-            ImageView img = row.findViewById(R.id.message_photo);
-
-            exerciseTitle.setText(names[position]);
-            repNum.setText(String.valueOf(reps[position]));
-            setNum.setText(String.valueOf(sets[position]));
-            img.setImageResource(R.drawable.ic_baseline_directions_run_24);
-
-            return row;
-        }
-
-    }
 }
