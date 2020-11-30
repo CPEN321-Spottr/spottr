@@ -33,7 +33,7 @@
         android:id="@+id/newsfeed_post_time"
         android:layout_width="138dp"
         android:layout_height="21dp"
-        android:layout_marginStart="326dp"
+        android:layout_marginStart="350dp"
         android:text="TextView"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -54,5 +54,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_baseline_arrow_right_24" />
+
+    <TextView
+        android:id="@+id/main_seeWorkout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="View"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/newsfeed_post_text"
+        app:layout_constraintEnd_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toTopOf="@+id/newsfeed_post_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
