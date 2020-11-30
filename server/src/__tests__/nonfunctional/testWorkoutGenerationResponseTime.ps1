@@ -1,4 +1,4 @@
-$attempts = 1000
+$attempts = 10
 
 $baseURL = "https://spottr-be.herokuapp.com"
 
@@ -26,7 +26,7 @@ for ($i = 0; $i -lt $attempts; $i++) {
 
 $measure = $times | Measure-Object -AllStats
 
-Write-Output
+
 Write-Output "-------------------------------------------------";
 Write-Output "Testing Endpoint: $($uri)"
 Write-Output "-------------------------------------------------";
@@ -35,4 +35,3 @@ Write-Output "Maximum Call Duration: $($measure.Maximum) seconds";
 Write-Output "Average Call Duration: $($measure.Average) seconds";
 Write-Output "Standard Deviation: $($measure.StandardDeviation)";
 Write-Output "-------------------------------------------------";
-Write-Output

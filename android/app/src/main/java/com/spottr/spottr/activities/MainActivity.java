@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ImageView imgProfilePic = (ImageView) findViewById(R.id.profile_pic);
-        ListView newsfeed = findViewById(R.id.newsfeed);
+        final ListView newsfeed = findViewById(R.id.newsfeed);
 
         Button workoutButton = (Button) findViewById(R.id.get_workout_button);
         workoutButton.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +148,22 @@ public class MainActivity extends AppCompatActivity {
 
         TextView welcomeBackText = findViewById(R.id.welcome_back_text);
         welcomeBackText.setText(account.getDisplayName());
+
+        // Configure Newsfeed
+        newsfeed.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                NewsfeedPost o = (NewsfeedPost) newsfeed.getItemAtPosition(position);
+
+                Intent newIntent = new Intent(MainActivity.this, GeneratePlan.class);
+                GoogleSignInAccount account = (GoogleSignInAccount) getIntent().getExtras().get("account");
+                newIntent.putExtra("planID", o.workout_plan_id);
+                newIntent.putExtra("account", account);
+                startActivity(newIntent);
+            }
+        });
+
+        newsfeed.setClickable(true);
 
         adapter = new NewsfeedPostAdapter(this, new ArrayList<NewsfeedPost>());
         newsfeed.setAdapter(adapter);
