@@ -25,8 +25,8 @@ public interface WorkoutAPI {
     @POST("/plans")
     Call<Plan> createPlan(@Body Plan plan);
 
-    @GET("/plans/{planID}")
-    Call<Plan> getPlanByID(@Path("planID") String planID);
+    @GET("/workout/plan/{workoutPlanId}")
+    Call<Plan> getPlanByID(@Path("workoutPlanId") String workoutPlanId);
 
     @GET("/users/{userID}/plans")
     Call<List<Plan>> getSavedPlansByUser(@Path("userID") String userID);

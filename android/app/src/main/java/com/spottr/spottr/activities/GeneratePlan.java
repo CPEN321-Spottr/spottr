@@ -33,6 +33,8 @@ import retrofit2.Response;
 
 public class GeneratePlan extends AppCompatActivity {
 
+    private Call<Plan> call;
+
     private Plan workoutPlan;
     private String workoutId;
     private String muscleId;
@@ -44,16 +46,22 @@ public class GeneratePlan extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_generate_plan);
 
-        APIFactory apiFactory = new APIFactory(this);
+        Bundle extras = getIntent().getExtras();
 
+        APIFactory apiFactory = new APIFactory(this);
         final WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
 
-        SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
-        userId = preferences.getInt("userID", -1);
+        // determine if we should display an existing plan or
+        String planID = extras.getString("planID");
+        if(planID != null) {
+            call = workoutAPI.getPlanByID(planID);
+        } else {
+            SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
+            userId = preferences.getInt("userID", -1);
 
-        //userID 6 was given to
-        muscleId = "1";
-        Call<Plan> call = workoutAPI.getRecommendedPlan(userId, 5, Integer.valueOf(muscleId));
+            muscleId = "1";
+            call = workoutAPI.getRecommendedPlan(userId, 5, Integer.valueOf(muscleId));
+        }
 
         ListView listView = findViewById(R.id.plan_list);
 
