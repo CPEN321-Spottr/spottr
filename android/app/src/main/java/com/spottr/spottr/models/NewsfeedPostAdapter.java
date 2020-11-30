@@ -45,6 +45,7 @@ public class NewsfeedPostAdapter extends ArrayAdapter<NewsfeedPost> {
         TextView posttime = internal_convertView.findViewById(R.id.newsfeed_post_time);
         ImageView userimg = internal_convertView.findViewById(R.id.newsfeed_post_image);
 
+        Log.d("NEWSFEED", post.posted.toString());
         posttext.setText(post.user_name + " just completed a workout!");
         posttime.setText(getRelativeTimeSpanString(post.posted.getTime()));
 

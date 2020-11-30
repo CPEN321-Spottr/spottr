@@ -45,7 +45,7 @@ public class NewsfeedPost {
         try {
 
             this.user_profile_img_url = object.getString("user_profile_img_url");
-            this.user_name = object.getString("name");
+            this.user_name = object.getString("user_name");
             this.user_profile_id = object.getInt("user_profile_id");
             this.posted = dateFormat.parse(object.getString("posted"));
             this.workout_history_actual_length_sec = object.getDouble("workout_history_actual_length_sec");
