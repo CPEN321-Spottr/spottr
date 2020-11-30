@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
                     preferences.edit().putInt("userID", Integer.parseInt(response.body().getId())).apply();
                     Log.d("TOKEN", "Successfully registered ID token for user: " + response.body().getId());
+                    Log.d("TOKEN", "Successfully registered ID token for user: " + response.body());
                 }else{
                     Log.d("TOKEN", "Failed to register ID token");
                 }

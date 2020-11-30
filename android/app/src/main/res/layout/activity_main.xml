@@ -10,9 +10,9 @@
 
     <TextView
         android:id="@+id/welcome_back_text"
-        android:layout_width="178dp"
-        android:layout_height="203dp"
-        android:text="Some other text"
+        android:layout_width="175dp"
+        android:layout_height="107dp"
+        android:text="User Name"
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"

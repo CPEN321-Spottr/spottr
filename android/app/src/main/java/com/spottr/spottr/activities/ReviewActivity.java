@@ -40,9 +40,9 @@ public class ReviewActivity extends AppCompatActivity {
 
         Button tooHard = (Button) findViewById(R.id.review_toohard);
         Button difficult = (Button) findViewById(R.id.review_difficult);
-        Button justRight = (Button) findViewById(R.id.review_difficult);
-        Button fair = (Button) findViewById(R.id.review_difficult);
-        Button tooEasy = (Button) findViewById(R.id.review_difficult);
+        Button justRight = (Button) findViewById(R.id.review_justright);
+        Button fair = (Button) findViewById(R.id.review_fair);
+        Button tooEasy = (Button) findViewById(R.id.review_tooeasy);
 
         tooHard.setOnClickListener(new View.OnClickListener() {
             @Override
