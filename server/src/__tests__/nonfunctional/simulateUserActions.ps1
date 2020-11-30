@@ -20,7 +20,7 @@ $GET_endpoints = @(
   "$($baseURL)/workout/muscleGroups",
   "$($baseURL)/users/1/workout/one-up/1"
 )
-$PUT_endpoints = @("$($baseURL)/users/6/workout/change-difficulty/0.5&1", "$($baseURL)/users/6/workout/change-difficulty/2&1")
+$PUT_endpoints = @("$($baseURL)/users/6/workout/change-difficulty/-1&1", "$($baseURL)/users/6/workout/change-difficulty/2&1")
 
 Write-Output "Started User Simulation: $($id)"
 
