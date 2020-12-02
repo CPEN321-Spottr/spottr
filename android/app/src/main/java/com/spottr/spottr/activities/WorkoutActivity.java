@@ -91,7 +91,8 @@ public class WorkoutActivity extends AppCompatActivity {
         toSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int timeDiff = (int) (now.getTime() - startTime)/1000;
+                Date end = new Date();
+                int timeDiff = (int) (end.getTime() - startTime)/1000;
                 Intent newIntent = new Intent(WorkoutActivity.this, ReviewActivity.class);
                 newIntent.putExtra("duration", timeDiff);
                 newIntent.putExtra("muscleId", muscleId);
