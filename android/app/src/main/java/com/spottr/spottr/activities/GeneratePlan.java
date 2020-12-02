@@ -38,7 +38,6 @@ public class GeneratePlan extends AppCompatActivity {
 
     private ExerciseAdapter adapter;
 
-    private Button returnButton;
     private Button oneupButton;
 
     @Override
@@ -52,7 +51,7 @@ public class GeneratePlan extends AppCompatActivity {
         final WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
 
         //return button
-        returnButton = (Button) findViewById(R.id.workoutcreation_returnButton);
+        Button returnButton = (Button) findViewById(R.id.workoutcreation_returnButton);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,7 +64,7 @@ public class GeneratePlan extends AppCompatActivity {
         oneupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                one_up(workoutAPI);
+                oneUp(workoutAPI);
             }
         });
 
@@ -121,7 +120,7 @@ public class GeneratePlan extends AppCompatActivity {
         startActivity(newIntent);
     }
 
-    private void one_up(WorkoutAPI workoutAPI) {
+    private void oneUp(WorkoutAPI workoutAPI) {
 
         call = workoutAPI.getOneUpPlan(userId, workoutPlan.workout_plan_id);
         getPlan(call);
