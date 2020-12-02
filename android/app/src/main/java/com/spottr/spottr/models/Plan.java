@@ -14,7 +14,7 @@ public class Plan implements Parcelable {
     public Integer num_exercises;
     public Integer num_parts;
     public Integer est_length_sec;
-    public Integer associated_multiplier;
+    public Float associated_multiplier;
     public Integer spottr_points;
 
     public ArrayList<Exercise> exercises;
@@ -57,7 +57,7 @@ public class Plan implements Parcelable {
         if (in.readByte() == 0) {
             associated_multiplier = null;
         } else {
-            associated_multiplier = in.readInt();
+            associated_multiplier = in.readFloat();
         }
         if (in.readByte() == 0) {
             spottr_points = null;
@@ -170,7 +170,7 @@ public class Plan implements Parcelable {
             parcel.writeByte((byte) 0);
         } else {
             parcel.writeByte((byte) 1);
-            parcel.writeInt(associated_multiplier);
+            parcel.writeFloat(associated_multiplier);
         }
         if (spottr_points == null) {
             parcel.writeByte((byte) 0);

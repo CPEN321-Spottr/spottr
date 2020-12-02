@@ -1,7 +1,5 @@
 package com.spottr.spottr.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -9,10 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -56,6 +51,7 @@ public class GeneratePlan extends AppCompatActivity {
         if(planID != null) {
             call = workoutAPI.getPlanByID(planID);
         } else {
+            Log.d("GENERATE", "Generating new plan");
             SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
             userId = preferences.getInt("userID", -1);
 
@@ -87,7 +83,7 @@ public class GeneratePlan extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Plan> call, Throwable t) {
-                Log.d("GENERATE", "Workout generation failed");
+                Log.d("GENERATE", "Workout generation failed", t);
             }
         });
 
