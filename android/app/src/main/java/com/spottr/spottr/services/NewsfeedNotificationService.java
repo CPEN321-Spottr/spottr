@@ -41,7 +41,7 @@ public class NewsfeedNotificationService extends FirebaseMessagingService {
      */
     private void sendRegistrationToServer(String token) {
 
-        token.toString();
+        String a = token;
         // TODO: Implement this method to send token to your app server.
     }
 
