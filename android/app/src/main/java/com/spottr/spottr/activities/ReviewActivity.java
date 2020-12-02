@@ -82,7 +82,7 @@ public class ReviewActivity extends AppCompatActivity {
 
         final ReviewAPI reviewAPI = apiFactory.getReviewAPI();
 
-        Call<Integer> completedWorkoutCall = reviewAPI.completedWorkout(userId ,workoutId, (int) TimeUnit.MILLISECONDS.toSeconds(duration));
+        Call<Integer> completedWorkoutCall = reviewAPI.completedWorkout(userId ,workoutId, duration);
         Call<Integer> workoutReviewCall = reviewAPI.changeDifficulty(userId, muscleId, rating);
 
         completedWorkoutCall.enqueue(new Callback<Integer>() {

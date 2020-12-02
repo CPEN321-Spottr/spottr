@@ -58,18 +58,6 @@ public class WorkoutActivity extends AppCompatActivity {
         Log.d("TEST", String.valueOf(workoutPlan.exercises.get(exerciseCounter)));
         Log.d("TEST", String.valueOf(workoutPlan.exercises.get(exerciseCounter).name));
 
-        currentExercise = workoutPlan.exercises.get(exerciseCounter);
-        currentRest = workoutPlan.breaks.get(restCounter);
-
-        TextView exerciseTitle = (TextView) findViewById(R.id.workout_title);
-        exerciseTitle.setText(currentExercise.name);
-        findViewById(R.id.workout_done).setVisibility(View.INVISIBLE);
-        TextView clock = (TextView) findViewById(R.id.workout_clock);
-        clock.setText("Sets: " + currentExercise.sets + "  Reps: " + currentExercise.reps);
-
-        now = new Date();
-        startTime = now.getTime();
-
         //Buttons
         Button exitButton = (Button) findViewById(R.id.workout_exit);
         exitButton.setOnClickListener(new View.OnClickListener() {
@@ -106,8 +94,30 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
+        currentExercise = workoutPlan.exercises.get(exerciseCounter);
+
+        TextView exerciseTitle = (TextView) findViewById(R.id.workout_title);
+        exerciseTitle.setText(currentExercise.name);
+        findViewById(R.id.workout_done).setVisibility(View.INVISIBLE);
+        TextView clock = (TextView) findViewById(R.id.workout_clock);
+        clock.setText("Sets: " + currentExercise.sets + "  Reps: " + currentExercise.reps);
+        now = new Date();
+        startTime = now.getTime();
+
+        if (workoutPlan.num_exercises != 1) {
+            nextButton.setVisibility(View.VISIBLE);
+            toSubmit.setVisibility(View.INVISIBLE);
+            findViewById(R.id.spottrLogo).setVisibility(View.VISIBLE);
+            currentRest = workoutPlan.breaks.get(restCounter);
+        } else {
+            nextButton.setVisibility(View.INVISIBLE);
+            toSubmit.setVisibility(View.VISIBLE);
+            findViewById(R.id.spottrLogo).setVisibility(View.INVISIBLE);
+        }
 
     }
+
+
 
     public void nextExercise() {
         //check if changing to the last exercise
