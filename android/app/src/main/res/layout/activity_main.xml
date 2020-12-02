@@ -8,6 +8,20 @@
     android:backgroundTint="@color/colorPrimaryDark"
     tools:context=".activities.MainActivity">
 
+    <Button
+        android:id="@+id/get_workout_button3"
+        android:layout_width="136dp"
+        android:layout_height="104dp"
+        android:layout_marginTop="396dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="@string/get_workout_button_text_20"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/get_workout_button2"
+        app:layout_constraintTop_toBottomOf="@+id/profile_pic" />
+
     <TextView
         android:id="@+id/welcome_back_text"
         android:layout_width="175dp"
@@ -48,15 +62,26 @@
 
     <Button
         android:id="@+id/get_workout_button"
-        android:layout_width="387dp"
-        android:layout_height="112dp"
+        android:layout_width="135dp"
+        android:layout_height="104dp"
+        android:layout_marginEnd="2dp"
         android:backgroundTint="@color/colorPrimary"
-        android:text="@string/get_workout_button_text"
+        android:text="@string/get_workout_button_text_5"
         android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/get_workout_button2"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/get_workout_button2" />
+
+    <Button
+        android:id="@+id/get_workout_button2"
+        android:layout_width="136dp"
+        android:layout_height="104dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="@string/get_workout_button_text_10"
+        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_pic"
-        app:layout_constraintVertical_bias="0.985" />
+        app:layout_constraintTop_toTopOf="@+id/get_workout_button3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

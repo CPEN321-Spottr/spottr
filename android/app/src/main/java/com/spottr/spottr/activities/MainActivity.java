@@ -35,10 +35,11 @@ import com.spottr.spottr.services.AuthorizationServiceHelper;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,28 +58,20 @@ public class MainActivity extends AppCompatActivity {
         final ListView newsfeed = findViewById(R.id.newsfeed);
 
         Button workoutButton = (Button) findViewById(R.id.get_workout_button);
-        workoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent newIntent = new Intent(MainActivity.this, GeneratePlan.class);
-                GoogleSignInAccount account = (GoogleSignInAccount) getIntent().getExtras().get("account");
-                newIntent.putExtra("account", account);
-                startActivity(newIntent);
-            }
-        });
+        workoutButton.setOnClickListener(this.getGenerateWorkoutOnClickListener(5));
+
+        Button workoutButton2 = (Button) findViewById(R.id.get_workout_button2);
+        workoutButton2.setOnClickListener(this.getGenerateWorkoutOnClickListener(10));
+
+        Button workoutButton3 = (Button) findViewById(R.id.get_workout_button3);
+        workoutButton3.setOnClickListener(this.getGenerateWorkoutOnClickListener(20));
 
         Bundle extras = getIntent().getExtras();
-
         GoogleSignInAccount account = (GoogleSignInAccount) extras.get("account");
         assert account != null;
-        Log.d("ACCOUNT", Objects.requireNonNull(account.getDisplayName()));
-        Log.d("ACCOUNT", Objects.requireNonNull(account.getPhotoUrl()).toString());
 
-        if(account.getIdToken() != null) {
-            Log.d("ACCOUNT", Objects.requireNonNull(account.getIdToken()));
-        } else {
-            Log.d("ACCOUNT", "Could not get ID token");
-        }
+        TextView welcomeBackText = findViewById(R.id.welcome_back_text);
+        welcomeBackText.setText(account.getDisplayName());
 
         Glide.with(this)
                 .load(account.getPhotoUrl())
@@ -91,64 +84,9 @@ public class MainActivity extends AppCompatActivity {
         APIFactory apiFactory = new APIFactory(this);
         final AdminAPI adminAPI = apiFactory.getAdminAPI();
 
-        // Get device token for Firebase notifications
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("FIREBASE", "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
+        this.handleFirebaseRegistration(adminAPI);
+        this.handleGoogleIDTokenRegistration(adminAPI);
 
-                        // Get new FCM registration token
-                        String token = task.getResult();
-
-                        Log.d("FIREBASE", token);
-
-                        Call<Void> firebasetokencall = adminAPI.registerFirebaseDeviceToken(token);
-
-                        firebasetokencall.enqueue(new Callback<Void>() {
-                            @Override
-                            public void onResponse(Call<Void> call, Response<Void> response) {
-                                if(response.code() == 200) {
-                                    Log.d("TOKEN", "Successfully registered device token");
-                                } else {
-                                    Log.d("TOKEN", response.toString());
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<Void> call, Throwable t) {
-                                Log.d("TOKEN", "Device token registration failed");
-                                Log.d("TOKEN", t.toString());
-                            }
-                        });
-                    }
-                });
-
-        Call<User> call = adminAPI.registerToken();
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if(response.code() == 200) {
-                    SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
-                    preferences.edit().putInt("userID", Integer.parseInt(response.body().getId())).apply();
-                    Log.d("TOKEN", "Successfully registered ID token for user: " + response.body().getId());
-                    Log.d("TOKEN", "Successfully registered ID token for user: " + response.body());
-                }else{
-                    Log.d("TOKEN", "Failed to register ID token");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.d("TOKEN", "Token registration failed");
-            }
-        });
-
-        TextView welcomeBackText = findViewById(R.id.welcome_back_text);
-        welcomeBackText.setText(account.getDisplayName());
 
         // Configure Newsfeed
         newsfeed.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -171,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
 
         WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
 
-
         Call<List<NewsfeedPost>> getNewsfeedPosts = workoutAPI.getGlobalWorkoutHistory(10);
         getNewsfeedPosts.enqueue(new Callback<List<NewsfeedPost>>() {
             @Override
@@ -191,7 +128,80 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("NEWSFEED", "Failed to retrieve newsfeed posts");
             }
         });
+    }
 
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    private View.OnClickListener getGenerateWorkoutOnClickListener(final Integer duration) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent newIntent = new Intent(MainActivity.this, GeneratePlan.class);
+                GoogleSignInAccount account = (GoogleSignInAccount) getIntent().getExtras().get("account");
+                newIntent.putExtra("account", account);
+                newIntent.putExtra("workout_length", duration);
+                startActivity(newIntent);
+            }
+        };
+    }
+
+    private void handleFirebaseRegistration(final AdminAPI adminAPI) {
+        FirebaseMessaging.getInstance().getToken()
+            .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    Log.w("FIREBASE", "Fetching FCM registration token failed", task.getException());
+                    return;
+                }
+
+                // Get new FCM registration token
+                String token = task.getResult();
+
+                Log.d("FIREBASE", token);
+
+                Call<Void> firebasetokencall = adminAPI.registerFirebaseDeviceToken(token);
+
+                firebasetokencall.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if(response.code() == 200) {
+                            Log.d("TOKEN", "Successfully registered device token");
+                        } else {
+                            Log.d("TOKEN", response.toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.d("TOKEN", "Device token registration failed");
+                        Log.d("TOKEN", t.toString());
+                    }
+                });
+                }
+            });
+    }
+
+    private void handleGoogleIDTokenRegistration(final AdminAPI adminAPI) {
+        Call<User> call = adminAPI.registerToken();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.code() == 200) {
+                    SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
+                    preferences.edit().putInt("userID", Integer.parseInt(response.body().getId())).apply();
+                    Log.d("TOKEN", "Successfully registered ID token for user: " + response.body().getId());
+                    Log.d("TOKEN", "Successfully registered ID token for user: " + response.body());
+                }else{
+                    Log.d("TOKEN", "Failed to register ID token");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d("TOKEN", "Token registration failed");
+            }
+        });
     }
 
     @Override
