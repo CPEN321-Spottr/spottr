@@ -31,17 +31,13 @@ public class NewsfeedNotificationService extends FirebaseMessagingService {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // FCM registration token to your app server.
-        sendRegistrationToServer(token);
+        // sendRegistrationToServer();
     }
 
     /**
      * Persists token to Spottr back end
-     *
-     * @param token The new token.
      */
-    private void sendRegistrationToServer(String token) {
-
-        String a = token;
+    private void sendRegistrationToServer() {
         // TODO: Implement this method to send token to your app server.
     }
 
