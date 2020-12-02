@@ -64,7 +64,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/workoutcreation_startButton2"
+            app:layout_constraintEnd_toStartOf="@+id/workoutcreation_one_up_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
@@ -78,12 +78,12 @@
             android:textColor="@color/colorPrimaryDark"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/workoutcreation_startButton2"
+            app:layout_constraintStart_toEndOf="@+id/workoutcreation_one_up_button"
             app:layout_constraintTop_toTopOf="@+id/workoutcreation_returnButton"
             tools:visibility="visible" />
 
         <Button
-            android:id="@+id/workoutcreation_startButton2"
+            android:id="@+id/workoutcreation_one_up_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorAnalogous_purple"

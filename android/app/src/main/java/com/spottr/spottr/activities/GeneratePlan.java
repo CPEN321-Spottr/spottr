@@ -36,6 +36,11 @@ public class GeneratePlan extends AppCompatActivity {
     private int userId;
     private ArrayList<Exercise> exercises = new ArrayList<Exercise>();
 
+    private ExerciseAdapter adapter;
+
+    private Button returnButton;
+    private Button oneupButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,55 +51,25 @@ public class GeneratePlan extends AppCompatActivity {
         APIFactory apiFactory = new APIFactory(this);
         final WorkoutAPI workoutAPI = apiFactory.getWorkoutAPI();
 
-        // determine if we should display an existing plan or
-        String planID = extras.getString("planID");
-        if(planID != null) {
-            call = workoutAPI.getPlanByID(planID);
-        } else {
-            Log.d("GENERATE", "Generating new plan");
-            SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
-            userId = preferences.getInt("userID", -1);
-
-            muscleId = "1";
-            call = workoutAPI.getRecommendedPlan(userId, 5, Integer.valueOf(muscleId));
-        }
-
-        ListView listView = findViewById(R.id.plan_list);
-
-        //creation of adapter
-        final ExerciseAdapter adapter = new ExerciseAdapter(this, exercises);
-        listView.setAdapter(adapter);
-
-        call.enqueue(new Callback<Plan>() {
-            @Override
-            public void onResponse(Call<Plan> call, Response<Plan> response) {
-                if(response.code() == 200) {
-                    Log.d("GENERATE", "Successfully generated a workout");
-                    Log.d("GENERATE", response.body().toString());
-                    workoutPlan = response.body();
-                    workoutId = workoutPlan.workout_plan_id;
-                    Log.d("TEST", workoutPlan.toString());
-                    exercises.addAll(workoutPlan.exercises);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    Log.d("GENERATE", response.toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Plan> call, Throwable t) {
-                Log.d("GENERATE", "Workout generation failed", t);
-            }
-        });
-
         //return button
-        Button returnButton = (Button) findViewById(R.id.workoutcreation_returnButton);
+        returnButton = (Button) findViewById(R.id.workoutcreation_returnButton);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+
+        // one up button
+        oneupButton = (Button) findViewById(R.id.workoutcreation_one_up_button);
+        oneupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                one_up(workoutAPI);
+            }
+        });
+
+        // start button
         Button startButton = (Button) findViewById(R.id.workoutcreation_startButton);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +77,31 @@ public class GeneratePlan extends AppCompatActivity {
                 passInfo();
             }
         });
+
+        SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
+        userId = preferences.getInt("userID", -1);
+
+        // determine if we should display an existing plan or
+        String planID = extras.getString("planID");
+        if(planID != null) {
+            call = workoutAPI.getPlanByID(planID);
+        } else {
+            Log.d("GENERATE", "Generating new plan");
+
+            muscleId = "1";
+            call = workoutAPI.getRecommendedPlan(userId, 5, Integer.valueOf(muscleId));
+
+            oneupButton.setVisibility(View.INVISIBLE);
+            oneupButton.setClickable(false);
+        }
+
+        ListView listView = findViewById(R.id.plan_list);
+
+        //creation of adapter
+        adapter = new ExerciseAdapter(this, exercises);
+        listView.setAdapter(adapter);
+
+        getPlan(call);
     }
 
     private void passInfo() {
@@ -119,6 +119,41 @@ public class GeneratePlan extends AppCompatActivity {
         newIntent.putExtra("account", account);
 
         startActivity(newIntent);
+    }
+
+    private void one_up(WorkoutAPI workoutAPI) {
+
+        call = workoutAPI.getOneUpPlan(userId, workoutPlan.workout_plan_id);
+        getPlan(call);
+
+        oneupButton.setVisibility(View.INVISIBLE);
+        oneupButton.setClickable(false);
+
+    }
+
+    private void getPlan(Call<Plan> call) {
+        call.enqueue(new Callback<Plan>() {
+            @Override
+            public void onResponse(Call<Plan> call, Response<Plan> response) {
+                if(response.code() == 200) {
+                    Log.d("GENERATE", "Successfully generated a workout");
+                    Log.d("GENERATE", response.body().toString());
+                    workoutPlan = response.body();
+                    workoutId = workoutPlan.workout_plan_id;
+                    Log.d("TEST", workoutPlan.toString());
+                    exercises.clear();
+                    exercises.addAll(workoutPlan.exercises);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Log.d("GENERATE", response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Plan> call, Throwable t) {
+                Log.d("GENERATE", "Workout generation failed", t);
+            }
+        });
     }
 
 }

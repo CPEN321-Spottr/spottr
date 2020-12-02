@@ -37,4 +37,10 @@ public interface WorkoutAPI {
             @Query("length-minutes") Integer minutes,
             @Query("target-muscle-group") Integer group
     );
+
+    @GET("/users/{userID}/workout/one-up/{workoutPlanID}")
+    Call<Plan>getOneUpPlan(
+            @Path("userID") Integer userID,
+            @Path("workoutPlanID") String workoutPlanID
+    );
 }
