@@ -32,7 +32,9 @@
 
     <!-- Strings used by Newsfeed -->
     <string name="newsfeed_image_content_desc">Profile Picture</string>
-    <string name="get_workout_button_text">Get Your Recommended Workout!</string>
+    <string name="get_workout_button_text_5">5 Minute Workout</string>
+    <string name="get_workout_button_text_10">10 Minute Workout</string>
+    <string name="get_workout_button_text_20">20 Minute Workout</string>
     <string name="title_activity_review">ReviewActivity</string>
     <!--
     This string is used for square devices and overridden by hello_world in
