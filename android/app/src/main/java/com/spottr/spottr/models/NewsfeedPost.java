@@ -1,7 +1,5 @@
 package com.spottr.spottr.models;
 
-import android.net.Uri;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
