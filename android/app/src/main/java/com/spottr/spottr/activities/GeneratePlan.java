@@ -51,6 +51,7 @@ public class GeneratePlan extends AppCompatActivity {
         if(planID != null) {
             call = workoutAPI.getPlanByID(planID);
         } else {
+            Log.d("GENERATE", "Generating new plan");
             SharedPreferences preferences = getSharedPreferences(getString(R.string.user_credential_store), Context.MODE_PRIVATE);
             userId = preferences.getInt("userID", -1);
 
@@ -82,7 +83,7 @@ public class GeneratePlan extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Plan> call, Throwable t) {
-                Log.d("GENERATE", "Workout generation failed");
+                Log.d("GENERATE", "Workout generation failed", t);
             }
         });
 
