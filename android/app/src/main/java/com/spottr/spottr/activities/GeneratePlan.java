@@ -56,7 +56,7 @@ public class GeneratePlan extends AppCompatActivity {
             userId = preferences.getInt("userID", -1);
 
             muscleId = "1";
-            call = workoutAPI.getRecommendedPlan(userId, 5, Integer.valueOf(muscleId));
+            call = workoutAPI.getRecommendedPlan(userId, 1, Integer.valueOf(muscleId));
         }
 
         ListView listView = findViewById(R.id.plan_list);
