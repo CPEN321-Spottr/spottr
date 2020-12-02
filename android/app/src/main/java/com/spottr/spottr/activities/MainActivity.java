@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent newIntent = new Intent(MainActivity.this, GeneratePlan.class);
                 GoogleSignInAccount account = (GoogleSignInAccount) getIntent().getExtras().get("account");
-                newIntent.putExtra("planID", o.workout_plan_id);
+                newIntent.putExtra("planID", o.workout_plan_id.toString());
                 newIntent.putExtra("account", account);
                 startActivity(newIntent);
             }
