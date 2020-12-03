@@ -117,9 +117,6 @@ public class GeneratePlan extends AppCompatActivity {
         newIntent.putExtra("workoutId", workoutId);
         Log.d("TEST", gsonString);
 
-        GoogleSignInAccount account = (GoogleSignInAccount) getIntent().getExtras().get("account");
-        newIntent.putExtra("account", account);
-
         startActivity(newIntent);
     }
 
