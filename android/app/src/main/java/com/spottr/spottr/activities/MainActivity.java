@@ -48,6 +48,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private NewsfeedPostAdapter adapter;
+    private TextView spottrPointsText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,6 +193,11 @@ public class MainActivity extends AppCompatActivity {
                     preferences.edit().putInt("userID", Integer.parseInt(response.body().getId())).apply();
                     Log.d("TOKEN", "Successfully registered ID token for user: " + response.body().getId());
                     Log.d("TOKEN", "Successfully registered ID token for user: " + response.body());
+
+                    spottrPointsText = findViewById(R.id.spottr_points_text);
+                    String text = getString(R.string.spottr_points) + response.body().getSpottrPoints().toString();
+                    spottrPointsText.setText(text);
+
                 }else{
                     Log.d("TOKEN", "Failed to register ID token");
                 }
