@@ -8,6 +8,7 @@ public class User {
     private String email;
     private Date created;
     private Integer workouts;
+    private Integer spottr_points;
 
     /**
      * Constructors
@@ -26,6 +27,7 @@ public class User {
         this.created = created;
         this.email = email;
         this.workouts = 0;
+        this.spottr_points = 0;
     }
 
     /**
@@ -40,6 +42,8 @@ public class User {
     public String getEmail() {return this.email;}
 
     public Integer getWorkouts() {return this.workouts;}
+
+    public Integer getSpottr_points() {return this.spottr_points;}
 
     /**
      * Setters
@@ -60,12 +64,15 @@ public class User {
         this.workouts = workouts;
     }
 
+    public void setSpottr_points(Integer spottr_points) { this.spottr_points = spottr_points; }
+
     /**
      * Copy
      */
     public static User hardCopy(User user) {
         User ret = new User(user.id, user.name, user.created, user.email);
         ret.setWorkouts(user.workouts);
+        ret.setSpottr_points(user.spottr_points);
         return ret;
     }
 }
