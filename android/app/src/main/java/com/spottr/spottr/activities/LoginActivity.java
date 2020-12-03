@@ -64,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
         if(result.isSuccess()){
             Log.d("LOGIN", "User successfully logged in");
             handleUserAccount(result.getSignInAccount());
-
         }else{
             Log.d("LOGIN", result.getStatus().toString());
             Toast.makeText(getApplicationContext(),"Google Sign-In Unsuccessful",Toast.LENGTH_LONG).show();

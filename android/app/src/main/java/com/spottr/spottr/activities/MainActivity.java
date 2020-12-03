@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("TOKEN", "Successfully registered ID token for user: " + response.body());
 
                     spottrPointsText = findViewById(R.id.spottr_points_text);
-                    String text = getString(R.string.spottr_points) + response.body().getSpottr_points().toString();
+                    String text = getString(R.string.spottr_points) + response.body().getSpottrPoints().toString();
                     spottrPointsText.setText(text);
 
                 }else{

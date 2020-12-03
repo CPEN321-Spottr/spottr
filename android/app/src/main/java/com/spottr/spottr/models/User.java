@@ -43,7 +43,7 @@ public class User {
 
     public Integer getWorkouts() {return this.workouts;}
 
-    public Integer getSpottr_points() {return this.spottr_points;}
+    public Integer getSpottrPoints() {return this.spottr_points;}
 
     /**
      * Setters
@@ -64,7 +64,7 @@ public class User {
         this.workouts = workouts;
     }
 
-    public void setSpottr_points(Integer spottr_points) { this.spottr_points = spottr_points; }
+    public void setSpottrPoints(Integer spottr_points) { this.spottr_points = spottr_points; }
 
     /**
      * Copy
@@ -72,7 +72,7 @@ public class User {
     public static User hardCopy(User user) {
         User ret = new User(user.id, user.name, user.created, user.email);
         ret.setWorkouts(user.workouts);
-        ret.setSpottr_points(user.spottr_points);
+        ret.setSpottrPoints(user.spottr_points);
         return ret;
     }
 }
