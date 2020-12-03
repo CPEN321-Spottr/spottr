@@ -2,11 +2,11 @@ $attempts = 10
 
 $baseURL = "https://spottr-be.herokuapp.com"
 
-$userID = 6
+$userID = 46
 $workoutLength = 40
 $targetGroup = 1
 
-$uri = "$($baseURL)/users/$($userID)/workout/generate-plan/$($workoutLength)&$($targetGroup)"
+$uri = "$($baseURL)/users/$($userID)/workout/generate-plan/?length-minutes=$($workoutLength)&target-muscle-group=$($targetGroup)"
 
 $times = @()
 
