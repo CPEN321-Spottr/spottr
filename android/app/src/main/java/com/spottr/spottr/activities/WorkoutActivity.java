@@ -32,7 +32,6 @@ public class WorkoutActivity extends AppCompatActivity {
     private Exercise currentExercise;
     private Rest currentRest;
     private Plan workoutPlan;
-    private Date now;
     private long startTime;
 
     private String muscleId;
@@ -101,7 +100,7 @@ public class WorkoutActivity extends AppCompatActivity {
         findViewById(R.id.workout_done).setVisibility(View.INVISIBLE);
         TextView clock = (TextView) findViewById(R.id.workout_clock);
         clock.setText("Sets: " + currentExercise.sets + "  Reps: " + currentExercise.reps);
-        now = new Date();
+        Date now = new Date();
         startTime = now.getTime();
 
         if (workoutPlan.num_exercises != 1) {
