@@ -50,7 +50,6 @@ while((New-TimeSpan -Start $start -End $current).TotalSeconds -lt $duration) {
     $calls += 1
     $response = Invoke-RestMethod -Uri $endpoint -Method $endpoint_type
   } catch {
-    Write-Host $_
     $failures += 1
   }
 
