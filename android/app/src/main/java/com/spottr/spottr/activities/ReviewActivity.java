@@ -88,11 +88,7 @@ public class ReviewActivity extends AppCompatActivity {
         completedWorkoutCall.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> completedWorkoutCall, Response<Integer> response) {
-                if(response.code() == 200) {
-                    Log.d("GENERATE", "Successfully submitted the workout completion");
-                } else {
-                    Log.d("GENERATE", "Unsuccessfully submitted the workout completion");
-                }
+                Log.d("GENERATE", "Successfully submitted the workout completion");
             }
 
             @Override
@@ -104,11 +100,7 @@ public class ReviewActivity extends AppCompatActivity {
         workoutReviewCall.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> workoutReviewCall, Response<Integer> response) {
-                if(response.code() == 200) {
-                    Log.d("GENERATE", "Successfully completed the workout");
-                } else {
-                    Log.d("GENERATE", "Unsuccessfully completed the workout");
-                }
+                Log.d("GENERATE", "Successfully completed the workout");
             }
 
             @Override
@@ -118,10 +110,7 @@ public class ReviewActivity extends AppCompatActivity {
         });
 
         //Call the back-end with what button the user clicked
-        Intent newIntent = new Intent(this, MainActivity.class);
-
-        GoogleSignInAccount account = (GoogleSignInAccount) getIntent().getExtras().get("account");
-        newIntent.putExtra("account", account);
+        Intent newIntent = new Intent(this, LoginActivity.class);
 
         newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(newIntent);
