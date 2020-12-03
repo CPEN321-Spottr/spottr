@@ -8,12 +8,9 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.spottr.spottr.R;
 import com.spottr.spottr.apis.APIFactory;
 import com.spottr.spottr.apis.ReviewAPI;
-
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
