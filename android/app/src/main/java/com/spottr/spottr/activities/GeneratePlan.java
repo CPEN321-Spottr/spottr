@@ -82,13 +82,16 @@ public class GeneratePlan extends AppCompatActivity {
 
         // determine if we should display an existing plan or
         String planID = extras.getString("planID");
+
         if(planID != null) {
             call = workoutAPI.getPlanByID(planID);
         } else {
             Log.d("GENERATE", "Generating new plan");
 
+            Integer duration = extras.getInt("workout_length");
+
             muscleId = "1";
-            call = workoutAPI.getRecommendedPlan(userId, 5, Integer.valueOf(muscleId));
+            call = workoutAPI.getRecommendedPlan(userId, duration, Integer.valueOf(muscleId));
 
             oneupButton.setVisibility(View.INVISIBLE);
             oneupButton.setClickable(false);
