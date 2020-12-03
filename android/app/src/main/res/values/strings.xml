@@ -14,6 +14,7 @@
     <!-- Workout Generation Strings -->
     <string name="workoutCreation_return">Return</string>
     <string name="workoutCreation_start">Start</string>
+    <string name="workoutCreation_oneup">One Up</string>
 
     <!-- Review Strings -->
     <string name="review_toohard">Too Hard</string>
